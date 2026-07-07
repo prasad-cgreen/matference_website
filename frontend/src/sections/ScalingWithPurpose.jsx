@@ -1,0 +1,193 @@
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import DataRiver from "@/components/site/DataRiver";
+import { STATS, SOLUTION_CAPTIONS } from "@/data/site";
+import { useCountUp } from "@/hooks/useCountUp";
+import { useIsDesktop } from "@/hooks/useResponsive";
+
+function StatItem({ value, suffix, label, active }) {
+  const n = useCountUp(value, active);
+  return (
+    <div className="text-center" data-testid={`stat-${label.toLowerCase()}`}>
+      <div className="font-head text-4xl lg:text-5xl text-[#FCDD15] tabular-nums">
+        {n}
+        {suffix}
+      </div>
+      <div className="font-body text-sm mt-1 text-[#FCDD15]/85">{label}</div>
+    </div>
+  );
+}
+
+function LogoSolution({ isDesktop }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: false, amount: 0.5 });
+  const stillVisible = useInView(ref, { once: false, amount: 0.02 });
+  const [fired, setFired] = useState(false);
+  const [glow, setGlow] = useState(false);
+  const [revealed, setRevealed] = useState(0);
+  const total = SOLUTION_CAPTIONS.length;
+
+  // Fire the sequence once, permanently.
+  useEffect(() => {
+    if (fired) return;
+    if (inView) {
+      setFired(true);
+      setGlow(true);
+      setTimeout(() => setGlow(false), 3000); // glow holds 3s then fades (cosmetic only)
+    }
+  }, [inView, fired]);
+
+  // Paced caption reveal after firing (self-clearing interval).
+  useEffect(() => {
+    if (!fired) return;
+    const id = setInterval(() => {
+      setRevealed((r) => {
+        const next = Math.min(total, r + 1);
+        if (next >= total) clearInterval(id);
+        return next;
+      });
+    }, 240);
+    return () => clearInterval(id);
+  }, [fired, total]);
+
+  // Fast-scroll fallback: if the section is scrolled past before completion, snap to complete.
+  useEffect(() => {
+    if (fired && !stillVisible && revealed < total) {
+      setRevealed(total);
+    }
+  }, [stillVisible, fired, revealed, total]);
+
+  if (!isDesktop) {
+    return (
+      <div ref={ref} className="flex flex-col items-center gap-6" data-testid="solution-logo-static">
+        <img src="/cgreen-logo.png" alt="cGreen" className="h-14 w-auto" />
+        <div className="flex flex-wrap justify-center gap-2 max-w-md">
+          {SOLUTION_CAPTIONS.map((c) => (
+            <span key={c} className="glass glass-navy rounded-full px-3 py-1.5 text-xs font-body text-[#142984] border border-[#142984]/20">
+              {c}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const R = 210;
+  const center = 280;
+  return (
+    <div ref={ref} className="relative mx-auto" style={{ width: 560, height: 560, maxWidth: "100%" }} data-testid="solution-logo">
+      {/* radiating lines */}
+      <svg viewBox="0 0 560 560" className="absolute inset-0 w-full h-full pointer-events-none">
+        {SOLUTION_CAPTIONS.map((_, i) => {
+          const a = (Math.PI * 2 * i) / total - Math.PI / 2;
+          const x2 = center + Math.cos(a) * R;
+          const y2 = center + Math.sin(a) * R;
+          return (
+            <motion.line
+              key={i}
+              x1={center}
+              y1={center}
+              x2={x2}
+              y2={y2}
+              stroke="#FCDD15"
+              strokeWidth="1.5"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={i < revealed ? { pathLength: 1, opacity: 0.7 } : {}}
+              transition={{ duration: 0.5 }}
+            />
+          );
+        })}
+      </svg>
+
+      {/* logo */}
+      <div
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] p-6 shadow-xl border border-[#142984]/10"
+        style={{
+          animation: glow ? "logo-pulse 1.2s ease-in-out infinite" : "none",
+          boxShadow: glow ? "0 0 40px 6px rgba(252,221,21,0.7)" : "0 10px 30px rgba(20,41,132,0.15)",
+          transition: "box-shadow 0.8s ease",
+        }}
+      >
+        <img src="/cgreen-logo.png" alt="cGreen" className="h-12 w-auto" />
+      </div>
+
+      {/* captions */}
+      {SOLUTION_CAPTIONS.map((c, i) => {
+        const a = (Math.PI * 2 * i) / total - Math.PI / 2;
+        const x = center + Math.cos(a) * R;
+        const y = center + Math.sin(a) * R;
+        return (
+          <div
+            key={c}
+            className="absolute"
+            style={{
+              left: x,
+              top: y,
+              transform: "translate(-50%, -50%)",
+              opacity: i < revealed ? 1 : 0,
+              scale: i < revealed ? 1 : 0.5,
+              transition: "opacity 0.4s ease, scale 0.4s ease",
+            }}
+          >
+            <span className="glass glass-navy whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-body font-medium text-[#142984] border border-[#142984]/25 shadow">
+              {c}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function ScalingWithPurpose() {
+  const ref = useRef(null);
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, amount: 0.4 });
+  const isDesktop = useIsDesktop();
+
+  return (
+    <section id="solution" ref={ref} className="relative w-full py-24 overflow-hidden" data-testid="section-scaling">
+      {/* River entering from top toward the logo, terminates at logo */}
+      {isDesktop && (
+        <DataRiver
+          d="M 40 0 C 90 90 40 170 140 240 C 240 300 320 300 360 360"
+          viewW={500}
+          viewH={400}
+          target={ref}
+          offset={["start end", "center center"]}
+          className="pointer-events-none absolute right-[8%] top-0 h-[55vh] w-[42vw]"
+        />
+      )}
+
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center relative z-10">
+        {/* Left column */}
+        <div ref={statsRef}>
+          <div className="glass glass-navy rounded-[28px] p-8" data-testid="stats-block">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+              {STATS.map((s) => (
+                <StatItem key={s.label} {...s} active={statsInView} />
+              ))}
+            </div>
+          </div>
+
+          <p className="font-head text-2xl lg:text-3xl text-[#FCDD15] mt-8 leading-tight drop-shadow-sm"
+             style={{ WebkitTextStroke: "0.4px rgba(20,41,132,0.25)" }}>
+            SCALING WITH PURPOSE, SOLVING FOR BHARAT
+          </p>
+
+          <div className="mt-8">
+            <h2 className="font-head text-3xl lg:text-4xl text-[#142984]">OUR SOLUTION</h2>
+            <p className="font-body text-base lg:text-lg text-[#142984]/70 mt-1">THE CGREEN APPROACH</p>
+            <ArrowRight className="text-[#142984] mt-3" size={30} />
+          </div>
+        </div>
+
+        {/* Right column: logo sequence */}
+        <div className="flex justify-center">
+          <LogoSolution isDesktop={isDesktop} />
+        </div>
+      </div>
+    </section>
+  );
+}

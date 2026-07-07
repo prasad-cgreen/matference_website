@@ -1,0 +1,159 @@
+import React, { useEffect, useState } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { NAV } from "@/data/site";
+
+const scrollToId = (id) => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const handleNav = (item) => {
+    setMobileOpen(false);
+    if (item.tab) {
+      window.dispatchEvent(new CustomEvent("cgreen:services-tab", { detail: item.tab }));
+    }
+    if (item.href && item.href.startsWith("#") && item.href.length > 1) {
+      scrollToId(item.href.slice(1));
+    }
+  };
+
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl" data-testid="navbar">
+      <nav
+        className={`glass glass-nav ${scrolled ? "glass-nav-scrolled" : ""} rounded-full px-4 py-2.5 flex items-center justify-between transition-[background] duration-500`}
+      >
+        {/* Logo */}
+        <button
+          onClick={() => scrollToId("hero")}
+          className="flex items-center shrink-0 pl-1"
+          data-testid="nav-logo"
+        >
+          <img src="/cgreen-logo.png" alt="cGreen" className="h-7 w-auto md:h-8" />
+        </button>
+
+        {/* Center nav (desktop) */}
+        <div className="hidden lg:flex items-center gap-1">
+          {NAV.map((item) => (
+            <div
+              key={item.label}
+              className="relative"
+              onMouseEnter={() => item.dropdown && setOpenMenu(item.label)}
+              onMouseLeave={() => setOpenMenu(null)}
+            >
+              <button
+                onClick={() => !item.dropdown && handleNav(item)}
+                data-testid={`nav-${item.label.replace(/\s+/g, "-").toLowerCase()}`}
+                className="flex items-center gap-1 px-3 py-2 rounded-full text-[15px] font-body font-medium text-[#142984] hover:text-[#0d1b5c] hover:bg-white/25 transition-colors"
+              >
+                {item.label}
+                {item.dropdown && <ChevronDown size={14} className="text-[#142984]" />}
+              </button>
+
+              {item.dropdown && openMenu === item.label && (
+                <div className="absolute left-0 top-full pt-2">
+                  <div className="glass glass-nav rounded-2xl p-2 min-w-[210px] shadow-xl">
+                    {item.dropdown.map((d) => (
+                      <button
+                        key={d.label}
+                        onClick={() => handleNav(d)}
+                        data-testid={`nav-drop-${d.label.replace(/\s+/g, "-").toLowerCase()}`}
+                        className="block w-full text-left px-3 py-2 rounded-xl text-sm font-body text-[#142984] hover:bg-[#142984]/10 transition-colors"
+                      >
+                        {d.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Right CTAs */}
+        <div className="hidden md:flex items-center gap-2">
+          <a
+            href="https://tx.cgreen.in/Login"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="nav-login"
+            className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
+          >
+            Login
+          </a>
+          <button
+            onClick={() => scrollToId("contact")}
+            data-testid="nav-book-demo"
+            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+          >
+            Book a Demo
+          </button>
+        </div>
+
+        {/* Mobile toggle */}
+        <button
+          className="md:hidden p-2 text-[#142984]"
+          onClick={() => setMobileOpen((v) => !v)}
+          data-testid="nav-mobile-toggle"
+        >
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </nav>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="md:hidden mt-2 glass glass-nav glass-nav-scrolled rounded-2xl p-3" data-testid="nav-mobile-menu">
+          {NAV.map((item) => (
+            <div key={item.label} className="py-1">
+              <button
+                onClick={() => handleNav(item)}
+                className="block w-full text-left px-3 py-2 rounded-xl text-[#142984] font-body font-medium"
+              >
+                {item.label}
+              </button>
+              {item.dropdown && (
+                <div className="pl-4">
+                  {item.dropdown.map((d) => (
+                    <button
+                      key={d.label}
+                      onClick={() => handleNav(d)}
+                      className="block w-full text-left px-3 py-1.5 text-sm text-[#142984]/80 font-body"
+                    >
+                      {d.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="flex gap-2 mt-2 px-3">
+            <a
+              href="https://tx.cgreen.in/Login"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 text-center px-4 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-medium"
+            >
+              Login
+            </a>
+            <button
+              onClick={() => { setMobileOpen(false); scrollToId("contact"); }}
+              className="flex-1 px-4 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold"
+            >
+              Book a Demo
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

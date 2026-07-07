@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;0,900&family=Inter+Tight:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #142984;
+  --yellow: #FCDD15;
+  --cream: #FFFCFA;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 300;
+  background: var(--cream);
+  color: var(--navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--yellow);
+  color: var(--navy);
+}
+
+.font-head {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.font-body {
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 300;
+}
+
+/* ---------- GLASS RECIPE ---------- */
+.glass {
+  position: relative;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.06),
+    0 12px 40px rgba(20, 41, 132, 0.10);
+  overflow: hidden;
+}
+
+/* Specular highlight streak */
+.glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.55) 50%, transparent 100%);
+  transform: skewX(-16deg);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Thin top edge specular line */
+.glass::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  pointer-events: none;
+}
+
+.glass-navy {
+  background: rgba(20, 41, 132, 0.15);
+}
+
+.glass-yellow {
+  background: rgba(252, 221, 21, 0.15);
+}
+
+.glass-nav {
+  background: rgba(255, 252, 250, 0.15);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.glass-nav-scrolled {
+  background: rgba(255, 252, 250, 0.35);
+}
+
+.glass-purple {
+  background: linear-gradient(135deg, rgba(59, 31, 92, 0.18), rgba(42, 21, 69, 0.18));
+  border-color: rgba(180, 150, 220, 0.3);
+}
+
+/* ---------- ORBIT ---------- */
+@keyframes orbit-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes orbit-ccw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+@keyframes orbit-cw-rev {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+@keyframes orbit-ccw-rev {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- DATA RIVER ---------- */
+@keyframes river-flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -240; }
+}
+
+.river-digits {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+/* ---------- MARQUEE ---------- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+/* Logo glow */
+@keyframes logo-pulse {
+  0%, 100% { filter: drop-shadow(0 0 0px rgba(252, 221, 21, 0)); }
+  50% { filter: drop-shadow(0 0 28px rgba(252, 221, 21, 0.95)); }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+  }
+}
