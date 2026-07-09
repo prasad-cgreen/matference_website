@@ -37,7 +37,7 @@ function Bars({ cx, baseY, heights, active }) {
 
 // Equalizer-style signal that fans/branches from the logo down into both cards.
 function EqualizerCircuit({ target }) {
-  const { scrollYProgress } = useScroll({ target, offset: ["start end", "center center"] });
+  const { scrollYProgress } = useScroll({ target, offset: ["start end", "center center"], layoutEffect: false });
   const len = useTransform(scrollYProgress, [0, 1], [0, 1], { clamp: true });
 
   // Branch lines fanning from the origin (top-center) to each card top-center.
