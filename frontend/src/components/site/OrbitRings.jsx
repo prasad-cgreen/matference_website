@@ -2,23 +2,28 @@ import React, { useEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 
 /**
- * Orbit rings around a circular illustration.
- * - Two rings rotate in opposite directions.
+ * Orbit ring around a circular illustration.
+ * - Captions sit on a single ring at one radius so every connector line is the
+ *   SAME length and originates exactly at the circle's edge (clean radial burst).
  * - Captions reveal one-by-one (fast), stay permanent, then rotation slows.
+ * - `belowNode` / `edgeNodes` let callers anchor river SVGs exactly to the circle.
  * - On non-desktop (animate=false) shows static illustration + caption chips.
  */
 export default function OrbitRings({
   children,
   outer = [],
   inner = [],
-  theme = "navy", // caption pill accent
-  diameter = 340,
+  theme = "navy",
+  diameter = 300,
   animate = true,
   testid = "orbit",
+  belowNode = null,
+  edgeNodes = [],
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
-  const total = outer.length + inner.length;
+  const items = [...outer, ...inner];
+  const total = items.length;
   const [revealed, setRevealed] = useState(0);
   const allRevealed = revealed >= total;
 
@@ -45,7 +50,7 @@ export default function OrbitRings({
           {children}
         </div>
         <div className="flex flex-wrap justify-center gap-2 max-w-md">
-          {[...outer, ...inner].map((c) => (
+          {items.map((c) => (
             <CaptionPill key={c} text={c} theme={theme} />
           ))}
         </div>
@@ -53,72 +58,18 @@ export default function OrbitRings({
     );
   }
 
-  const container = diameter + 280;
+  const L = 48; // connector length — identical for every caption
+  const pad = 96; // room for pills beyond the caption radius
+  const Redge = diameter / 2;
+  const R = Redge + L; // caption radius (single ring)
+  const container = diameter + 2 * (L + pad);
   const center = container / 2;
-  const rInner = diameter / 2 + 40;
-  const rOuter = diameter / 2 + 108;
   const dur = allRevealed ? 90 : 26;
 
-  const renderRing = (items, radius, dir, offset) => (
-    <div
-      className="absolute left-1/2 top-1/2"
-      style={{
-        width: 0,
-        height: 0,
-        animation: `orbit-${dir} ${dur}s linear infinite`,
-      }}
-    >
-      {items.map((text, i) => {
-        const globalIndex = offset + i;
-        const angle = (360 / items.length) * i + (dir === "ccw" ? 30 : 0);
-        const show = globalIndex < revealed;
-        const revDir = dir === "cw" ? "cw-rev" : "ccw-rev";
-        return (
-          <div
-            key={text}
-            className="absolute"
-            style={{
-              left: 0,
-              top: 0,
-              transform: `rotate(${angle}deg) translateY(-${radius}px)`,
-            }}
-          >
-            {/* connector line back to center */}
-            <div
-              className="absolute left-1/2"
-              style={{
-                width: "1.5px",
-                height: radius,
-                top: 0,
-                transform: "translateX(-50%)",
-                background:
-                  theme === "yellow"
-                    ? "linear-gradient(to bottom, rgba(252,221,21,0.9), rgba(252,221,21,0))"
-                    : "linear-gradient(to bottom, rgba(20,41,132,0.7), rgba(20,41,132,0))",
-                opacity: show ? 1 : 0,
-                transition: "opacity 0.5s ease",
-              }}
-            />
-            {/* counter-rotate to keep upright */}
-            <div style={{ transform: `rotate(${-angle}deg)` }}>
-              <div style={{ animation: `orbit-${revDir} ${dur}s linear infinite` }}>
-                <div
-                  style={{
-                    transform: "translate(-50%, -50%)",
-                    opacity: show ? 1 : 0,
-                    scale: show ? "1" : "0.6",
-                    transition: "opacity 0.5s ease, scale 0.5s ease",
-                  }}
-                >
-                  <CaptionPill text={text} theme={theme} />
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+  const edgePoint = (deg) => {
+    const rad = (deg * Math.PI) / 180;
+    return { x: center + Redge * Math.cos(rad), y: center + Redge * Math.sin(rad) };
+  };
 
   return (
     <div
@@ -127,36 +78,95 @@ export default function OrbitRings({
       className="relative mx-auto"
       style={{ width: container, height: container, maxWidth: "100%" }}
     >
-      {/* faint ring guides */}
-      <div
-        className="absolute left-1/2 top-1/2 rounded-full border border-current/10"
-        style={{
-          width: rInner * 2,
-          height: rInner * 2,
-          transform: "translate(-50%,-50%)",
-          borderColor: theme === "yellow" ? "rgba(252,221,21,0.25)" : "rgba(20,41,132,0.18)",
-        }}
-      />
+      {/* faint ring guide at the caption radius */}
       <div
         className="absolute left-1/2 top-1/2 rounded-full"
         style={{
-          width: rOuter * 2,
-          height: rOuter * 2,
+          width: R * 2,
+          height: R * 2,
           transform: "translate(-50%,-50%)",
-          border: `1px dashed ${theme === "yellow" ? "rgba(252,221,21,0.22)" : "rgba(20,41,132,0.15)"}`,
+          border: `1px dashed ${theme === "yellow" ? "rgba(252,221,21,0.28)" : "rgba(20,41,132,0.18)"}`,
         }}
       />
 
+      {/* river anchored below the circle (flows out of the illustration) */}
+      {belowNode && (
+        <div
+          className="absolute"
+          style={{ left: center, top: center + Redge, transform: "translateX(-50%)" }}
+        >
+          {belowNode}
+        </div>
+      )}
+
+      {/* rivers anchored to a specific point on the circle edge */}
+      {edgeNodes.map((en, i) => {
+        const p = edgePoint(en.angle);
+        const tx = en.anchor === "br" ? "translate(-100%, -100%)" : "translate(0, 0)";
+        return (
+          <div key={i} className="absolute" style={{ left: p.x, top: p.y, transform: tx }}>
+            {en.node}
+          </div>
+        );
+      })}
+
       {/* central illustration circle */}
       <div
-        className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl border border-white/50"
+        className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl border border-white/50 z-10"
         style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
       >
         {children}
       </div>
 
-      {renderRing(inner, rInner, "ccw", 0)}
-      {renderRing(outer, rOuter, "cw", inner.length)}
+      {/* single rotating ring of captions */}
+      <div
+        className="absolute left-1/2 top-1/2 z-20"
+        style={{ width: 0, height: 0, animation: `orbit-cw ${dur}s linear infinite` }}
+      >
+        {items.map((text, i) => {
+          const angle = (360 / total) * i;
+          const show = i < revealed;
+          return (
+            <div
+              key={text}
+              className="absolute"
+              style={{ left: 0, top: 0, transform: `rotate(${angle}deg) translateY(-${R}px)` }}
+            >
+              {/* connector: from circle edge (bottom end) out to the caption — length L for all */}
+              <div
+                className="absolute left-1/2"
+                style={{
+                  width: "2px",
+                  height: L,
+                  top: 0,
+                  transform: "translateX(-50%)",
+                  background:
+                    theme === "yellow"
+                      ? "linear-gradient(to bottom, rgba(252,221,21,0), rgba(252,221,21,0.95))"
+                      : "linear-gradient(to bottom, rgba(20,41,132,0), rgba(20,41,132,0.85))",
+                  opacity: show ? 1 : 0,
+                  transition: "opacity 0.5s ease",
+                }}
+              />
+              {/* keep the pill upright while it orbits */}
+              <div style={{ transform: `rotate(${-angle}deg)` }}>
+                <div style={{ animation: `orbit-cw-rev ${dur}s linear infinite` }}>
+                  <div
+                    style={{
+                      transform: "translate(-50%, -50%)",
+                      opacity: show ? 1 : 0,
+                      scale: show ? "1" : "0.6",
+                      transition: "opacity 0.5s ease, scale 0.5s ease",
+                    }}
+                  >
+                    <CaptionPill text={text} theme={theme} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -167,9 +177,9 @@ function CaptionPill({ text, theme }) {
     <span
       className="glass whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-body font-medium shadow-md"
       style={{
-        background: isYellow ? "rgba(252,221,21,0.22)" : "rgba(255,252,250,0.55)",
+        background: isYellow ? "rgba(252,221,21,0.5)" : "rgba(255,252,250,0.7)",
         color: "#142984",
-        border: isYellow ? "1px solid rgba(252,221,21,0.6)" : "1px solid rgba(20,41,132,0.25)",
+        border: isYellow ? "1px solid rgba(252,221,21,0.7)" : "1px solid rgba(20,41,132,0.3)",
       }}
     >
       {text}

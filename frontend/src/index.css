@@ -86,11 +86,11 @@ body {
 }
 
 .glass-navy {
-  background: rgba(20, 41, 132, 0.15);
+  background: rgba(20, 41, 132, 0.38);
 }
 
 .glass-yellow {
-  background: rgba(252, 221, 21, 0.15);
+  background: rgba(252, 221, 21, 0.38);
 }
 
 .glass-nav {
@@ -152,6 +152,17 @@ body {
 @keyframes logo-pulse {
   0%, 100% { filter: drop-shadow(0 0 0px rgba(252, 221, 21, 0)); }
   50% { filter: drop-shadow(0 0 28px rgba(252, 221, 21, 0.95)); }
+}
+
+/* Equalizer active-bar pulse (Section 4 signal circuit) */
+@keyframes eq-pulse {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.15); }
+}
+.eq-active {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: eq-pulse 1.1s ease-in-out infinite;
 }
 
 @layer base {

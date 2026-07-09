@@ -14,7 +14,7 @@ function StatItem({ value, suffix, label, active }) {
         {n}
         {suffix}
       </div>
-      <div className="font-body text-sm mt-1 text-[#FCDD15]/85">{label}</div>
+      <div className="font-body text-sm mt-1 text-[#FCDD15]/90">{label}</div>
     </div>
   );
 }
@@ -61,10 +61,10 @@ function LogoSolution({ isDesktop }) {
   if (!isDesktop) {
     return (
       <div ref={ref} className="flex flex-col items-center gap-6" data-testid="solution-logo-static">
-        <img src="/cgreen-logo.png" alt="cGreen" className="h-14 w-auto" />
+        <img src="/cgreen-logo.png" alt="cGreen" className="w-56 h-auto" />
         <div className="flex flex-wrap justify-center gap-2 max-w-md">
           {SOLUTION_CAPTIONS.map((c) => (
-            <span key={c} className="glass glass-navy rounded-full px-3 py-1.5 text-xs font-body text-[#142984] border border-[#142984]/20">
+            <span key={c} className="glass glass-navy rounded-full px-3 py-1.5 text-xs font-body text-[#142984] border border-[#142984]/25">
               {c}
             </span>
           ))}
@@ -73,12 +73,13 @@ function LogoSolution({ isDesktop }) {
     );
   }
 
-  const R = 210;
-  const center = 280;
+  const SIZE = 600;
+  const center = SIZE / 2;
+  const R = 238;
   return (
-    <div ref={ref} className="relative mx-auto" style={{ width: 560, height: 560, maxWidth: "100%" }} data-testid="solution-logo">
-      {/* radiating lines */}
-      <svg viewBox="0 0 560 560" className="absolute inset-0 w-full h-full pointer-events-none">
+    <div ref={ref} className="relative mx-auto" style={{ width: SIZE, height: SIZE, maxWidth: "100%" }} data-testid="solution-logo">
+      {/* radiating lines (thick, high-contrast navy) */}
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="absolute inset-0 w-full h-full pointer-events-none">
         {SOLUTION_CAPTIONS.map((_, i) => {
           const a = (Math.PI * 2 * i) / total - Math.PI / 2;
           const x2 = center + Math.cos(a) * R;
@@ -90,26 +91,43 @@ function LogoSolution({ isDesktop }) {
               y1={center}
               x2={x2}
               y2={y2}
-              stroke="#FCDD15"
-              strokeWidth="1.5"
+              stroke="#142984"
+              strokeWidth="3.5"
+              strokeLinecap="round"
               initial={{ pathLength: 0, opacity: 0 }}
-              animate={i < revealed ? { pathLength: 1, opacity: 0.7 } : {}}
+              animate={i < revealed ? { pathLength: 1, opacity: 0.9 } : {}}
               transition={{ duration: 0.5 }}
             />
           );
         })}
       </svg>
 
-      {/* logo */}
+      {/* yellow bloom / halo behind the logo */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] p-6 shadow-xl border border-[#142984]/10"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
+        style={{
+          width: 380,
+          height: 380,
+          background:
+            "radial-gradient(circle, rgba(252,221,21,0.95) 0%, rgba(252,221,21,0.5) 42%, rgba(252,221,21,0) 72%)",
+          filter: "blur(8px)",
+          opacity: glow ? 1 : 0,
+          transition: "opacity 0.9s ease",
+        }}
+      />
+
+      {/* logo — large focal point, roughly the width of the stats box */}
+      <div
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] px-10 py-8 border border-[#142984]/10 z-10"
         style={{
           animation: glow ? "logo-pulse 1.2s ease-in-out infinite" : "none",
-          boxShadow: glow ? "0 0 40px 6px rgba(252,221,21,0.7)" : "0 10px 30px rgba(20,41,132,0.15)",
-          transition: "box-shadow 0.8s ease",
+          boxShadow: glow
+            ? "0 0 90px 26px rgba(252,221,21,0.9), 0 0 30px 6px rgba(252,221,21,1)"
+            : "0 12px 34px rgba(20,41,132,0.18)",
+          transition: "box-shadow 0.9s ease",
         }}
       >
-        <img src="/cgreen-logo.png" alt="cGreen" className="h-12 w-auto" />
+        <img src="/cgreen-logo.png" alt="cGreen" className="w-[260px] h-auto" />
       </div>
 
       {/* captions */}
@@ -120,7 +138,7 @@ function LogoSolution({ isDesktop }) {
         return (
           <div
             key={c}
-            className="absolute"
+            className="absolute z-20"
             style={{
               left: x,
               top: y,
@@ -130,7 +148,10 @@ function LogoSolution({ isDesktop }) {
               transition: "opacity 0.4s ease, scale 0.4s ease",
             }}
           >
-            <span className="glass glass-navy whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-body font-medium text-[#142984] border border-[#142984]/25 shadow">
+            <span
+              className="glass glass-navy whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-body font-medium text-[#142984] shadow"
+              style={{ border: "1px solid rgba(20,41,132,0.3)" }}
+            >
               {c}
             </span>
           </div>
@@ -172,7 +193,7 @@ export default function ScalingWithPurpose() {
           </div>
 
           <p className="font-head text-2xl lg:text-3xl text-[#FCDD15] mt-8 leading-tight drop-shadow-sm"
-             style={{ WebkitTextStroke: "0.4px rgba(20,41,132,0.25)" }}>
+             style={{ WebkitTextStroke: "0.4px rgba(20,41,132,0.4)" }}>
             SCALING WITH PURPOSE, SOLVING FOR BHARAT
           </p>
 

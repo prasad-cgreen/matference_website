@@ -10,6 +10,19 @@ export default function HeroSection() {
   const ref = useRef(null);
   const isDesktop = useIsDesktop();
 
+  // River flows straight out of the bottom of the urban circle, centered on it.
+  const heroRiver = (
+    <DataRiver
+      d="M 130 0 C 110 70 175 130 130 210 C 90 290 165 350 130 460"
+      viewW={260}
+      viewH={460}
+      target={ref}
+      offset={["start start", "end start"]}
+      style={{ width: "18vw", height: "52vh", display: "block" }}
+      className="pointer-events-none"
+    />
+  );
+
   return (
     <section
       id="hero"
@@ -47,26 +60,15 @@ export default function HeroSection() {
             outer={HERO_ORBIT.outer}
             inner={HERO_ORBIT.inner}
             theme="navy"
-            diameter={isDesktop ? 320 : 260}
+            diameter={isDesktop ? 300 : 260}
             animate={isDesktop}
             testid="hero-orbit"
+            belowNode={isDesktop ? heroRiver : null}
           >
             <UrbanScene className="w-full h-full" />
           </OrbitRings>
         </div>
       </div>
-
-      {/* River emerging from bottom, weaving downward (scroll-tied) */}
-      {isDesktop && (
-        <DataRiver
-          d="M 360 0 C 380 60 300 110 340 180 C 380 250 300 300 360 380"
-          viewW={500}
-          viewH={380}
-          target={ref}
-          offset={["start start", "end start"]}
-          className="pointer-events-none absolute right-[6%] bottom-0 h-[45vh] w-[40vw]"
-        />
-      )}
     </section>
   );
 }

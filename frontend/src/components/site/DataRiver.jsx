@@ -91,7 +91,7 @@ export default function DataRiver({
         <text
           className="river-digits"
           fontSize="13"
-          fill="#8FE3C4"
+          fill="#3E6B47"
           dy={-6}
           opacity="0.95"
         >
@@ -103,9 +103,9 @@ export default function DataRiver({
         <text
           className="river-digits"
           fontSize="13"
-          fill="#CFE0FF"
+          fill="#2C5236"
           dy={12}
-          opacity="0.9"
+          opacity="0.95"
         >
           <textPath href={`#path-${uid}`} startOffset="0">
             {lane2}
