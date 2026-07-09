@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import OrbitRings from "@/components/site/OrbitRings";
-import DataRiver from "@/components/site/DataRiver";
 import RuralScene from "@/illustrations/RuralScene";
 import { RURAL_ORBIT, BHARAT_COPY } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
@@ -9,32 +8,6 @@ import { useIsDesktop } from "@/hooks/useResponsive";
 export default function BharatProblem() {
   const ref = useRef(null);
   const isDesktop = useIsDesktop();
-
-  // Entry river: travels IN from the top-left and ends exactly at the circle edge (225°).
-  const entryRiver = (
-    <DataRiver
-      d="M 0 0 C 70 40 40 120 120 160 C 200 200 240 230 300 300"
-      viewW={300}
-      viewH={300}
-      target={ref}
-      offset={["start end", "center center"]}
-      style={{ width: "20vw", height: "34vh", display: "block" }}
-      className="pointer-events-none"
-    />
-  );
-
-  // Exit river: starts exactly at the circle edge (45°) and flows OUT toward the next section.
-  const exitRiver = (
-    <DataRiver
-      d="M 0 0 C 60 70 20 150 100 200 C 180 250 260 280 320 360"
-      viewW={320}
-      viewH={360}
-      target={ref}
-      offset={["center center", "end start"]}
-      style={{ width: "22vw", height: "40vh", display: "block" }}
-      className="pointer-events-none"
-    />
-  );
 
   return (
     <section
@@ -44,7 +17,7 @@ export default function BharatProblem() {
       data-testid="section-bharat"
     >
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center relative z-10">
-        {/* Left: rural orbit with rivers anchored to the circle edge */}
+        {/* Left: rural orbit — the one river enters/exits this circle's edge */}
         <div className="flex justify-center lg:justify-start">
           <OrbitRings
             outer={RURAL_ORBIT.outer}
@@ -53,14 +26,7 @@ export default function BharatProblem() {
             diameter={isDesktop ? 300 : 260}
             animate={isDesktop}
             testid="rural-orbit"
-            edgeNodes={
-              isDesktop
-                ? [
-                    { angle: 225, anchor: "br", node: entryRiver },
-                    { angle: 45, anchor: "tl", node: exitRiver },
-                  ]
-                : []
-            }
+            circleId="rural"
           >
             <RuralScene className="w-full h-full" />
           </OrbitRings>

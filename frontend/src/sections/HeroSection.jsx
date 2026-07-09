@@ -1,27 +1,13 @@
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import OrbitRings from "@/components/site/OrbitRings";
-import DataRiver from "@/components/site/DataRiver";
 import UrbanScene from "@/illustrations/UrbanScene";
 import { HERO_ORBIT } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 
-export default function HeroSection() {
+export default function HeroSection({ onCaptionsDone }) {
   const ref = useRef(null);
   const isDesktop = useIsDesktop();
-
-  // River flows straight out of the bottom of the urban circle, centered on it.
-  const heroRiver = (
-    <DataRiver
-      d="M 130 0 C 110 70 175 130 130 210 C 90 290 165 350 130 460"
-      viewW={260}
-      viewH={460}
-      target={ref}
-      offset={["start start", "end start"]}
-      style={{ width: "18vw", height: "52vh", display: "block" }}
-      className="pointer-events-none"
-    />
-  );
 
   return (
     <section
@@ -54,8 +40,8 @@ export default function HeroSection() {
           </p>
         </motion.div>
 
-        {/* Right: urban orbit */}
-        <div className="relative flex justify-center lg:justify-end">
+        {/* Right: urban orbit (river originates from the bottom of this circle) */}
+        <div className="relative flex justify-center lg:justify-end z-10">
           <OrbitRings
             outer={HERO_ORBIT.outer}
             inner={HERO_ORBIT.inner}
@@ -63,7 +49,8 @@ export default function HeroSection() {
             diameter={isDesktop ? 300 : 260}
             animate={isDesktop}
             testid="hero-orbit"
-            belowNode={isDesktop ? heroRiver : null}
+            circleId="urban"
+            onAllRevealed={onCaptionsDone}
           >
             <UrbanScene className="w-full h-full" />
           </OrbitRings>

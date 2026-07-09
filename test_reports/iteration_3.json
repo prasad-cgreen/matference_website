@@ -1,0 +1,23 @@
+{
+  "summary": "Frontend-only testing of SINGLE global river requirement on cGreen landing page (desktop 1440x900). Verified exactly one [data-testid=global-river] element exists at all scroll positions (top, 15/30/45/60/75/90/100%, back up to top). Anchors (urban/rural/logo) present. River originates at bottom of urban circle, weaves through rural circle (with circle-hole mask for morph), and terminates at cGreen logo. Two lanes of dark forest-green digits (#4C7E5B and #3C6A4B) — muted, not neon. No duplicate river fragments visible at any scroll position. Reversibility verified. Regression: contact section, hero orbit (543 descendants), and page structure OK.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Minor: Framer-motion console warning 'You have defined a target options but the provided ref is not yet hydrated' appears twice on load — non-blocking but should be silenced by moving useScroll() closer to the ref or setting layoutEffect:false.",
+    "The GlobalRiver SVG is present in DOM even before hero captions finish (progress=0 keeps it invisible via mask). This satisfies 'not visible yet' but if strict DOM absence is desired, gate the render on `ready` too.",
+    "Regression check for service-tab data-testid found 0 elements — the services tabs may use a different selector prefix. Confirm data-testid naming for future tests."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "skipped", "frontend": "100%"},
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "SINGLE-river bug is FIXED. Verified via document.querySelectorAll('[data-testid=global-river]').length === 1 at all scroll positions on desktop 1440x900. Screenshots confirm continuous weaving path from urban circle -> rural circle -> cGreen logo with muted dark-green digits. Mobile intentionally has no river (isDesktop gate).",
+  "rca of the issue": "Previous duplicate-river bug resolved by consolidating all per-section river components into a single page-level GlobalRiver instance rendered once in CGreenLanding.jsx, measuring absolute page coordinates of urban/rural/logo anchors and drawing one continuous SVG path with a scroll-driven mask reveal."
+}

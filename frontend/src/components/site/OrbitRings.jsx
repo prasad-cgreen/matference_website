@@ -6,7 +6,7 @@ import { useInView } from "framer-motion";
  * - Captions sit on a single ring at one radius so every connector line is the
  *   SAME length and originates exactly at the circle's edge (clean radial burst).
  * - Captions reveal one-by-one (fast), stay permanent, then rotation slows.
- * - `belowNode` / `edgeNodes` let callers anchor river SVGs exactly to the circle.
+ * - `circleId` marks the circle element so the single page-level river can anchor to it.
  * - On non-desktop (animate=false) shows static illustration + caption chips.
  */
 export default function OrbitRings({
@@ -17,8 +17,8 @@ export default function OrbitRings({
   diameter = 300,
   animate = true,
   testid = "orbit",
-  belowNode = null,
-  edgeNodes = [],
+  circleId = null,
+  onAllRevealed = null,
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
@@ -38,6 +38,16 @@ export default function OrbitRings({
     }, 320);
     return () => clearInterval(id);
   }, [animate, inView, total]);
+
+  // Notify once all captions have revealed (gates the page river).
+  useEffect(() => {
+    if (allRevealed && onAllRevealed) onAllRevealed();
+  }, [allRevealed, onAllRevealed]);
+
+  // If not animated (mobile), consider captions "revealed" immediately for gating.
+  useEffect(() => {
+    if (!animate && onAllRevealed) onAllRevealed();
+  }, [animate, onAllRevealed]);
 
   // Static (mobile) fallback: everything visible, no orbit.
   if (!animate) {
@@ -63,13 +73,7 @@ export default function OrbitRings({
   const Redge = diameter / 2;
   const R = Redge + L; // caption radius (single ring)
   const container = diameter + 2 * (L + pad);
-  const center = container / 2;
   const dur = allRevealed ? 90 : 26;
-
-  const edgePoint = (deg) => {
-    const rad = (deg * Math.PI) / 180;
-    return { x: center + Redge * Math.cos(rad), y: center + Redge * Math.sin(rad) };
-  };
 
   return (
     <div
@@ -89,29 +93,9 @@ export default function OrbitRings({
         }}
       />
 
-      {/* river anchored below the circle (flows out of the illustration) */}
-      {belowNode && (
-        <div
-          className="absolute"
-          style={{ left: center, top: center + Redge, transform: "translateX(-50%)" }}
-        >
-          {belowNode}
-        </div>
-      )}
-
-      {/* rivers anchored to a specific point on the circle edge */}
-      {edgeNodes.map((en, i) => {
-        const p = edgePoint(en.angle);
-        const tx = en.anchor === "br" ? "translate(-100%, -100%)" : "translate(0, 0)";
-        return (
-          <div key={i} className="absolute" style={{ left: p.x, top: p.y, transform: tx }}>
-            {en.node}
-          </div>
-        );
-      })}
-
-      {/* central illustration circle */}
+      {/* central illustration circle (anchor for the single page-level river) */}
       <div
+        {...(circleId ? { "data-river-anchor": circleId } : {})}
         className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl border border-white/50 z-10"
         style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
       >

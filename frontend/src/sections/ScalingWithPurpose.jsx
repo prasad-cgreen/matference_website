@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import DataRiver from "@/components/site/DataRiver";
 import { STATS, SOLUTION_CAPTIONS } from "@/data/site";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useIsDesktop } from "@/hooks/useResponsive";
@@ -116,8 +115,9 @@ function LogoSolution({ isDesktop }) {
         }}
       />
 
-      {/* logo — large focal point, roughly the width of the stats box */}
+      {/* logo — large focal point, roughly the width of the stats box; river terminates here */}
       <div
+        data-river-anchor="logo"
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] px-10 py-8 border border-[#142984]/10 z-10"
         style={{
           animation: glow ? "logo-pulse 1.2s ease-in-out infinite" : "none",
@@ -169,18 +169,6 @@ export default function ScalingWithPurpose() {
 
   return (
     <section id="solution" ref={ref} className="relative w-full py-24 overflow-hidden" data-testid="section-scaling">
-      {/* River entering from top toward the logo, terminates at logo */}
-      {isDesktop && (
-        <DataRiver
-          d="M 40 0 C 90 90 40 170 140 240 C 240 300 320 300 360 360"
-          viewW={500}
-          viewH={400}
-          target={ref}
-          offset={["start end", "center center"]}
-          className="pointer-events-none absolute right-[8%] top-0 h-[55vh] w-[42vw]"
-        />
-      )}
-
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center relative z-10">
         {/* Left column */}
         <div ref={statsRef}>
