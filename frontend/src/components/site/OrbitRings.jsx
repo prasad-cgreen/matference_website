@@ -3,9 +3,8 @@ import { useInView } from "framer-motion";
 
 /**
  * Orbit rings around a circular illustration.
- * - Pills are positioned by exact polar coordinates (cx + r·cosθ, cy + r·sinθ) each
- *   frame via requestAnimationFrame, so every pill holds a CONSTANT radius (no drift).
- * - The container is forced square and pills orbit its true center = the illustration center.
+ * - Pills are positioned by exact polar coordinates each frame (constant radius, no drift).
+ * - NO connector lines. Radii are large enough that pills never touch/overlap the circle.
  * - Outer captions at a larger fixed radius, inner captions at a smaller fixed radius.
  * - Constant rotation speed. Captions reveal one-by-one and stay permanent.
  */
@@ -14,7 +13,7 @@ export default function OrbitRings({
   outer = [],
   inner = [],
   theme = "navy",
-  diameter = 280,
+  diameter = 200,
   animate = true,
   testid = "orbit",
   circleId = null,
@@ -28,7 +27,6 @@ export default function OrbitRings({
   const [box, setBox] = useState(0);
   const allRevealed = revealed >= total;
 
-  // Measure the square box size (its own rendered width) so the orbit center = illustration center.
   useLayoutEffect(() => {
     if (!animate) return;
     const measure = () => {
@@ -70,7 +68,7 @@ export default function OrbitRings({
       <div ref={ref} data-testid={`${testid}-static`} className="flex flex-col items-center gap-6">
         <div
           className="rounded-full overflow-hidden border border-white/40 shadow-xl"
-          style={{ width: Math.min(diameter, 300), height: Math.min(diameter, 300) }}
+          style={{ width: Math.min(diameter, 280), height: Math.min(diameter, 280) }}
         >
           {children}
         </div>
@@ -83,13 +81,12 @@ export default function OrbitRings({
     );
   }
 
-  const Redge = diameter / 2;
-  const rInner = Redge + 40;
-  const rOuter = Redge + 96;
+  // Radii chosen so pills (nowrap) always clear the circle at every angle.
+  const rInner = diameter / 2 + 92;
+  const rOuter = diameter / 2 + 150;
 
   return (
-    <div ref={ref} data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: rOuter * 2 + 200 }}>
-      {/* square box: height follows width so the true center == illustration center */}
+    <div ref={ref} data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: rOuter * 2 + 180 }}>
       <div ref={boxRef} className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
         {/* fixed-radius ring guides */}
         {[rInner, rOuter].map((rr) => (
@@ -116,28 +113,8 @@ export default function OrbitRings({
 
         {box > 0 && (
           <>
-            <Ring
-              items={outer}
-              radius={rOuter}
-              redge={Redge}
-              center={box / 2}
-              box={box}
-              dir="cw"
-              theme={theme}
-              revealed={revealed}
-              offset={0}
-            />
-            <Ring
-              items={inner}
-              radius={rInner}
-              redge={Redge}
-              center={box / 2}
-              box={box}
-              dir="ccw"
-              theme={theme}
-              revealed={revealed}
-              offset={outer.length}
-            />
+            <Ring items={outer} radius={rOuter} center={box / 2} dir="cw" theme={theme} revealed={revealed} offset={0} />
+            <Ring items={inner} radius={rInner} center={box / 2} dir="ccw" theme={theme} revealed={revealed} offset={outer.length} />
           </>
         )}
       </div>
@@ -147,9 +124,8 @@ export default function OrbitRings({
 
 const DUR = 42; // seconds per full rotation (constant)
 
-function Ring({ items, radius, redge, center, box, dir, theme, revealed, offset }) {
+function Ring({ items, radius, center, dir, theme, revealed, offset }) {
   const pillRefs = useRef([]);
-  const lineRefs = useRef([]);
 
   useEffect(() => {
     let raf;
@@ -160,50 +136,20 @@ function Ring({ items, radius, redge, center, box, dir, theme, revealed, offset 
       const theta = sign * (((now - start) / 1000) / DUR) * 2 * Math.PI;
       for (let i = 0; i < items.length; i++) {
         const a = base[i] + theta;
-        const cos = Math.cos(a);
-        const sin = Math.sin(a);
         const p = pillRefs.current[i];
         if (p) {
-          p.style.left = center + radius * cos + "px";
-          p.style.top = center + radius * sin + "px";
-        }
-        const l = lineRefs.current[i];
-        if (l) {
-          l.setAttribute("x1", center + redge * cos);
-          l.setAttribute("y1", center + redge * sin);
-          l.setAttribute("x2", center + radius * cos);
-          l.setAttribute("y2", center + radius * sin);
+          p.style.left = center + radius * Math.cos(a) + "px";
+          p.style.top = center + radius * Math.sin(a) + "px";
         }
       }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [items, radius, redge, center, dir]);
-
-  const lineColor = theme === "yellow" ? "rgba(252,221,21,0.9)" : "rgba(20,41,132,0.8)";
+  }, [items, radius, center, dir]);
 
   return (
     <>
-      <svg
-        className="absolute left-0 top-0 pointer-events-none"
-        width={box}
-        height={box}
-        viewBox={`0 0 ${box} ${box}`}
-      >
-        {items.map((_, i) => (
-          <line
-            key={i}
-            ref={(el) => (lineRefs.current[i] = el)}
-            stroke={lineColor}
-            strokeWidth="2"
-            style={{
-              opacity: offset + i < revealed ? 1 : 0,
-              transition: "opacity 0.5s ease",
-            }}
-          />
-        ))}
-      </svg>
       {items.map((text, i) => (
         <div
           key={text}
@@ -228,9 +174,9 @@ function CaptionPill({ text, theme }) {
     <span
       className="glass whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-body font-medium shadow-md"
       style={{
-        background: isYellow ? "rgba(252,221,21,0.5)" : "rgba(255,252,250,0.7)",
+        background: isYellow ? "rgba(252,221,21,0.5)" : "rgba(20,41,132,0.35)",
         color: "#142984",
-        border: isYellow ? "1px solid rgba(252,221,21,0.7)" : "1px solid rgba(20,41,132,0.3)",
+        border: isYellow ? "1px solid rgba(252,221,21,0.7)" : "1px solid rgba(20,41,132,0.5)",
       }}
     >
       {text}

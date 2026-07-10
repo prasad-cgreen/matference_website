@@ -120,7 +120,7 @@ export default function GlobalRiver({ ready }) {
       height={geo.height}
       viewBox={`0 0 ${geo.docW} ${geo.height}`}
       className="absolute left-0 top-0 pointer-events-none"
-      style={{ zIndex: 0 }}
+      style={{ zIndex: 5 }}
       aria-hidden="true"
       data-testid="global-river"
     >
