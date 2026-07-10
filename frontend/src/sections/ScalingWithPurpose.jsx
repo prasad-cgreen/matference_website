@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { STATS, SOLUTION_CAPTIONS } from "@/data/site";
 import { useCountUp } from "@/hooks/useCountUp";
@@ -60,7 +60,7 @@ function LogoSolution({ isDesktop }) {
         if (next >= total) clearInterval(id);
         return next;
       });
-    }, 240);
+    }, 95);
     return () => clearInterval(id);
   }, [fired, total]);
 
@@ -84,30 +84,6 @@ function LogoSolution({ isDesktop }) {
   const R = 238;
   return (
     <div ref={ref} className="relative mx-auto" style={{ width: SIZE, height: SIZE, maxWidth: "100%" }} data-testid="solution-logo">
-      {/* radiating lines (thick, high-contrast navy) */}
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="absolute inset-0 w-full h-full pointer-events-none">
-        {SOLUTION_CAPTIONS.map((_, i) => {
-          const a = (Math.PI * 2 * i) / total - Math.PI / 2;
-          const x2 = center + Math.cos(a) * R;
-          const y2 = center + Math.sin(a) * R;
-          return (
-            <motion.line
-              key={i}
-              x1={center}
-              y1={center}
-              x2={x2}
-              y2={y2}
-              stroke="#142984"
-              strokeWidth="3.5"
-              strokeLinecap="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={i < revealed ? { pathLength: 1, opacity: 0.9 } : {}}
-              transition={{ duration: 0.5 }}
-            />
-          );
-        })}
-      </svg>
-
       {/* yellow bloom / halo behind the logo */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
@@ -137,7 +113,7 @@ function LogoSolution({ isDesktop }) {
         <img src="/cgreen-logo.png" alt="cGreen" className="w-[260px] h-auto" />
       </div>
 
-      {/* captions */}
+      {/* "code condensation" captions — no pill, no border, no connector line */}
       {SOLUTION_CAPTIONS.map((c, i) => {
         const a = (Math.PI * 2 * i) / total - Math.PI / 2;
         const x = center + Math.cos(a) * R;
@@ -146,24 +122,63 @@ function LogoSolution({ isDesktop }) {
           <div
             key={c}
             className="absolute z-20"
-            style={{
-              left: x,
-              top: y,
-              transform: "translate(-50%, -50%)",
-              opacity: i < revealed ? 1 : 0,
-              scale: i < revealed ? 1 : 0.5,
-              transition: "opacity 0.4s ease, scale 0.4s ease",
-            }}
+            style={{ left: x, top: y, transform: "translate(-50%, -50%)", width: 150 }}
           >
-            <span
-              className="glass glass-navy whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-body font-medium text-[#142984] shadow"
-              style={{ border: "1px solid rgba(20,41,132,0.3)" }}
-            >
-              {c}
-            </span>
+            <CodeLabel text={c} active={i < revealed} />
           </div>
         );
       })}
+    </div>
+  );
+}
+
+const randBits = (n) => Array.from({ length: n }, () => (Math.random() > 0.5 ? "1" : "0")).join("");
+
+// A single "decoded out of the data stream" caption: binary cycles then freezes, label resolves.
+function CodeLabel({ text, active }) {
+  const [line1, setLine1] = useState(() => randBits(5));
+  const [line2, setLine2] = useState(() => randBits(4));
+  const [resolved, setResolved] = useState(false);
+
+  useEffect(() => {
+    if (!active) return;
+    const cycle = setInterval(() => {
+      setLine1(randBits(5));
+      setLine2(randBits(4));
+    }, 55);
+    const stop = setTimeout(() => {
+      clearInterval(cycle);
+      setLine1(randBits(5));
+      setLine2(randBits(4));
+      setResolved(true);
+    }, 560);
+    return () => {
+      clearInterval(cycle);
+      clearTimeout(stop);
+    };
+  }, [active]);
+
+  return (
+    <div className="flex flex-col items-center text-center select-none" style={{ fontFamily: "'Courier New', monospace" }}>
+      <div
+        className="leading-[1.05] tracking-[0.15em]"
+        style={{ fontSize: "10px", color: "#0F1F4B", opacity: active ? 0.35 : 0 }}
+      >
+        <div>{line1}</div>
+        <div>{line2}</div>
+      </div>
+      <div
+        className="font-bold mt-0.5"
+        style={{
+          fontSize: "12px",
+          color: "#0F1F4B",
+          opacity: resolved ? 1 : 0,
+          transform: resolved ? "translateY(0)" : "translateY(2px)",
+          transition: "opacity 0.25s ease, transform 0.25s ease",
+        }}
+      >
+        {text}
+      </div>
     </div>
   );
 }
