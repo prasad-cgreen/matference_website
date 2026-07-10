@@ -23,7 +23,7 @@ export default function BharatProblem() {
             outer={RURAL_ORBIT.outer}
             inner={RURAL_ORBIT.inner}
             theme="yellow"
-            diameter={isDesktop ? 300 : 260}
+            diameter={isDesktop ? 280 : 260}
             animate={isDesktop}
             testid="rural-orbit"
             circleId="rural"

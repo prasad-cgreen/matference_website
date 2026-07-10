@@ -16,6 +16,13 @@ export default function HeroSection({ onCaptionsDone }) {
       className="relative min-h-screen w-full flex items-center pt-28 pb-16 overflow-hidden"
       data-testid="section-hero"
     >
+      {/* subtle warm top-to-bottom tint (kept lighter than Section 4's solid yellow) */}
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(to bottom, #FFFBEA 0%, #FFFCFA 100%)", zIndex: -1 }}
+        aria-hidden="true"
+      />
+
       <div className="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-2 gap-10 items-center">
         {/* Left: headline */}
         <motion.div
@@ -46,7 +53,7 @@ export default function HeroSection({ onCaptionsDone }) {
             outer={HERO_ORBIT.outer}
             inner={HERO_ORBIT.inner}
             theme="navy"
-            diameter={isDesktop ? 300 : 260}
+            diameter={isDesktop ? 280 : 260}
             animate={isDesktop}
             testid="hero-orbit"
             circleId="urban"

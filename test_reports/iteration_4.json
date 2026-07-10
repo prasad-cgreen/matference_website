@@ -1,0 +1,41 @@
+{
+  "summary": "Frontend-only verification of the 6 ROUND-4 fixes on cGreen landing (desktop 1440x900). FIX 1 (nav logo), FIX 2 (hero warm gradient), FIX 4 (logo glow + 9-caption reveal on both slow and fast scroll), FIX 5 (957K+ fully inside stats box), FIX 6 (heading crispness), and the regression checks (single global-river, service tabs present) all PASS. FIX 3 (orbit caption motion on Hero urban circle) FAILS — captions have significant RADIAL DRIFT: measured pill distance from circle center varies by 25–77 px over 7.5s, meaning captions move noticeably closer/farther from the center during rotation rather than orbiting on perfect fixed circles. Visually confirmed in screenshot (e.g., 'Digital Infrastructure' overlapping 'Financial Literacy' at one moment while other pills sit much further out).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "OrbitRings.jsx (Hero urban circle, testid=hero-orbit; same code path used by rural-orbit)",
+        "issue": "FIX 3 NOT satisfied. Caption pills do NOT hold a fixed radius while rotating. Measured radial distance from the illustration-circle center across 7.5s: pill0 187–212 (range 25 px), pill1 218–246 (28), pill2 233–266 (33), pill3 246–271 (25), pill4 180–220 (40), pill5 196–254 (58), pill6 170–216 (46), pill7 73–150 (77), pill8 180–190 (10). A perfectly circular orbit would give range ~0. Root cause likely: the hero-orbit container is not square in the current layout — measured w=596 x h=636 (styleW/H both 636 but maxWidth:100% shrinks width because the right grid column is narrower than 636px on 1440 viewport). The rotating parent uses `left:50%; top:50%` for its origin — because the container is non-square, the origin of the outer rotating ring and the illustration circle sit at the same point mathematically, but the FIRST-child positioning wrapper `.absolute left-1/2 top-1/2` establishes different visual coordinates than the pill's own bounding-rect center under composed rotations (the pill wrapper's own width causes bounding-rect center shift under compound rotate+counter-rotate transforms). Net effect: pill7 comes within 73 px of the circle center (inside the illustration!) at one point and 150 px at another. Also the wobble is visually obvious over ~10s.",
+        "selector": "[data-testid=hero-orbit] span.glass.whitespace-nowrap",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "passed_checks": {
+    "FIX1_nav_logo": "PASS — img h=48px inside nav h=70px; button+img background rgba(0,0,0,0); PNG is RGBA 680x200 with corner alpha=0 (truly transparent). Clean black wordmark on glass nav.",
+    "FIX2_hero_gradient": "PASS — hero has aria-hidden div with backgroundImage=linear-gradient(rgb(255,251,234) 0%, rgb(255,252,250) 100%), zIndex=-1. Platform section bg=rgb(252,221,21). Clearly distinct: hero is a faint warm tint, platform is bold yellow.",
+    "FIX4_logo_glow_and_caption_reveal": "PASS on BOTH scroll modes — Fast scroll (scrollIntoView): all 9 captions revealed within ~4s (Risk Scoring, Socioeconomic & Demographic Validation, Financial Inclusion, Customer Place Verification, Digital Connect, Rural Infra, Pragati Kendra, Voice Transcription, Intent & Ability Verification). Slow scroll (mouse.wheel over 4.8s): all 9 captions revealed. Yellow bloom bloom style is applied (radial-gradient behind logo + boxShadow with rgba(252,221,21) burst) and holds ~3s before fading — consistent with spec (glow visible, then fades; captions persist).",
+    "FIX5_stats_box_957K": "PASS — stats-block left=104 right=692 with padding-right=32px; stat-villages '957K+' numRight=659, distance from block's right inner edge = 33px. All four figures (10+, 4, 35, 957K+) sit fully inside with padding. whitespace-nowrap applied.",
+    "FIX6_heading_crispness": "PASS — 'SCALING WITH PURPOSE, SOLVING FOR BHARAT' computed style: filter=none, textShadow=none, webkitTextStroke=0px, fontWeight=800, fontFamily=Montserrat. Identical crispness attributes to 'OUR SOLUTION' heading below it.",
+    "REGRESSION_single_river": "PASS — document.querySelectorAll('[data-testid=global-river]').length === 1.",
+    "REGRESSION_services_tabs": "PASS — services-tab-pragati and services-tab-lending both present in DOM."
+  },
+  "test_report_links": [],
+  "action_items": [
+    "FIX 3 remains broken: Orbit captions drift radially by up to 77 px over a rotation cycle. Suggested fix: (a) ensure the OrbitRings container is truly square by removing `maxWidth:'100%'` OR by dropping the outer padding so the container width fits inside the grid column; (b) drive pill positions purely with `transform-origin: center center` on an INNER absolutely-positioned wrapper whose left/top are computed from cx+r*cos(t), cy-r*sin(t) via a single requestAnimationFrame loop (or CSS keyframe with `transform: rotate(var(--t)) translate(r,0) rotate(calc(-1*var(--t)))`), rather than nested rotate+counter-rotate divs whose bounding-box centers shift as pills change orientation; (c) verify by asserting Math.max(...radii)-Math.min(...radii) < 3px per pill across a full 42s cycle. Same fix must be applied to rural-orbit which shares the OrbitRings component."
+  ],
+  "critical_code_review_comments": [
+    "OrbitRings.jsx sets `style={{ width: container, height: container, maxWidth: '100%' }}` — on 1440x900 the right grid column is ~596px so width collapses to 596 while height stays 636. Non-square container is the likely trigger for observed radial drift.",
+    "ScalingWithPurpose.jsx uses CSS `scale` property inline (not inside `transform`). Works in modern browsers but combining `scale` and `transform: translate(-50%,-50%)` on separate lines can produce ordering surprises; consider consolidating into a single transform string.",
+    "Framer-motion warning still present on load: 'container has non-static position...' — from a useScroll ref hydrating late. Non-blocking."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "skipped (unchanged, verified 100% previously)", "frontend": "6/7 checks pass (FIX 3 fails)"},
+  "seed_data_creation": "none",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Only FIX 3 (orbit caption motion) needs retesting after main agent's fix. Assertion to use: for each pill in [data-testid=hero-orbit] and [data-testid=rural-orbit], sample bounding-rect center every 500ms for 12s while measuring distance from the corresponding [data-river-anchor=urban|rural] illustration center. Assert (max-min) per pill < 3 px. All other fixes verified passing.",
+  "rca of the issue": "FIX 3 radial drift: OrbitRings container is 596x636 (non-square) because parent grid column is narrower than desired 636px width; combined with the current nested rotate + counter-rotate + translateY-radius transform stack whose bounding-rect center shifts with pill orientation, the effective orbit is not a circle. Reproduction: load /, viewport 1440x900, wait 3s, then for i in range(6): sample radii of hero-orbit pills relative to [data-river-anchor=urban] center every 1.5s — observed ranges of 25–77 px per pill (should be ~0). Mitigation options listed in action_items."
+}

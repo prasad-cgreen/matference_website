@@ -9,7 +9,7 @@ function StatItem({ value, suffix, label, active }) {
   const n = useCountUp(value, active);
   return (
     <div className="text-center" data-testid={`stat-${label.toLowerCase()}`}>
-      <div className="font-head text-4xl lg:text-5xl text-[#FCDD15] tabular-nums">
+      <div className="font-head text-3xl lg:text-4xl text-[#FCDD15] tabular-nums whitespace-nowrap">
         {n}
         {suffix}
       </div>
@@ -20,22 +20,36 @@ function StatItem({ value, suffix, label, active }) {
 
 function LogoSolution({ isDesktop }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: false, amount: 0.5 });
-  const stillVisible = useInView(ref, { once: false, amount: 0.02 });
+  const firedRef = useRef(false);
   const [fired, setFired] = useState(false);
   const [glow, setGlow] = useState(false);
   const [revealed, setRevealed] = useState(0);
   const total = SOLUTION_CAPTIONS.length;
 
-  // Fire the sequence once, permanently.
+  // Robust trigger: fire as soon as the logo enters the viewport — works for both
+  // normal scroll-paced arrival AND fast-scroll. Fires once; captions stay permanent.
   useEffect(() => {
-    if (fired) return;
-    if (inView) {
-      setFired(true);
-      setGlow(true);
-      setTimeout(() => setGlow(false), 3000); // glow holds 3s then fades (cosmetic only)
-    }
-  }, [inView, fired]);
+    if (!isDesktop) return;
+    const check = () => {
+      if (firedRef.current) return;
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.8 && r.bottom > 0) {
+        firedRef.current = true;
+        setFired(true);
+        setGlow(true);
+        setTimeout(() => setGlow(false), 3000); // glow holds 3s then fades (cosmetic only)
+      }
+    };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    return () => {
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
+  }, [isDesktop]);
 
   // Paced caption reveal after firing (self-clearing interval).
   useEffect(() => {
@@ -49,13 +63,6 @@ function LogoSolution({ isDesktop }) {
     }, 240);
     return () => clearInterval(id);
   }, [fired, total]);
-
-  // Fast-scroll fallback: if the section is scrolled past before completion, snap to complete.
-  useEffect(() => {
-    if (fired && !stillVisible && revealed < total) {
-      setRevealed(total);
-    }
-  }, [stillVisible, fired, revealed, total]);
 
   if (!isDesktop) {
     return (
@@ -180,8 +187,7 @@ export default function ScalingWithPurpose() {
             </div>
           </div>
 
-          <p className="font-head text-2xl lg:text-3xl text-[#FCDD15] mt-8 leading-tight drop-shadow-sm"
-             style={{ WebkitTextStroke: "0.4px rgba(20,41,132,0.4)" }}>
+          <p className="font-head text-2xl lg:text-3xl text-[#FCDD15] mt-8 leading-tight">
             SCALING WITH PURPOSE, SOLVING FOR BHARAT
           </p>
 
