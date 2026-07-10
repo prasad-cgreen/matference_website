@@ -45,6 +45,13 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - Backend contact persistence. Verified: testing_agent iteration_1 → backend 100%, frontend 100%,
   zero console errors.
 
+## Round 7 Fixes (2026-07-10) — VERIFIED (iteration_8, frontend 100%)
+- 4-lane data river (two complement pairs, wider body: bodyWidth 54 / laneWidth 80).
+- Section 3 captions now reveal strictly when the river reaches the logo (logo center ≤ 45% vh), sequential at 160ms.
+- Decoded captions enlarged to 17px / font-weight 800.
+- Hero & Bharat orbit circles enlarged to 340px (OrbitRings offsets tightened: rInner +70, rOuter +120).
+- Static Hero pulse-ring background added (data-testid=hero-pulse-bg): concentric rings, horizontal beam, center glow, sparkles.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.
