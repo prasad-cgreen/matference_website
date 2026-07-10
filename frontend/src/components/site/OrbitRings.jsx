@@ -81,9 +81,10 @@ export default function OrbitRings({
     );
   }
 
-  // Radii chosen so pills (nowrap) always clear the circle at every angle.
-  const rInner = diameter / 2 + 92;
-  const rOuter = diameter / 2 + 150;
+  // Radii chosen so pills (nowrap) always clear the circle at every angle,
+  // while keeping the enlarged circle + orbit within the grid column width.
+  const rInner = diameter / 2 + 70;
+  const rOuter = diameter / 2 + 120;
 
   return (
     <div ref={ref} data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: rOuter * 2 + 180 }}>

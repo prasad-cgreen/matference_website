@@ -26,8 +26,11 @@ function LogoSolution({ isDesktop }) {
   const [revealed, setRevealed] = useState(0);
   const total = SOLUTION_CAPTIONS.length;
 
-  // Robust trigger: fire as soon as the logo enters the viewport — works for both
-  // normal scroll-paced arrival AND fast-scroll. Fires once; captions stay permanent.
+  // Trigger strictly when the river reaches the logo. The GlobalRiver reveal
+  // completes (progress → 1) when the logo's center sits at ~45% of the
+  // viewport height, so we fire the caption reveal at that exact moment.
+  // Fires once; captions stay permanent (also covers fast-scroll: the test
+  // stays true once scrolled past).
   useEffect(() => {
     if (!isDesktop) return;
     const check = () => {
@@ -35,7 +38,8 @@ function LogoSolution({ isDesktop }) {
       const el = ref.current;
       if (!el) return;
       const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight * 0.8 && r.bottom > 0) {
+      const centerFromTop = r.top + r.height / 2;
+      if (centerFromTop <= window.innerHeight * 0.45) {
         firedRef.current = true;
         setFired(true);
         setGlow(true);
@@ -60,7 +64,7 @@ function LogoSolution({ isDesktop }) {
         if (next >= total) clearInterval(id);
         return next;
       });
-    }, 95);
+    }, 160);
     return () => clearInterval(id);
   }, [fired, total]);
 
@@ -122,7 +126,7 @@ function LogoSolution({ isDesktop }) {
           <div
             key={c}
             className="absolute z-20"
-            style={{ left: x, top: y, transform: "translate(-50%, -50%)", width: 150 }}
+            style={{ left: x, top: y, transform: "translate(-50%, -50%)", width: 180 }}
           >
             <CodeLabel text={c} active={i < revealed} />
           </div>
@@ -162,15 +166,17 @@ function CodeLabel({ text, active }) {
     <div className="flex flex-col items-center text-center select-none" style={{ fontFamily: "'Courier New', monospace" }}>
       <div
         className="leading-[1.05] tracking-[0.15em]"
-        style={{ fontSize: "10px", color: "#0F1F4B", opacity: active ? 0.35 : 0 }}
+        style={{ fontSize: "12px", color: "#0F1F4B", opacity: active ? 0.4 : 0 }}
       >
         <div>{line1}</div>
         <div>{line2}</div>
       </div>
       <div
-        className="font-bold mt-0.5"
+        className="mt-1"
         style={{
-          fontSize: "12px",
+          fontSize: "17px",
+          fontWeight: 800,
+          lineHeight: 1.15,
           color: "#0F1F4B",
           opacity: resolved ? 1 : 0,
           transform: resolved ? "translateY(0)" : "translateY(2px)",

@@ -80,12 +80,18 @@ export default function GlobalRiver({ ready }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [geo, ready, progress]);
 
-  // Two lanes: lane2 is the exact bitwise complement of lane1.
-  const { lane1, lane2 } = useMemo(() => {
-    let a = "";
-    for (let i = 0; i < 600; i++) a += Math.random() > 0.5 ? "1" : "0";
-    const b = a.split("").map((c) => (c === "1" ? "0" : "1")).join("");
-    return { lane1: a, lane2: b };
+  // Four lanes arranged as two bitwise-complement pairs:
+  //   lane2 = complement(lane1)   |   lane4 = complement(lane3)
+  const { lane1, lane2, lane3, lane4 } = useMemo(() => {
+    const rand = () => {
+      let s = "";
+      for (let i = 0; i < 600; i++) s += Math.random() > 0.5 ? "1" : "0";
+      return s;
+    };
+    const comp = (s) => s.split("").map((c) => (c === "1" ? "0" : "1")).join("");
+    const a = rand();
+    const b = rand();
+    return { lane1: a, lane2: comp(a), lane3: b, lane4: comp(b) };
   }, []);
 
   const d = useMemo(() => {
@@ -111,8 +117,8 @@ export default function GlobalRiver({ ready }) {
 
   if (!geo || !d) return null;
 
-  const bodyWidth = 30;
-  const laneWidth = bodyWidth + 22;
+  const bodyWidth = 54;
+  const laneWidth = bodyWidth + 26;
 
   return (
     <svg
@@ -168,16 +174,30 @@ export default function GlobalRiver({ ready }) {
           strokeLinejoin="round"
         />
         {/* Lane 1 (forward) */}
-        <text className="river-digits" fontSize="13" fill="#4C7E5B" dy={-6} opacity="0.98">
+        <text className="river-digits" fontSize="13" fill="#4C7E5B" dy={-21} opacity="0.98">
           <textPath href="#river-path" startOffset="0">
             {lane1}
             <animate attributeName="startOffset" from="0" to="-160" dur="6s" repeatCount="indefinite" />
           </textPath>
         </text>
         {/* Lane 2 (bitwise complement of Lane 1) */}
-        <text className="river-digits" fontSize="13" fill="#3C6A4B" dy={12} opacity="0.98">
+        <text className="river-digits" fontSize="13" fill="#3C6A4B" dy={-7} opacity="0.98">
           <textPath href="#river-path" startOffset="0">
             {lane2}
+            <animate attributeName="startOffset" from="0" to="-160" dur="6s" repeatCount="indefinite" />
+          </textPath>
+        </text>
+        {/* Lane 3 (forward) */}
+        <text className="river-digits" fontSize="13" fill="#4C7E5B" dy={7} opacity="0.98">
+          <textPath href="#river-path" startOffset="0">
+            {lane3}
+            <animate attributeName="startOffset" from="0" to="-160" dur="6s" repeatCount="indefinite" />
+          </textPath>
+        </text>
+        {/* Lane 4 (bitwise complement of Lane 3) */}
+        <text className="river-digits" fontSize="13" fill="#3C6A4B" dy={21} opacity="0.98">
+          <textPath href="#river-path" startOffset="0">
+            {lane4}
             <animate attributeName="startOffset" from="0" to="-160" dur="6s" repeatCount="indefinite" />
           </textPath>
         </text>
