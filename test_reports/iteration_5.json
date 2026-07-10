@@ -1,0 +1,25 @@
+{
+  "summary": "ROUND-4 RETEST of FIX 3 (orbit caption motion) on desktop 1440x900. PASS for BOTH [data-testid=hero-orbit] and [data-testid=rural-orbit]. After 24 samples over 12s per circle, every pill held its radius essentially constant (max range 2.3 px across all 15 pills; well under the ~4 px threshold). No pill ever enters the illustration circle (min distance 178.5 px vs anchor radius 140 px). Quick regressions all PASS: single global-river (count=1), solution-logo present, both orbit testids present.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "passed_checks": {
+    "FIX3_hero_orbit_radial_stability": "PASS — 9 pills, radial ranges: [0.8, 2.3, 1.1, 1.7, 2.0, 1.0, 2.1, 1.0, 2.2] px. Outer ring ~235 px, inner ring ~180 px from urban circle center; anchor radius 140 px so no pill enters circle.",
+    "FIX3_rural_orbit_radial_stability": "PASS — 6 pills, radial ranges: [1.6, 2.2, 0.9, 2.3, 1.0, 1.5] px. Outer ~235 px, inner ~180 px from rural circle center; anchor radius 140 px so no pill enters circle.",
+    "REGRESSION_single_global_river": "PASS — document.querySelectorAll('[data-testid=global-river]').length === 1.",
+    "REGRESSION_solution_logo_present": "PASS — [data-testid=solution-logo] exists in DOM.",
+    "REGRESSION_orbit_testids_present": "PASS — hero-orbit and rural-orbit both present."
+  },
+  "test_report_links": ["/app/test_reports/iteration_5.json"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "OrbitRings.jsx rewrite is clean: rAF-driven polar positioning inside a forced-square (aspect-ratio 1/1) container. Center = box/2 exactly matches the illustration circle's translate(-50%,-50%) center. Both pill left/top and SVG line endpoints are updated in the same frame, so lines stay attached to pill edges without drift.",
+    "Minor (non-blocking, pre-existing): framer-motion warning 'container has non-static position...' still logged on load — from a useScroll ref hydrating late. Not related to FIX 3."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "skipped", "frontend": "5/5 checks pass (FIX 3 both circles + 3 regressions)"},
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "FIX 3 is fully resolved on desktop 1440x900. Per-pill radial drift is < 2.3 px over 12s for both hero-orbit and rural-orbit; no pill enters the illustration circle. All 6 ROUND-4 fixes now pass along with the standing regressions (single global-river, service tabs, logo glow + 9-caption reveal).",
+  "rca of the issue": "Previously (iteration_4) the container was non-square (596x636) and used a nested rotate + counter-rotate transform stack whose composed bounding-rect center shifted with pill orientation, producing 25–77 px radial drift. The rewrite forces the container square via aspect-ratio: 1/1 and positions each pill every animation frame using explicit polar coordinates (left = cx + r·cosθ, top = cy + r·sinθ) with pill centered by transform: translate(-50%,-50%). Radius r is a constant per ring, so bounding-rect center distance to the anchor stays fixed to within sub-pixel + measurement noise (~1–2 px)."
+}

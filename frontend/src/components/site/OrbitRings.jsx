@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useInView } from "framer-motion";
 
 /**
  * Orbit rings around a circular illustration.
- * - Outer captions ride a fixed outer radius; inner captions a fixed smaller radius.
- * - Constant rotation speed (no speed changes) so radius never drifts and pills never wobble.
- * - Captions reveal one-by-one and stay permanent.
- * - `circleId` marks the circle element so the single page-level river can anchor to it.
+ * - Pills are positioned by exact polar coordinates (cx + r·cosθ, cy + r·sinθ) each
+ *   frame via requestAnimationFrame, so every pill holds a CONSTANT radius (no drift).
+ * - The container is forced square and pills orbit its true center = the illustration center.
+ * - Outer captions at a larger fixed radius, inner captions at a smaller fixed radius.
+ * - Constant rotation speed. Captions reveal one-by-one and stay permanent.
  */
 export default function OrbitRings({
   children,
@@ -20,10 +21,28 @@ export default function OrbitRings({
   onAllRevealed = null,
 }) {
   const ref = useRef(null);
+  const boxRef = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const total = outer.length + inner.length;
   const [revealed, setRevealed] = useState(0);
+  const [box, setBox] = useState(0);
   const allRevealed = revealed >= total;
+
+  // Measure the square box size (its own rendered width) so the orbit center = illustration center.
+  useLayoutEffect(() => {
+    if (!animate) return;
+    const measure = () => {
+      if (boxRef.current) setBox(boxRef.current.clientWidth);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (boxRef.current) ro.observe(boxRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [animate]);
 
   useEffect(() => {
     if (!animate || !inView) return;
@@ -65,99 +84,141 @@ export default function OrbitRings({
   }
 
   const Redge = diameter / 2;
-  const rInner = Redge + 36; // fixed inner radius
-  const rOuter = Redge + 84; // fixed outer radius
-  const pad = 94; // room for pills beyond the outer radius
-  const container = diameter + 2 * (rOuter - Redge + pad);
-  const DUR = 42; // constant rotation period (seconds) — never changes
-
-  // One ring at a constant radius. Captions + connectors stay at that exact radius.
-  const renderRing = (items, radius, dir, offset) => {
-    const revDir = dir === "cw" ? "cw-rev" : "ccw-rev";
-    return (
-      <div
-        className="absolute left-1/2 top-1/2"
-        style={{ width: 0, height: 0, animation: `orbit-${dir} ${DUR}s linear infinite` }}
-      >
-        {items.map((text, i) => {
-          const angle = (360 / items.length) * i + (dir === "ccw" ? 40 : 0);
-          const show = offset + i < revealed;
-          return (
-            <div
-              key={text}
-              className="absolute"
-              style={{ left: 0, top: 0, transform: `rotate(${angle}deg) translateY(-${radius}px)` }}
-            >
-              {/* connector: circle edge -> caption (starts exactly at the circumference) */}
-              <div
-                className="absolute left-1/2"
-                style={{
-                  width: "2px",
-                  height: radius - Redge,
-                  top: 0,
-                  transform: "translateX(-50%)",
-                  background:
-                    theme === "yellow"
-                      ? "linear-gradient(to bottom, rgba(252,221,21,0), rgba(252,221,21,0.95))"
-                      : "linear-gradient(to bottom, rgba(20,41,132,0), rgba(20,41,132,0.85))",
-                  opacity: show ? 1 : 0,
-                  transition: "opacity 0.5s ease",
-                }}
-              />
-              {/* keep pill upright while orbiting (counter-spin, same constant period) */}
-              <div style={{ transform: `rotate(${-angle}deg)` }}>
-                <div style={{ animation: `orbit-${revDir} ${DUR}s linear infinite` }}>
-                  <div
-                    style={{
-                      transform: "translate(-50%, -50%)",
-                      opacity: show ? 1 : 0,
-                      transition: "opacity 0.5s ease",
-                    }}
-                  >
-                    <CaptionPill text={text} theme={theme} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  const rInner = Redge + 40;
+  const rOuter = Redge + 96;
 
   return (
-    <div
-      ref={ref}
-      data-testid={testid}
-      className="relative mx-auto"
-      style={{ width: container, height: container, maxWidth: "100%" }}
-    >
-      {/* faint fixed-radius ring guides */}
-      {[rInner, rOuter].map((rr) => (
+    <div ref={ref} data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: rOuter * 2 + 200 }}>
+      {/* square box: height follows width so the true center == illustration center */}
+      <div ref={boxRef} className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
+        {/* fixed-radius ring guides */}
+        {[rInner, rOuter].map((rr) => (
+          <div
+            key={rr}
+            className="absolute left-1/2 top-1/2 rounded-full"
+            style={{
+              width: rr * 2,
+              height: rr * 2,
+              transform: "translate(-50%,-50%)",
+              border: `1px dashed ${theme === "yellow" ? "rgba(252,221,21,0.25)" : "rgba(20,41,132,0.16)"}`,
+            }}
+          />
+        ))}
+
+        {/* central illustration circle (anchor for the single page-level river) */}
         <div
-          key={rr}
-          className="absolute left-1/2 top-1/2 rounded-full"
-          style={{
-            width: rr * 2,
-            height: rr * 2,
-            transform: "translate(-50%,-50%)",
-            border: `1px dashed ${theme === "yellow" ? "rgba(252,221,21,0.25)" : "rgba(20,41,132,0.16)"}`,
-          }}
-        />
-      ))}
+          {...(circleId ? { "data-river-anchor": circleId } : {})}
+          className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl border border-white/50 z-10"
+          style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
+        >
+          {children}
+        </div>
 
-      {/* central illustration circle (anchor for the single page-level river) */}
-      <div
-        {...(circleId ? { "data-river-anchor": circleId } : {})}
-        className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl border border-white/50 z-10"
-        style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
-      >
-        {children}
+        {box > 0 && (
+          <>
+            <Ring
+              items={outer}
+              radius={rOuter}
+              redge={Redge}
+              center={box / 2}
+              box={box}
+              dir="cw"
+              theme={theme}
+              revealed={revealed}
+              offset={0}
+            />
+            <Ring
+              items={inner}
+              radius={rInner}
+              redge={Redge}
+              center={box / 2}
+              box={box}
+              dir="ccw"
+              theme={theme}
+              revealed={revealed}
+              offset={outer.length}
+            />
+          </>
+        )}
       </div>
-
-      {renderRing(outer, rOuter, "cw", 0)}
-      {renderRing(inner, rInner, "ccw", outer.length)}
     </div>
+  );
+}
+
+const DUR = 42; // seconds per full rotation (constant)
+
+function Ring({ items, radius, redge, center, box, dir, theme, revealed, offset }) {
+  const pillRefs = useRef([]);
+  const lineRefs = useRef([]);
+
+  useEffect(() => {
+    let raf;
+    const start = performance.now();
+    const sign = dir === "cw" ? 1 : -1;
+    const base = items.map((_, i) => (2 * Math.PI * i) / items.length + (dir === "ccw" ? 0.6 : 0));
+    const loop = (now) => {
+      const theta = sign * (((now - start) / 1000) / DUR) * 2 * Math.PI;
+      for (let i = 0; i < items.length; i++) {
+        const a = base[i] + theta;
+        const cos = Math.cos(a);
+        const sin = Math.sin(a);
+        const p = pillRefs.current[i];
+        if (p) {
+          p.style.left = center + radius * cos + "px";
+          p.style.top = center + radius * sin + "px";
+        }
+        const l = lineRefs.current[i];
+        if (l) {
+          l.setAttribute("x1", center + redge * cos);
+          l.setAttribute("y1", center + redge * sin);
+          l.setAttribute("x2", center + radius * cos);
+          l.setAttribute("y2", center + radius * sin);
+        }
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [items, radius, redge, center, dir]);
+
+  const lineColor = theme === "yellow" ? "rgba(252,221,21,0.9)" : "rgba(20,41,132,0.8)";
+
+  return (
+    <>
+      <svg
+        className="absolute left-0 top-0 pointer-events-none"
+        width={box}
+        height={box}
+        viewBox={`0 0 ${box} ${box}`}
+      >
+        {items.map((_, i) => (
+          <line
+            key={i}
+            ref={(el) => (lineRefs.current[i] = el)}
+            stroke={lineColor}
+            strokeWidth="2"
+            style={{
+              opacity: offset + i < revealed ? 1 : 0,
+              transition: "opacity 0.5s ease",
+            }}
+          />
+        ))}
+      </svg>
+      {items.map((text, i) => (
+        <div
+          key={text}
+          ref={(el) => (pillRefs.current[i] = el)}
+          className="absolute"
+          style={{
+            transform: "translate(-50%, -50%)",
+            opacity: offset + i < revealed ? 1 : 0,
+            transition: "opacity 0.5s ease",
+          }}
+        >
+          <CaptionPill text={text} theme={theme} />
+        </div>
+      ))}
+    </>
   );
 }
 
