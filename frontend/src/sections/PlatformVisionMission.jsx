@@ -6,12 +6,12 @@ export default function PlatformVisionMission() {
   return (
     <section
       className="relative w-full py-24"
-      style={{ background: "#FCDD15" }}
+      style={{ background: "#FFF4C2" }}
       data-testid="section-platform-vision"
     >
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="font-head text-4xl lg:text-5xl text-[#142984]">Platform Vision &amp; Mission</h2>
+          <h2 className="font-head text-4xl lg:text-5xl text-[#142984]">VISION AND MISSION</h2>
         </div>
 
         {/* Vision / Mission cards — navy blue glassmorphism */}
@@ -26,8 +26,7 @@ export default function PlatformVisionMission() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.7, delay: i * 0.1 }}
-              className="glass rounded-[28px] p-8 lg:p-10"
-              style={{ background: "rgba(20,41,132,0.9)", border: "1px solid rgba(255,255,255,0.25)" }}
+              className="glass glass-navy rounded-[28px] p-8 lg:p-10"
               data-testid={`card-${c.h.toLowerCase()}`}
             >
               <h3 className="font-head text-2xl text-center text-[#FCDD15] mb-5">{c.h}</h3>

@@ -15,12 +15,12 @@ function ServiceCard({ card, i }) {
       className="glass glass-navy rounded-[24px] p-7 flex flex-col"
       data-testid={`service-card-${i}`}
     >
-      <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 border border-[#142984]/25 bg-[#FCDD15]/25">
-        <Icon className="text-[#142984]" size={24} />
+      <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 border border-white/40 bg-white/15">
+        <Icon className="text-white" size={24} />
       </div>
-      <p className="font-head text-sm text-[#142984] uppercase tracking-wide mb-2">{card.value}</p>
-      <h3 className="font-head text-lg text-[#142984] mb-3">{card.title}</h3>
-      <p className="font-body text-sm leading-relaxed text-[#142984]/80">{card.body}</p>
+      <p className="font-head text-sm text-white/90 uppercase tracking-wide mb-2">{card.value}</p>
+      <h3 className="font-head text-lg text-[#FCDD15] mb-3">{card.title}</h3>
+      <p className="font-body text-sm leading-relaxed text-white/90">{card.body}</p>
     </motion.div>
   );
 }
