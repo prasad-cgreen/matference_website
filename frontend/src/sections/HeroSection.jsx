@@ -14,19 +14,21 @@ export default function HeroSection({ onCaptionsDone }) {
       id="hero"
       ref={ref}
       className="relative min-h-screen w-full flex items-center pt-28 pb-16 overflow-hidden"
-      style={{ background: "linear-gradient(to bottom, #FFF3B0 0%, #FFFCFA 100%)" }}
+      style={{ background: "#F7F8FB" }}
       data-testid="section-hero"
     >
       {isDesktop && (
         <div
-          className="absolute inset-0 z-0 pointer-events-none"
+          className="absolute z-0 pointer-events-none"
           data-testid="hero-pulse-bg"
           style={{
-            backgroundColor: "#F7F8FB",
+            width: "78%",
+            aspectRatio: "1536 / 1024",
+            left: "-3.6%",
+            top: "9.5%",
             backgroundImage: "url(/pulse-ring.png)",
             backgroundRepeat: "no-repeat",
-            backgroundSize: "contain",
-            backgroundPosition: "9% 56%",
+            backgroundSize: "100% 100%",
           }}
         />
       )}
