@@ -26,7 +26,7 @@ export default function HeroSection({ onCaptionsDone }) {
             backgroundImage: "url(/pulse-ring.png)",
             backgroundRepeat: "no-repeat",
             backgroundSize: "contain",
-            backgroundPosition: "19% 56%",
+            backgroundPosition: "9% 56%",
           }}
         />
       )}
