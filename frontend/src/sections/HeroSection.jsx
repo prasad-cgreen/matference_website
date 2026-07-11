@@ -24,8 +24,8 @@ export default function HeroSection({ onCaptionsDone }) {
           style={{
             width: "78%",
             aspectRatio: "1536 / 1024",
-            left: "-3.6%",
-            top: "9.5%",
+            left: "-11.2%",
+            top: "3.2%",
             backgroundImage: "url(/pulse-ring.png)",
             backgroundRepeat: "no-repeat",
             backgroundSize: "100% 100%",
