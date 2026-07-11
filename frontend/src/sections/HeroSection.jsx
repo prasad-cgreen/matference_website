@@ -17,6 +17,20 @@ export default function HeroSection({ onCaptionsDone }) {
       style={{ background: "linear-gradient(to bottom, #FFF3B0 0%, #FFFCFA 100%)" }}
       data-testid="section-hero"
     >
+      {isDesktop && (
+        <div
+          className="absolute inset-0 z-0 pointer-events-none"
+          data-testid="hero-pulse-bg"
+          style={{
+            backgroundColor: "#F7F8FB",
+            backgroundImage: "url(/pulse-ring.png)",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            backgroundPosition: "19% 56%",
+          }}
+        />
+      )}
+
       <div className="max-w-7xl mx-auto px-6 w-full grid lg:grid-cols-2 gap-10 items-center relative z-10">
         {/* Left: headline */}
         <motion.div

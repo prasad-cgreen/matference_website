@@ -12,13 +12,14 @@ function ServiceCard({ card, i }) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: i * 0.08 }}
-      className="glass glass-navy rounded-[24px] p-7 flex flex-col"
+      className="glass rounded-[24px] p-7 flex flex-col"
+      style={{ background: "rgba(26,52,165,0.5)", border: "1px solid rgba(255,255,255,0.28)" }}
       data-testid={`service-card-${i}`}
     >
-      <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 border border-white/40 bg-white/15">
-        <Icon className="text-white" size={24} />
+      <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 border border-[#142984]/20 bg-[#FCDD15]">
+        <Icon className="text-[#142984]" size={24} />
       </div>
-      <p className="font-head text-sm text-white/90 uppercase tracking-wide mb-2">{card.value}</p>
+      <p className="font-head text-sm text-[#FCDD15] uppercase tracking-wide mb-2">{card.value}</p>
       <h3 className="font-head text-lg text-[#FCDD15] mb-3">{card.title}</h3>
       <p className="font-body text-sm leading-relaxed text-white/90">{card.body}</p>
     </motion.div>
