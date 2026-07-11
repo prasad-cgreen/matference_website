@@ -52,6 +52,11 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - Hero & Bharat orbit circles enlarged to 340px (OrbitRings offsets tightened: rInner +70, rOuter +120).
 - Static Hero pulse-ring background added (data-testid=hero-pulse-bg): concentric rings, horizontal beam, center glow, sparkles.
 
+## Round 9-11 (2026-07-11)
+- Pulse-ring in Hero: replaced coded version with supplied raster image, positioned so the glow core sits below the "W" of "Where" on line 1 (percentage-based layer, tracks headline). Hero bg set to #F7F8FB.
+- Vision/Mission: heading "VISION AND MISSION", bg #fff236 with glassy sheen, cards opaque navy; Our Services cards brighter blue, yellow icon chips w/ navy glyph, yellow headings, white body.
+- Round 11: swapped urban & rural circle illustrations to supplied raster PNGs (urban-scene.png / rural-scene.png). Updated GlobalRiver rural entry→~12 o'clock, exit→~7:30 to match new image's river; urban entry (6 o'clock) unchanged.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.

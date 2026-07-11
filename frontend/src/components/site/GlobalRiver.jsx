@@ -97,20 +97,22 @@ export default function GlobalRiver({ ready }) {
   const d = useMemo(() => {
     if (!geo) return "";
     const { origin: o, rural: r, logo: l } = geo;
-    const k = r.R * 0.707;
-    const entry = { x: r.x - k, y: r.y - k }; // top-left edge of rural circle
-    const exit = { x: r.x + k, y: r.y + k }; // bottom-right edge of rural circle
+    // Rural contact points matched to the new illustration's own river:
+    //   entry ~12 o'clock (upper-center, slightly left) — where the arch-bridge river originates
+    //   exit  ~7:30 (lower-left edge) — where the river runs off-frame
+    const entry = { x: r.x - r.R * 0.15, y: r.y - r.R * 0.99 };
+    const exit = { x: r.x - r.R * 0.707, y: r.y + r.R * 0.707 };
     const m1x = (o.x + entry.x) / 2;
     const m1y = (o.y + entry.y) / 2;
     const m2x = (exit.x + l.x) / 2;
     const m2y = (exit.y + l.y) / 2;
     return [
       `M ${o.x} ${o.y}`,
-      `C ${o.x - 60} ${o.y + 90}, ${m1x + 90} ${m1y - 60}, ${m1x} ${m1y}`,
-      `S ${entry.x - 50} ${entry.y - 30}, ${entry.x} ${entry.y}`,
+      `C ${o.x - 40} ${o.y + 100}, ${m1x + 60} ${m1y - 40}, ${m1x} ${m1y}`,
+      `S ${entry.x + 30} ${entry.y - 46}, ${entry.x} ${entry.y}`,
       `L ${r.x} ${r.y}`,
       `L ${exit.x} ${exit.y}`,
-      `C ${exit.x + 70} ${exit.y + 70}, ${m2x - 90} ${m2y - 50}, ${m2x} ${m2y}`,
+      `C ${exit.x - 70} ${exit.y + 80}, ${m2x - 70} ${m2y - 40}, ${m2x} ${m2y}`,
       `S ${l.x + 60} ${l.y - 80}, ${l.x} ${l.y}`,
     ].join(" ");
   }, [geo]);
