@@ -26,11 +26,8 @@ function LogoSolution({ isDesktop }) {
   const [revealed, setRevealed] = useState(0);
   const total = SOLUTION_CAPTIONS.length;
 
-  // Trigger strictly when the river reaches the logo. The GlobalRiver reveal
-  // completes (progress → 1) when the logo's center sits at ~45% of the
-  // viewport height, so we fire the caption reveal at that exact moment.
-  // Fires once; captions stay permanent (also covers fast-scroll: the test
-  // stays true once scrolled past).
+  // Fire when the logo hub scrolls into view (standard threshold used elsewhere).
+  // Fires once; captions stay permanent (also covers fast-scroll: stays true once past).
   useEffect(() => {
     if (!isDesktop) return;
     const check = () => {
@@ -38,8 +35,7 @@ function LogoSolution({ isDesktop }) {
       const el = ref.current;
       if (!el) return;
       const r = el.getBoundingClientRect();
-      const centerFromTop = r.top + r.height / 2;
-      if (centerFromTop <= window.innerHeight * 0.45) {
+      if (r.top < window.innerHeight * 0.8 && r.bottom > 0) {
         firedRef.current = true;
         setFired(true);
         setGlow(true);
@@ -104,7 +100,6 @@ function LogoSolution({ isDesktop }) {
 
       {/* logo — large focal point, roughly the width of the stats box; river terminates here */}
       <div
-        data-river-anchor="logo"
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] px-10 py-8 border border-[#142984]/10 z-10"
         style={{
           animation: glow ? "logo-pulse 1.2s ease-in-out infinite" : "none",

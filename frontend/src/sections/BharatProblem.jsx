@@ -17,16 +17,15 @@ export default function BharatProblem() {
       data-testid="section-bharat"
     >
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center relative z-10">
-        {/* Left: rural orbit — the one river enters/exits this circle's edge */}
+        {/* Left: rural orbit */}
         <div className="flex justify-center lg:justify-start">
           <OrbitRings
             outer={RURAL_ORBIT.outer}
             inner={RURAL_ORBIT.inner}
             theme="yellow"
-            diameter={isDesktop ? 340 : 240}
+            diameter={isDesktop ? 401 : 240}
             animate={isDesktop}
             testid="rural-orbit"
-            circleId="rural"
           >
             <RuralScene className="w-full h-full" />
           </OrbitRings>

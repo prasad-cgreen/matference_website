@@ -5,7 +5,7 @@ import UrbanScene from "@/illustrations/UrbanScene";
 import { HERO_ORBIT } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 
-export default function HeroSection({ onCaptionsDone }) {
+export default function HeroSection() {
   const ref = useRef(null);
   const isDesktop = useIsDesktop();
 
@@ -57,17 +57,15 @@ export default function HeroSection({ onCaptionsDone }) {
           </p>
         </motion.div>
 
-        {/* Right: urban orbit (river originates from the bottom of this circle) */}
+        {/* Right: urban orbit */}
         <div className="relative flex justify-center lg:justify-end z-10">
           <OrbitRings
             outer={HERO_ORBIT.outer}
             inner={HERO_ORBIT.inner}
             theme="navy"
-            diameter={isDesktop ? 340 : 240}
+            diameter={isDesktop ? 401 : 240}
             animate={isDesktop}
             testid="hero-orbit"
-            circleId="urban"
-            onAllRevealed={onCaptionsDone}
           >
             <UrbanScene className="w-full h-full" />
           </OrbitRings>

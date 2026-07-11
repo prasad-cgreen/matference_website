@@ -16,7 +16,6 @@ export default function OrbitRings({
   diameter = 200,
   animate = true,
   testid = "orbit",
-  circleId = null,
   onAllRevealed = null,
 }) {
   const ref = useRef(null);
@@ -103,9 +102,8 @@ export default function OrbitRings({
           />
         ))}
 
-        {/* central illustration circle (anchor for the single page-level river) */}
+        {/* central illustration circle */}
         <div
-          {...(circleId ? { "data-river-anchor": circleId } : {})}
           className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl border border-white/50 z-10"
           style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
         >

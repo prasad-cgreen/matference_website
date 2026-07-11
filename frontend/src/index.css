@@ -125,18 +125,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ---------- DATA RIVER ---------- */
-@keyframes river-flow {
-  from { stroke-dashoffset: 0; }
-  to { stroke-dashoffset: -240; }
-}
-
-.river-digits {
-  font-family: 'Courier New', monospace;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
-
 /* ---------- MARQUEE ---------- */
 @keyframes marquee {
   from { transform: translateX(0); }
