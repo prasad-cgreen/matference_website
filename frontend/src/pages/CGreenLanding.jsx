@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import Navbar from "@/components/site/Navbar";
+import DataRiverOverlay from "@/components/site/DataRiverOverlay";
 import HeroSection from "@/sections/HeroSection";
 import BharatProblem from "@/sections/BharatProblem";
 import ScalingWithPurpose from "@/sections/ScalingWithPurpose";
@@ -12,11 +13,19 @@ import ContactUs from "@/sections/ContactUs";
 import Footer from "@/sections/Footer";
 
 export default function CGreenLanding() {
+  const riverWrapRef = useRef(null);
+
   return (
     <div className="relative w-full bg-[#FFFCFA]" data-testid="cgreen-landing">
       <Navbar />
-      <HeroSection />
-      <BharatProblem />
+
+      {/* Shared container: the data-river connects the urban (S1) & rural (S2) circles */}
+      <div ref={riverWrapRef} className="relative" data-testid="river-wrap">
+        <DataRiverOverlay containerRef={riverWrapRef} />
+        <HeroSection />
+        <BharatProblem />
+      </div>
+
       <ScalingWithPurpose />
       <PlatformVisionMission />
       <OurServices />
