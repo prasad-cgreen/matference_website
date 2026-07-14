@@ -66,7 +66,7 @@ export default function OrbitRings({
     return (
       <div ref={ref} data-testid={`${testid}-static`} className="flex flex-col items-center gap-6">
         <div
-          className="rounded-full overflow-hidden border border-white/40 shadow-xl"
+          className="rounded-full overflow-hidden shadow-xl"
           style={{ width: Math.min(diameter, 280), height: Math.min(diameter, 280) }}
         >
           {children}
@@ -104,7 +104,7 @@ export default function OrbitRings({
 
         {/* central illustration circle */}
         <div
-          className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl border border-white/50 z-10"
+          className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl z-10"
           style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
         >
           {children}

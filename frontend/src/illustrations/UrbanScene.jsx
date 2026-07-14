@@ -5,7 +5,7 @@ import React from "react";
 export default function UrbanScene({ className = "" }) {
   return (
     <img
-      src="/urban-scene-v2.png"
+      src="/urban-scene-v3.png"
       alt="Financial district skyline at dusk"
       className={`${className} object-cover select-none`}
       draggable="false"

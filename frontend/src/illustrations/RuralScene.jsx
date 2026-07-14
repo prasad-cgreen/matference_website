@@ -6,7 +6,7 @@ import React from "react";
 export default function RuralScene({ className = "" }) {
   return (
     <img
-      src="/rural-scene-v2.png"
+      src="/rural-scene-v3.png"
       alt="Village street at dusk with a river"
       className={`${className} object-cover select-none`}
       draggable="false"
