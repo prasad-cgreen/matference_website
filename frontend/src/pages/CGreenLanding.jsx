@@ -19,8 +19,9 @@ export default function CGreenLanding() {
     <div className="relative w-full bg-[#FFFCFA]" data-testid="cgreen-landing">
       <Navbar />
 
-      {/* Shared container: the data-river connects the urban (S1) & rural (S2) circles */}
-      <div ref={riverWrapRef} className="relative" data-testid="river-wrap">
+      {/* Shared container: the data-river connects the urban (S1) & rural (S2) circles.
+          `isolate` traps all river/section stacking below the fixed nav (z-50). */}
+      <div ref={riverWrapRef} className="relative isolate" data-testid="river-wrap">
         <DataRiverOverlay containerRef={riverWrapRef} />
         <HeroSection />
         <BharatProblem />

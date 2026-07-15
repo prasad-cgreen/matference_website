@@ -33,8 +33,9 @@ export default function DataRiverOverlay({ containerRef }) {
 
       // blue -> deep inside urban lower-interior (underlaps, circle covers excess)
       const Tu = { x: U.x - U.R * 0.08, y: U.y + U.R * 0.34 };
-      // purple -> crosses rural's LEFT edge (~9 o'clock, centre height), slightly interior
-      const Tr = { x: R.x - R.R * 0.82, y: R.y };
+      // purple -> pushed well INSIDE the rural circle from its left, so the visible
+      // bright end clearly overlaps into the interior (no gap; circle covers excess)
+      const Tr = { x: R.x - R.R * 0.28, y: R.y };
 
       const Vx = Tu.x - Tr.x;
       const Vy = Tu.y - Tr.y;
