@@ -125,6 +125,22 @@ body {
   to { transform: rotate(360deg); }
 }
 
+/* ---------- DATA RIVER (Round 15 Part B — motion) ---------- */
+@keyframes river-hl-sweep {
+  from { -webkit-mask-position: 160% 0; mask-position: 160% 0; }
+  to   { -webkit-mask-position: -60% 0; mask-position: -60% 0; }
+}
+@keyframes river-particle {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes river-glow-pulse {
+  0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(0.9); }
+  50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.15); }
+}
+
 /* ---------- MARQUEE ---------- */
 @keyframes marquee {
   from { transform: translateX(0); }
