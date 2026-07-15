@@ -1,18 +1,18 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 
-// Part A: place the pre-rendered glowing light-stream PNG statically between the
-// two circles. Blue end (top-right of source) -> urban circle; purple end
-// (bottom-left of source) -> rural circle. No animation yet (Part B adds motion).
+// Part A: place the final approved glowing light-stream PNG statically between
+// the two circles. Blue end (top-right of source) -> INSIDE urban circle;
+// purple end (bottom-left of source) -> enters rural circle from its LEFT side.
+// No animation yet (Part B adds scroll-reveal + motion).
 
-const IMG_W = 1672;
-const IMG_H = 941;
+const IMG_W = 1847;
+const IMG_H = 852;
 const ASPECT = IMG_W / IMG_H;
-// bright tips of the stream, as fractions of the source image
-const BLUE = { fx: 0.97, fy: 0.16 }; // -> urban
-const PURPLE = { fx: 0.04, fy: 0.87 }; // -> rural
-// vector (blue - purple) in a unit-width image, used for base angle/length
-const VDX = (BLUE.fx - PURPLE.fx); // 0.93
-const VDY = (BLUE.fy - PURPLE.fy) / ASPECT; // in display units per unit width
+// bright concentrated tips of the stream, as fractions of the source image
+const BLUE = { fx: 0.96, fy: 0.2 }; // -> urban
+const PURPLE = { fx: 0.025, fy: 0.88 }; // -> rural
+const VDX = BLUE.fx - PURPLE.fx;
+const VDY = (BLUE.fy - PURPLE.fy) / ASPECT;
 const VLEN = Math.hypot(VDX, VDY);
 const VANG = (Math.atan2(VDY, VDX) * 180) / Math.PI;
 
@@ -31,9 +31,10 @@ export default function DataRiverOverlay({ containerRef }) {
       const U = { x: ur.left - wr.left + ur.width / 2, y: ur.top - wr.top + ur.height / 2, R: ur.width / 2 };
       const R = { x: rr.left - wr.left + rr.width / 2, y: rr.top - wr.top + rr.height / 2, R: rr.width / 2 };
 
-      // anchor points slightly INSIDE each circle (underlap → circle covers the excess)
-      const Tu = { x: U.x - U.R * 0.12, y: U.y + U.R * 0.28 }; // blue → urban lower-interior
-      const Tr = { x: R.x - R.R * 0.05, y: R.y - R.R * 0.12 }; // purple → rural upper-left interior
+      // blue -> deep inside urban lower-interior (underlaps, circle covers excess)
+      const Tu = { x: U.x - U.R * 0.08, y: U.y + U.R * 0.34 };
+      // purple -> crosses rural's LEFT edge (~9 o'clock, centre height), slightly interior
+      const Tr = { x: R.x - R.R * 0.82, y: R.y };
 
       const Vx = Tu.x - Tr.x;
       const Vy = Tu.y - Tr.y;
@@ -42,10 +43,8 @@ export default function DataRiverOverlay({ containerRef }) {
       const Hd = Wd / ASPECT;
       const angTgt = (Math.atan2(Vy, Vx) * 180) / Math.PI;
       const theta = angTgt - VANG;
-      const p0x = PURPLE.fx * Wd;
-      const p0y = PURPLE.fy * Hd;
-      const tx = Tr.x - p0x;
-      const ty = Tr.y - p0y;
+      const tx = Tr.x - PURPLE.fx * Wd;
+      const ty = Tr.y - PURPLE.fy * Hd;
 
       setStyle({
         width: `${Wd}px`,
@@ -72,7 +71,7 @@ export default function DataRiverOverlay({ containerRef }) {
 
   return (
     <img
-      src="/river-stream.png"
+      src="/river-stream-v2.png"
       alt=""
       aria-hidden="true"
       draggable="false"
