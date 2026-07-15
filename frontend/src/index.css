@@ -125,20 +125,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ---------- DATA RIVER (Round 14) ---------- */
-@keyframes river-flow-move {
-  from { stroke-dashoffset: 0; }
-  to { stroke-dashoffset: -280; }
-}
-@keyframes river-pulse-src {
-  0%, 100% { opacity: 0.55; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.12); }
-}
-@keyframes river-pulse-arr {
-  0%, 100% { opacity: 0.5; transform: scale(0.92); }
-  50% { opacity: 0.95; transform: scale(1.1); }
-}
-
 /* ---------- MARQUEE ---------- */
 @keyframes marquee {
   from { transform: translateX(0); }
