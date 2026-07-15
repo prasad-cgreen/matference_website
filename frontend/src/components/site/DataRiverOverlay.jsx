@@ -1,21 +1,10 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-// Part B: motion layer on top of the static Part A image.
-// - Base REVEAL is scroll-LINKED (scrubbed): the mask boundary is a direct
-//   function of scroll offset within the shared wrapper, applied imperatively
-//   on each scroll tick via rAF. No timeline / @keyframes / autoplay drives it,
-//   so it freezes the instant scrolling stops and retracts in lockstep.
-// - Highlight / particles / endpoint glows keep their own ambient loops.
-
-const IMG_W = 1847;
-const IMG_H = 852;
-const ASPECT = IMG_W / IMG_H;
-const BLUE = { fx: 0.96, fy: 0.2 };
-const PURPLE = { fx: 0.025, fy: 0.88 };
-const VDX = BLUE.fx - PURPLE.fx;
-const VDY = (BLUE.fy - PURPLE.fy) / ASPECT;
-const VLEN = Math.hypot(VDX, VDY);
-const VANG = (Math.atan2(VDY, VDX) * 180) / Math.PI;
+// Reusable scroll-scrubbed glowing river between two circles.
+// - Base REVEAL is scroll-LINKED (imperative, rAF on scroll): freezes on stop,
+//   retracts in lockstep. No timeline / @keyframes / autoplay drives it.
+// - Highlight / particles / endpoint glows keep independent ambient loops.
+// Blue end -> source circle, purple end -> destination circle.
 
 function useMedia() {
   const read = () => ({
@@ -43,7 +32,35 @@ function maskFor(g, p) {
   return `linear-gradient(${g.maskAngle}deg, #000 0%, #000 ${pct}%, transparent ${Math.min(100, pct + 6)}%, transparent 100%)`;
 }
 
-export default function DataRiverOverlay({ containerRef }) {
+function setGlow(el, on, reduced, dur) {
+  if (!el) return;
+  if (!on) {
+    el.style.animation = "none";
+    el.style.opacity = "0";
+    return;
+  }
+  if (reduced) {
+    el.style.animation = "none";
+    el.style.opacity = "0.7";
+  } else {
+    el.style.animation = `river-glow-pulse ${dur}s ease-in-out infinite`;
+    el.style.opacity = "";
+  }
+}
+
+export default function DataRiverOverlay({
+  containerRef,
+  src,
+  imgW,
+  imgH,
+  blue,
+  purple,
+  srcSel,
+  dstSel,
+  srcAnchor,
+  dstAnchor,
+  testid = "data-river-overlay",
+}) {
   const media = useMedia();
   const { reduced, mobile, tablet } = media;
   const [geo, setGeo] = useState(null);
@@ -51,45 +68,49 @@ export default function DataRiverOverlay({ containerRef }) {
   const geoRef = useRef(null);
   const mediaRef = useRef(media);
   const maskRef = useRef(null);
-  const uGlowRef = useRef(null);
-  const rGlowRef = useRef(null);
+  const sGlowRef = useRef(null);
+  const dGlowRef = useRef(null);
   const ticking = useRef(false);
-
   mediaRef.current = media;
 
-  // scroll-linked reveal, applied imperatively (no timeline / autoplay)
+  const ASPECT = imgW / imgH;
+  const VDX = blue.fx - purple.fx;
+  const VDY = (blue.fy - purple.fy) / ASPECT;
+  const VLEN = Math.hypot(VDX, VDY);
+  const VANG = (Math.atan2(VDY, VDX) * 180) / Math.PI;
+
   const applyReveal = () => {
     const g = geoRef.current;
     const wrap = containerRef.current;
     if (!g || !wrap || !maskRef.current) return;
-    const rect = wrap.getBoundingClientRect();
+    const dst = document.querySelector(`[data-testid="${dstSel}"]`);
+    if (!dst) return;
+    const dr = dst.getBoundingClientRect();
     const vh = window.innerHeight;
-    const start = vh * 0.55;
-    const total = rect.height - vh * 0.5;
-    const p = Math.min(1, Math.max(0, (start - rect.top) / Math.max(1, total)));
+    const p = Math.min(1, Math.max(0, (vh * 0.62 - dr.top) / (vh * 0.42)));
     const m = maskFor(g, p);
     maskRef.current.style.maskImage = m;
     maskRef.current.style.webkitMaskImage = m;
     const red = mediaRef.current.reduced;
-    setGlow(uGlowRef.current, p > 0.03, red, 3);
-    setGlow(rGlowRef.current, p > 0.9, red, 2.7);
+    setGlow(sGlowRef.current, p > 0.04, red, 3);
+    setGlow(dGlowRef.current, p > 0.9, red, 2.7);
   };
 
   useLayoutEffect(() => {
     const compute = () => {
       const wrap = containerRef.current;
-      const u = document.querySelector('[data-testid="urban-scene-img"]');
-      const r = document.querySelector('[data-testid="rural-scene-img"]');
-      if (!wrap || !u || !r) return;
+      const s = document.querySelector(`[data-testid="${srcSel}"]`);
+      const d = document.querySelector(`[data-testid="${dstSel}"]`);
+      if (!wrap || !s || !d) return;
       const wr = wrap.getBoundingClientRect();
-      const ur = u.getBoundingClientRect();
-      const rr = r.getBoundingClientRect();
+      const sr = s.getBoundingClientRect();
+      const dr = d.getBoundingClientRect();
       const W = wr.width;
       const H = wr.height;
-      const U = { x: ur.left - wr.left + ur.width / 2, y: ur.top - wr.top + ur.height / 2, R: ur.width / 2 };
-      const R = { x: rr.left - wr.left + rr.width / 2, y: rr.top - wr.top + rr.height / 2, R: rr.width / 2 };
-      const Tu = { x: U.x - U.R * 0.08, y: U.y + U.R * 0.34 };
-      const Tr = { x: R.x - R.R * 0.28, y: R.y };
+      const S = { x: sr.left - wr.left + sr.width / 2, y: sr.top - wr.top + sr.height / 2, R: sr.width / 2 };
+      const D = { x: dr.left - wr.left + dr.width / 2, y: dr.top - wr.top + dr.height / 2, R: Math.min(dr.width, dr.height) / 2 };
+      const Tu = srcAnchor(S); // blue end
+      const Tr = dstAnchor(D); // purple end
 
       const Vx = Tu.x - Tr.x;
       const Vy = Tu.y - Tr.y;
@@ -100,8 +121,8 @@ export default function DataRiverOverlay({ containerRef }) {
       const imgStyle = {
         width: `${Wd}px`,
         height: `${Hd}px`,
-        transformOrigin: `${PURPLE.fx * 100}% ${PURPLE.fy * 100}%`,
-        transform: `translate(${Tr.x - PURPLE.fx * Wd}px, ${Tr.y - PURPLE.fy * Hd}px) rotate(${theta}deg)`,
+        transformOrigin: `${purple.fx * 100}% ${purple.fy * 100}%`,
+        transform: `translate(${Tr.x - purple.fx * Wd}px, ${Tr.y - purple.fy * Hd}px) rotate(${theta}deg)`,
       };
 
       const dx = Tr.x - Tu.x;
@@ -111,13 +132,11 @@ export default function DataRiverOverlay({ containerRef }) {
       const gradLen = Math.abs(W * Math.sin(rad)) + Math.abs(H * Math.cos(rad));
       const dl = Math.max(1, Math.hypot(dx, dy));
       const dir = { x: dx / dl, y: dy / dl };
-      const cx = W / 2;
-      const cy = H / 2;
-      const Bu = 0.5 + ((Tu.x - cx) * dir.x + (Tu.y - cy) * dir.y) / gradLen;
-      const Br = 0.5 + ((Tr.x - cx) * dir.x + (Tr.y - cy) * dir.y) / gradLen;
+      const Bu = 0.5 + ((Tu.x - W / 2) * dir.x + (Tu.y - H / 2) * dir.y) / gradLen;
+      const Br = 0.5 + ((Tr.x - W / 2) * dir.x + (Tr.y - H / 2) * dir.y) / gradLen;
       const path = `path("M ${Tu.x} ${Tu.y} C ${Tu.x + dx * 0.12} ${Tu.y + dy * 0.5}, ${Tu.x + dx * 0.58} ${Tu.y + dy * 0.52}, ${Tr.x} ${Tr.y}")`;
 
-      const g = { imgStyle, maskAngle, Bu, Br, path, Tu, Tr, W, H };
+      const g = { imgStyle, maskAngle, Bu, Br, path, Tu, Tr };
       geoRef.current = g;
       setGeo(g);
       applyReveal();
@@ -135,9 +154,8 @@ export default function DataRiverOverlay({ containerRef }) {
       ro.disconnect();
     };
     // eslint-disable-next-line
-  }, [containerRef]);
+  }, [containerRef, src, srcSel, dstSel]);
 
-  // scroll → rAF-synced imperative reveal (fires only on scroll, freezes when idle)
   useEffect(() => {
     const onScroll = () => {
       if (ticking.current) return;
@@ -155,47 +173,31 @@ export default function DataRiverOverlay({ containerRef }) {
       window.removeEventListener("resize", applyReveal);
     };
     // eslint-disable-next-line
-  }, [containerRef]);
+  }, [containerRef, dstSel]);
 
-  // re-apply glow gating when motion preference changes
   useEffect(() => {
     applyReveal();
     // eslint-disable-next-line
   }, [reduced]);
 
-  if (!geo) return <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }} data-testid="data-river-overlay" />;
+  if (!geo) return <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }} data-testid={testid} />;
 
   const initialMask = maskFor(geo, 0);
-  const pCount = mobile ? 5 : tablet ? 10 : 18;
+  const pCount = mobile ? 5 : tablet ? 9 : 15;
   const colors = ["#CFE4FF", "#9CC2FF", "#E7DEFF", "#C9B9F5", "#DCEBFF"];
 
   return (
-    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }} data-testid="data-river-overlay">
-      {/* SHARED MASKED PARENT — scroll-scrubbed reveal set imperatively on maskRef */}
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }} data-testid={testid}>
       <div
         ref={maskRef}
         className="absolute inset-0"
-        style={{
-          maskImage: initialMask,
-          WebkitMaskImage: initialMask,
-          maskRepeat: "no-repeat",
-          WebkitMaskRepeat: "no-repeat",
-        }}
-        data-testid="river-masked-parent"
+        style={{ maskImage: initialMask, WebkitMaskImage: initialMask, maskRepeat: "no-repeat", WebkitMaskRepeat: "no-repeat" }}
       >
-        <img
-          src="/river-stream-v3.png"
-          alt=""
-          aria-hidden="true"
-          draggable="false"
-          className="absolute top-0 left-0 select-none"
-          style={geo.imgStyle}
-        />
+        <img src={src} alt="" aria-hidden="true" draggable="false" className="absolute top-0 left-0 select-none" style={geo.imgStyle} />
 
-        {/* traveling highlight (ambient loop, allowed) */}
         {!reduced && (
           <img
-            src="/river-stream-v3.png"
+            src={src}
             alt=""
             aria-hidden="true"
             draggable="false"
@@ -215,7 +217,6 @@ export default function DataRiverOverlay({ containerRef }) {
           />
         )}
 
-        {/* particles (ambient loops, allowed) */}
         {!reduced &&
           Array.from({ length: pCount }).map((_, i) => {
             const size = 4 + (i % 4) * 2.5;
@@ -240,9 +241,8 @@ export default function DataRiverOverlay({ containerRef }) {
           })}
       </div>
 
-      {/* ENDPOINT GLOWS — not masked; gated + pulsed imperatively via refs */}
       <div
-        ref={uGlowRef}
+        ref={sGlowRef}
         className="absolute rounded-full"
         style={{
           left: geo.Tu.x,
@@ -255,7 +255,7 @@ export default function DataRiverOverlay({ containerRef }) {
         }}
       />
       <div
-        ref={rGlowRef}
+        ref={dGlowRef}
         className="absolute rounded-full"
         style={{
           left: geo.Tr.x,
@@ -269,22 +269,4 @@ export default function DataRiverOverlay({ containerRef }) {
       />
     </div>
   );
-}
-
-// Gate + pulse an endpoint glow. Pulse is a looping CSS keyframe (allowed for
-// glows); gating (whether the reveal has reached this end) is scroll-linked.
-function setGlow(el, on, reduced, dur) {
-  if (!el) return;
-  if (!on) {
-    el.style.animation = "none";
-    el.style.opacity = "0";
-    return;
-  }
-  if (reduced) {
-    el.style.animation = "none";
-    el.style.opacity = "0.7";
-  } else {
-    el.style.animation = `river-glow-pulse ${dur}s ease-in-out infinite`;
-    el.style.opacity = "";
-  }
 }
