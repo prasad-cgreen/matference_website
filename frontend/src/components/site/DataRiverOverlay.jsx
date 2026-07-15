@@ -72,7 +72,7 @@ export default function DataRiverOverlay({ containerRef }) {
 
   return (
     <img
-      src="/river-stream-v2.png"
+      src="/river-stream-v3.png"
       alt=""
       aria-hidden="true"
       draggable="false"
