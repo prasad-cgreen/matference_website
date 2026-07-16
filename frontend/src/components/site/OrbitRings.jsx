@@ -112,22 +112,28 @@ export default function OrbitRings({
         </div>
 
         {/* Edge flare: sits ON the circle boundary (blooms across it, not clipped),
-            marking where the river breaks through the circle. Above the circle. */}
-        {edgeGlow && box > 0 && (
-          <div
-            className="absolute rounded-full pointer-events-none z-20"
-            data-testid="orbit-edge-glow"
-            style={{
-              left: box / 2 + (diameter / 2) * edgeGlow.ox,
-              top: box / 2 + (diameter / 2) * edgeGlow.oy,
-              width: edgeGlow.size,
-              height: edgeGlow.size,
-              transform: "translate(-50%, -50%)",
-              background: edgeGlow.color,
-              animation: "river-glow-pulse 3s ease-in-out infinite",
-            }}
-          />
-        )}
+            marking where the river breaks through. Anchored by angle to the live
+            circle center + radius so it tracks the circle and never drifts. */}
+        {edgeGlow && box > 0 && (() => {
+          const rad = (edgeGlow.angleDeg * Math.PI) / 180;
+          const cx = box / 2;
+          const R = diameter / 2;
+          return (
+            <div
+              className="absolute rounded-full pointer-events-none z-20"
+              data-testid="orbit-edge-glow"
+              style={{
+                left: cx + R * Math.cos(rad),
+                top: cx + R * Math.sin(rad),
+                width: edgeGlow.size,
+                height: edgeGlow.size,
+                transform: "translate(-50%, -50%)",
+                background: edgeGlow.color,
+                animation: "river-glow-pulse 3s ease-in-out infinite",
+              }}
+            />
+          );
+        })()}
 
         {box > 0 && (
           <>

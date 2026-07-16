@@ -71,7 +71,7 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - **Wider rural→logo start**: warped `river_asset_rural_to_logo.png` in place (numpy column-wise vertical scale, factor 1.7 at the rural-exit end tapering to 1.0 by ~30% length). Logo end unchanged.
 
 ## Round 18 (2026-07-16) — VERIFIED visually (frontend-only)
-- **Urban flare repositioned**: deleted the in-circle `centerGlow` (was clipped by the circle's `overflow-hidden`) and replaced it with an `edgeGlow` prop on `OrbitRings` that renders the pulsing blue-white flare ON the circle's bottom-left edge (ox -0.98, oy 0.21), blooming across the boundary above the circle — matching the reference where the river breaks through.
+- **Urban flare repositioned**: deleted the in-circle `centerGlow` (was clipped by the circle's `overflow-hidden`) and replaced it with an `edgeGlow` prop on `OrbitRings` that renders the pulsing blue-white flare ON the circle's bottom-left edge at ~7:30 o'clock (`angleDeg` 128, computed as center + radius·cos/sin from the live circle box so it can't drift), blooming across the boundary above the circle — at the point where the river breaks through.
 - **River 2 highlight direction fixed**: the traveling highlight swept right→left in image space; since River 2's source (blue) is on the image's left, that ran logo→rural (backward). Added `flowReverse` prop (highlight `animationDirection: reverse`), set on River 2 only, so the highlight now flows rural→logo. Particles already traveled rural→logo (path Tu→Tr) and were left unchanged. River 1 untouched.
 
 ## Backlog / Remaining

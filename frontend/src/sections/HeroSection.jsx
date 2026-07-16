@@ -67,8 +67,7 @@ export default function HeroSection() {
             animate={isDesktop}
             testid="hero-orbit"
             edgeGlow={{
-              ox: -0.98,
-              oy: 0.21,
+              angleDeg: 128,
               size: isDesktop ? 172 : 108,
               color:
                 "radial-gradient(circle, rgba(255,255,255,0.98) 0%, rgba(220,235,255,0.9) 22%, rgba(77,166,255,0.55) 46%, rgba(77,166,255,0) 74%)",
