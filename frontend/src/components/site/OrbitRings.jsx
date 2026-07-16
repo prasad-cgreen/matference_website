@@ -3,9 +3,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 /**
  * Constellation of factor dots around a circular illustration.
  * - Resting: dim, unlabeled glowing dots on two orbit rings, gently twinkling.
- * - Reveal: hovering within proximity (desktop), focusing (keyboard) or tapping
- *   (mobile) brightens the dot and slides in a connector + label tooltip.
- * - Positions are updated each frame; on desktop the rings slowly rotate.
+ * - Reveal: proximity hover (desktop), focus (keyboard) or tap (mobile), OR an
+ *   externally-forced label (from a synced list chip) brightens the dot and
+ *   slides in a connector + label tooltip.
+ * - Reports its single "primary" locally-active factor up via onActive so the
+ *   companion static list can mirror the highlight.
  */
 
 const DUR = 60; // seconds per full rotation (slow, calm)
@@ -14,19 +16,24 @@ const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 function ringRadii(box, diameter) {
   const half = box / 2;
   const circleR = diameter / 2;
-  const band = Math.max(28, half - circleR);
+  const band = Math.max(24, half - circleR);
   return {
     rInner: circleR + band * 0.42,
     rOuter: circleR + band * 0.82,
   };
 }
 
-function Constellation({ items, box, diameter, animate, theme, testid }) {
+function Constellation({ items, box, diameter, animate, theme, testid, onActive, forcedActive }) {
   const hostRef = useRef(null);
   const wrapRefs = useRef([]);
   const mouseRef = useRef({ x: -9999, y: -9999, inside: false });
   const focusSet = useRef(new Set());
   const tapSet = useRef(new Set());
+  const onActiveRef = useRef(onActive);
+  const forcedRef = useRef(forcedActive);
+  const lastPrimary = useRef(null);
+  onActiveRef.current = onActive;
+  forcedRef.current = forcedActive;
 
   useEffect(() => {
     let raf;
@@ -36,6 +43,7 @@ function Constellation({ items, box, diameter, animate, theme, testid }) {
       const { rInner, rOuter } = ringRadii(box, diameter);
       const t = animate ? (((now - start) / 1000) / DUR) * 2 * Math.PI : 0;
       const TH2 = 36 * 36;
+      let primary = null;
       for (let i = 0; i < items.length; i++) {
         const it = items[i];
         const r = it.ring === "outer" ? rOuter : rInner;
@@ -48,13 +56,19 @@ function Constellation({ items, box, diameter, animate, theme, testid }) {
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
         el.dataset.side = x >= half ? "right" : "left";
-        let active = focusSet.current.has(i) || tapSet.current.has(i);
-        if (!active && mouseRef.current.inside) {
+        let local = focusSet.current.has(i) || tapSet.current.has(i);
+        if (!local && mouseRef.current.inside) {
           const dx = x - mouseRef.current.x;
           const dy = y - mouseRef.current.y;
-          active = dx * dx + dy * dy <= TH2;
+          local = dx * dx + dy * dy <= TH2;
         }
-        el.classList.toggle("is-active", active);
+        if (local && primary === null) primary = it.label;
+        const visible = local || forcedRef.current === it.label;
+        el.classList.toggle("is-active", visible);
+      }
+      if (primary !== lastPrimary.current) {
+        lastPrimary.current = primary;
+        onActiveRef.current?.(primary);
       }
       raf = requestAnimationFrame(loop);
     };
@@ -124,6 +138,8 @@ export default function OrbitRings({
   diameter = 200,
   animate = true,
   testid = "orbit",
+  onActive = null,
+  forcedActive = null,
 }) {
   const boxRef = useRef(null);
   const [box, setBox] = useState(0);
@@ -151,9 +167,8 @@ export default function OrbitRings({
   const { rInner, rOuter } = box > 0 ? ringRadii(box, diameter) : { rInner: 0, rOuter: 0 };
 
   return (
-    <div data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: diameter + 240 }}>
+    <div data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: diameter + 150 }}>
       <div ref={boxRef} className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
-        {/* orbit ring guides */}
         {box > 0 &&
           [rInner, rOuter].map((rr) => (
             <div
@@ -168,7 +183,6 @@ export default function OrbitRings({
             />
           ))}
 
-        {/* central illustration circle */}
         <div
           className="absolute left-1/2 top-1/2 rounded-full overflow-hidden shadow-2xl z-10"
           style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
@@ -177,7 +191,16 @@ export default function OrbitRings({
         </div>
 
         {box > 0 && (
-          <Constellation items={items} box={box} diameter={diameter} animate={animate} theme={theme} testid={testid} />
+          <Constellation
+            items={items}
+            box={box}
+            diameter={diameter}
+            animate={animate}
+            theme={theme}
+            testid={testid}
+            onActive={onActive}
+            forcedActive={forcedActive}
+          />
         )}
       </div>
     </div>

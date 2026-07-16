@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import OrbitRings from "@/components/site/OrbitRings";
 import UrbanScene from "@/illustrations/UrbanScene";
@@ -9,12 +9,15 @@ import { useIsDesktop } from "@/hooks/useResponsive";
 export default function HeroSection() {
   const ref = useRef(null);
   const isDesktop = useIsDesktop();
+  const [dotActive, setDotActive] = useState(null);
+  const [chipActive, setChipActive] = useState(null);
+  const active = chipActive || dotActive;
 
   return (
     <section
       id="hero"
       ref={ref}
-      className="relative min-h-screen w-full flex items-center pt-28 pb-16 overflow-hidden"
+      className="relative min-h-screen w-full flex items-center pt-24 pb-12 overflow-hidden"
       style={{ background: "#F7F8FB" }}
       data-testid="section-hero"
     >
@@ -64,13 +67,21 @@ export default function HeroSection() {
             outer={HERO_ORBIT.outer}
             inner={HERO_ORBIT.inner}
             theme="navy"
-            diameter={isDesktop ? 401 : 240}
+            diameter={isDesktop ? 300 : 240}
             animate={isDesktop}
             testid="hero-orbit"
+            onActive={setDotActive}
+            forcedActive={chipActive}
           >
             <UrbanScene className="w-full h-full" />
           </OrbitRings>
-          <EcosystemFactors factors={URBAN_FACTORS} theme="navy" testid="urban-ecosystem-factors" />
+          <EcosystemFactors
+            factors={URBAN_FACTORS}
+            theme="navy"
+            activeLabel={active}
+            onHover={setChipActive}
+            testid="urban-ecosystem-factors"
+          />
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import OrbitRings from "@/components/site/OrbitRings";
 import RuralScene from "@/illustrations/RuralScene";
@@ -9,6 +9,9 @@ import { useIsDesktop } from "@/hooks/useResponsive";
 export default function BharatProblem() {
   const ref = useRef(null);
   const isDesktop = useIsDesktop();
+  const [dotActive, setDotActive] = useState(null);
+  const [chipActive, setChipActive] = useState(null);
+  const active = chipActive || dotActive;
 
   return (
     <section
@@ -24,13 +27,21 @@ export default function BharatProblem() {
             outer={RURAL_ORBIT.outer}
             inner={RURAL_ORBIT.inner}
             theme="yellow"
-            diameter={isDesktop ? 401 : 240}
+            diameter={isDesktop ? 300 : 240}
             animate={isDesktop}
             testid="rural-orbit"
+            onActive={setDotActive}
+            forcedActive={chipActive}
           >
             <RuralScene className="w-full h-full" />
           </OrbitRings>
-          <EcosystemFactors factors={RURAL_FACTORS} theme="yellow" testid="rural-ecosystem-factors" />
+          <EcosystemFactors
+            factors={RURAL_FACTORS}
+            theme="yellow"
+            activeLabel={active}
+            onHover={setChipActive}
+            testid="rural-ecosystem-factors"
+          />
         </div>
 
         {/* Right: content card */}
