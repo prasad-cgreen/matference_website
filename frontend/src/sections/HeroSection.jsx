@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import OrbitRings from "@/components/site/OrbitRings";
 import UrbanScene from "@/illustrations/UrbanScene";
+import EcosystemFactors, { URBAN_FACTORS } from "@/components/site/EcosystemFactors";
 import { HERO_ORBIT } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 
@@ -57,8 +58,8 @@ export default function HeroSection() {
           </p>
         </motion.div>
 
-        {/* Right: urban orbit */}
-        <div className="relative flex justify-center lg:justify-end z-10">
+        {/* Right: urban orbit + static ecosystem factors */}
+        <div className="relative flex flex-col items-center z-10">
           <OrbitRings
             outer={HERO_ORBIT.outer}
             inner={HERO_ORBIT.inner}
@@ -69,6 +70,7 @@ export default function HeroSection() {
           >
             <UrbanScene className="w-full h-full" />
           </OrbitRings>
+          <EcosystemFactors factors={URBAN_FACTORS} theme="navy" testid="urban-ecosystem-factors" />
         </div>
       </div>
     </section>

@@ -74,6 +74,10 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - **Urban flare repositioned**: deleted the in-circle `centerGlow` (was clipped by the circle's `overflow-hidden`) and replaced it with an `edgeGlow` prop on `OrbitRings` that renders the pulsing blue-white flare ON the circle's bottom-left edge at ~7:30 o'clock (`angleDeg` 128, computed as center + radius·cos/sin from the live circle box so it can't drift), blooming across the boundary above the circle — at the point where the river breaks through.
 - **River 2 highlight direction fixed**: the traveling highlight swept right→left in image space; since River 2's source (blue) is on the image's left, that ran logo→rural (backward). Added `flowReverse` prop (highlight `animationDirection: reverse`), set on River 2 only, so the highlight now flows rural→logo. Particles already traveled rural→logo (path Tu→Tr) and were left unchanged. River 1 untouched.
 
+## Round 19 (2026-07-16) — VERIFIED visually
+- Removed the urban circle edge-glow entirely (per request).
+- **Static "ECOSYSTEM FACTORS" lists** added beneath both circles via a new reusable `components/site/EcosystemFactors.jsx` (exports `URBAN_FACTORS` / `RURAL_FACTORS` with canonical lucide line-icons). Small-caps letter-spaced header flanked by divider lines; wrapping grid of outlined pill chips (icon + label), always visible. Urban = navy scheme / 9 factors; rural = yellow scheme / 6 factors. Orbiting pills and rivers left untouched (coexist beneath the circle).
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.

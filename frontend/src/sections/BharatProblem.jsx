@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import OrbitRings from "@/components/site/OrbitRings";
 import RuralScene from "@/illustrations/RuralScene";
+import EcosystemFactors, { RURAL_FACTORS } from "@/components/site/EcosystemFactors";
 import { RURAL_ORBIT, BHARAT_COPY } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 
@@ -17,8 +18,8 @@ export default function BharatProblem() {
       data-testid="section-bharat"
     >
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center relative z-10">
-        {/* Left: rural orbit */}
-        <div className="flex justify-center lg:justify-start">
+        {/* Left: rural orbit + static ecosystem factors */}
+        <div className="flex flex-col items-center">
           <OrbitRings
             outer={RURAL_ORBIT.outer}
             inner={RURAL_ORBIT.inner}
@@ -29,6 +30,7 @@ export default function BharatProblem() {
           >
             <RuralScene className="w-full h-full" />
           </OrbitRings>
+          <EcosystemFactors factors={RURAL_FACTORS} theme="yellow" testid="rural-ecosystem-factors" />
         </div>
 
         {/* Right: content card */}
