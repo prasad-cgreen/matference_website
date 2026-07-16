@@ -66,6 +66,13 @@ export default function HeroSection() {
             diameter={isDesktop ? 401 : 240}
             animate={isDesktop}
             testid="hero-orbit"
+            centerGlow={{
+              left: "46%",
+              top: "67%",
+              size: isDesktop ? 168 : 104,
+              color:
+                "radial-gradient(circle, rgba(220,235,255,0.95) 0%, rgba(77,166,255,0.5) 40%, rgba(77,166,255,0) 72%)",
+            }}
           >
             <UrbanScene className="w-full h-full" />
           </OrbitRings>

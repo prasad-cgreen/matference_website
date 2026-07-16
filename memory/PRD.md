@@ -65,6 +65,11 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - **River 2** (Rural→Logo): NEW `river_asset_rural_to_logo.png`. Source tip focal {0.02,0.17}, dest tip {0.97,0.81}. Rural exit ~4:30 o'clock (underlapping), logo entry at left edge (underlapping). Scroll-scrubbed reveal (freezes on stop).
 - Logo glow + code-condensation caption reveal in `ScalingWithPurpose.jsx` now fires on River 2 arrival (window `river-logo-arrived` event at scroll progress ≥0.92); old generic scroll-into-view trigger deleted.
 
+## Round 17 (2026-07-16) — VERIFIED visually (frontend-only animation changes)
+- **Rivers reverted to continuous autoplay** (both segments): removed ALL scroll-tied clip-path/mask reveal from `DataRiverOverlay`. Full river image shows immediately; highlight sweep + particles + endpoint glows loop continuously; scroll now only toggles play/pause based on whether each river's own vertical span is in the viewport. River 2's logo caption/glow trigger (`river-logo-arrived`) now fires when River 2 enters view.
+- **Urban interior glow**: added `centerGlow` prop to `OrbitRings`; HeroSection renders a pulsing blue-white radial glow (~46%/67%) inside the urban circle at the river origin, above the artwork, clipped to the circle. (Note: sits above the artwork AND the underlapping river, since the circle renders above the river by design — visual "emerging from the city" goal met; placeholder-quality default, revisit if a reference is supplied.)
+- **Wider rural→logo start**: warped `river_asset_rural_to_logo.png` in place (numpy column-wise vertical scale, factor 1.7 at the rural-exit end tapering to 1.0 by ~30% length). Logo end unchanged.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.

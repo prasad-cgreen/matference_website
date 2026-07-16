@@ -17,6 +17,7 @@ export default function OrbitRings({
   animate = true,
   testid = "orbit",
   onAllRevealed = null,
+  centerGlow = null,
 }) {
   const ref = useRef(null);
   const boxRef = useRef(null);
@@ -108,6 +109,21 @@ export default function OrbitRings({
           style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
         >
           {children}
+          {centerGlow && (
+            <div
+              className="absolute rounded-full pointer-events-none"
+              data-testid="orbit-center-glow"
+              style={{
+                left: centerGlow.left,
+                top: centerGlow.top,
+                width: centerGlow.size,
+                height: centerGlow.size,
+                transform: "translate(-50%, -50%)",
+                background: centerGlow.color,
+                animation: "river-glow-pulse 3s ease-in-out infinite",
+              }}
+            />
+          )}
         </div>
 
         {box > 0 && (
