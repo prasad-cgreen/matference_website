@@ -40,6 +40,7 @@ export default function DataRiverOverlay({
   srcAnchor,
   dstAnchor,
   onArrive,
+  flowReverse = false,
   testid = "data-river-overlay",
 }) {
   const media = useMedia();
@@ -187,6 +188,7 @@ export default function DataRiverOverlay({
               maskRepeat: "no-repeat",
               WebkitMaskRepeat: "no-repeat",
               animation: "river-hl-sweep 5.5s linear infinite",
+              animationDirection: flowReverse ? "reverse" : "normal",
               animationPlayState: play,
             }}
           />

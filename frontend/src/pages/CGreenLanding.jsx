@@ -54,6 +54,7 @@ export default function CGreenLanding() {
           srcAnchor={(S) => ({ x: S.x + S.R * 0.62, y: S.y + S.R * 0.62 })}
           dstAnchor={(D) => ({ x: D.x - D.R * 2.0, y: D.y })}
           onArrive={notifyLogoArrival}
+          flowReverse
           testid="data-river-overlay-2"
         />
 

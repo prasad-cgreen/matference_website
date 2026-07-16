@@ -17,7 +17,7 @@ export default function OrbitRings({
   animate = true,
   testid = "orbit",
   onAllRevealed = null,
-  centerGlow = null,
+  edgeGlow = null,
 }) {
   const ref = useRef(null);
   const boxRef = useRef(null);
@@ -109,22 +109,25 @@ export default function OrbitRings({
           style={{ width: diameter, height: diameter, transform: "translate(-50%,-50%)" }}
         >
           {children}
-          {centerGlow && (
-            <div
-              className="absolute rounded-full pointer-events-none"
-              data-testid="orbit-center-glow"
-              style={{
-                left: centerGlow.left,
-                top: centerGlow.top,
-                width: centerGlow.size,
-                height: centerGlow.size,
-                transform: "translate(-50%, -50%)",
-                background: centerGlow.color,
-                animation: "river-glow-pulse 3s ease-in-out infinite",
-              }}
-            />
-          )}
         </div>
+
+        {/* Edge flare: sits ON the circle boundary (blooms across it, not clipped),
+            marking where the river breaks through the circle. Above the circle. */}
+        {edgeGlow && box > 0 && (
+          <div
+            className="absolute rounded-full pointer-events-none z-20"
+            data-testid="orbit-edge-glow"
+            style={{
+              left: box / 2 + (diameter / 2) * edgeGlow.ox,
+              top: box / 2 + (diameter / 2) * edgeGlow.oy,
+              width: edgeGlow.size,
+              height: edgeGlow.size,
+              transform: "translate(-50%, -50%)",
+              background: edgeGlow.color,
+              animation: "river-glow-pulse 3s ease-in-out infinite",
+            }}
+          />
+        )}
 
         {box > 0 && (
           <>

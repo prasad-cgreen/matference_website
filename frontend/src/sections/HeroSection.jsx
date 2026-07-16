@@ -66,12 +66,12 @@ export default function HeroSection() {
             diameter={isDesktop ? 401 : 240}
             animate={isDesktop}
             testid="hero-orbit"
-            centerGlow={{
-              left: "46%",
-              top: "67%",
-              size: isDesktop ? 168 : 104,
+            edgeGlow={{
+              ox: -0.98,
+              oy: 0.21,
+              size: isDesktop ? 172 : 108,
               color:
-                "radial-gradient(circle, rgba(220,235,255,0.95) 0%, rgba(77,166,255,0.5) 40%, rgba(77,166,255,0) 72%)",
+                "radial-gradient(circle, rgba(255,255,255,0.98) 0%, rgba(220,235,255,0.9) 22%, rgba(77,166,255,0.55) 46%, rgba(77,166,255,0) 74%)",
             }}
           >
             <UrbanScene className="w-full h-full" />
