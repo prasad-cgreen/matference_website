@@ -26,29 +26,18 @@ function LogoSolution({ isDesktop }) {
   const [revealed, setRevealed] = useState(0);
   const total = SOLUTION_CAPTIONS.length;
 
-  // Fire when the logo hub scrolls into view (standard threshold used elsewhere).
-  // Fires once; captions stay permanent (also covers fast-scroll: stays true once past).
+  // Fires when River 2 (rural -> logo) reaches the hub. Captions stay permanent.
   useEffect(() => {
     if (!isDesktop) return;
-    const check = () => {
+    const onArrive = () => {
       if (firedRef.current) return;
-      const el = ref.current;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      if (r.top < window.innerHeight * 0.8 && r.bottom > 0) {
-        firedRef.current = true;
-        setFired(true);
-        setGlow(true);
-        setTimeout(() => setGlow(false), 3000); // glow holds 3s then fades (cosmetic only)
-      }
+      firedRef.current = true;
+      setFired(true);
+      setGlow(true);
+      setTimeout(() => setGlow(false), 3000); // glow holds 3s then fades (cosmetic only)
     };
-    check();
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check);
-    return () => {
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
-    };
+    window.addEventListener("river-logo-arrived", onArrive);
+    return () => window.removeEventListener("river-logo-arrived", onArrive);
   }, [isDesktop]);
 
   // Paced caption reveal after firing (self-clearing interval).
@@ -101,6 +90,7 @@ function LogoSolution({ isDesktop }) {
       {/* logo — large focal point, roughly the width of the stats box; river terminates here */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] px-10 py-8 border border-[#142984]/10 z-10"
+        data-testid="solution-logo-hub"
         style={{
           animation: glow ? "logo-pulse 1.2s ease-in-out infinite" : "none",
           boxShadow: glow

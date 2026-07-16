@@ -57,6 +57,14 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - Vision/Mission: heading "VISION AND MISSION", bg #fff236 with glassy sheen, cards opaque navy; Our Services cards brighter blue, yellow icon chips w/ navy glyph, yellow headings, white body.
 - Round 11: swapped urban & rural circle illustrations to supplied raster PNGs (urban-scene.png / rural-scene.png). Updated GlobalRiver rural entry→~12 o'clock, exit→~7:30 to match new image's river; urban entry (6 o'clock) unchanged.
 
+## Round 16 (2026-07-15) — VERIFIED (contact form: iteration_9 backend+frontend 100%)
+- **Fixed blocker**: page was crashing/blank — `DataRiverOverlay` had been refactored to require props but `CGreenLanding` rendered it with none. Restored River 1 config.
+- `DataRiverOverlay` is now a fully reusable, prop-driven component (src, imgW/imgH, blue/purple focal points, srcSel/dstSel, srcAnchor/dstAnchor, onArrive).
+- Single shared `river-wrap` (isolate) now spans Hero + BharatProblem + ScalingWithPurpose so both rivers share one coordinate space (nav-stacking fix preserved).
+- **River 1** (Urban→Rural): `river-stream-v3.png`, unchanged behavior.
+- **River 2** (Rural→Logo): NEW `river_asset_rural_to_logo.png`. Source tip focal {0.02,0.17}, dest tip {0.97,0.81}. Rural exit ~4:30 o'clock (underlapping), logo entry at left edge (underlapping). Scroll-scrubbed reveal (freezes on stop).
+- Logo glow + code-condensation caption reveal in `ScalingWithPurpose.jsx` now fires on River 2 arrival (window `river-logo-arrived` event at scroll progress ≥0.92); old generic scroll-into-view trigger deleted.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.

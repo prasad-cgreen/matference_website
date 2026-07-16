@@ -59,6 +59,7 @@ export default function DataRiverOverlay({
   dstSel,
   srcAnchor,
   dstAnchor,
+  onArrive,
   testid = "data-river-overlay",
 }) {
   const media = useMedia();
@@ -71,6 +72,7 @@ export default function DataRiverOverlay({
   const sGlowRef = useRef(null);
   const dGlowRef = useRef(null);
   const ticking = useRef(false);
+  const arrivedRef = useRef(false);
   mediaRef.current = media;
 
   const ASPECT = imgW / imgH;
@@ -94,6 +96,10 @@ export default function DataRiverOverlay({
     const red = mediaRef.current.reduced;
     setGlow(sGlowRef.current, p > 0.04, red, 3);
     setGlow(dGlowRef.current, p > 0.9, red, 2.7);
+    if (onArrive && !arrivedRef.current && p >= 0.92) {
+      arrivedRef.current = true;
+      onArrive();
+    }
   };
 
   useLayoutEffect(() => {
