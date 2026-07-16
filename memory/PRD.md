@@ -78,6 +78,14 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - Removed the urban circle edge-glow entirely (per request).
 - **Static "ECOSYSTEM FACTORS" lists** added beneath both circles via a new reusable `components/site/EcosystemFactors.jsx` (exports `URBAN_FACTORS` / `RURAL_FACTORS` with canonical lucide line-icons). Small-caps letter-spaced header flanked by divider lines; wrapping grid of outlined pill chips (icon + label), always visible. Urban = navy scheme / 9 factors; rural = yellow scheme / 6 factors. Orbiting pills and rivers left untouched (coexist beneath the circle).
 
+## Round 22 (2026-07-16) — VERIFIED (desktop hover + keyboard)
+- Converted the always-visible orbit pills into a **hover-reveal constellation** (rewrote `OrbitRings`; removed the old pill/reveal/`CaptionPill`-orbit implementation and unused `onAllRevealed`).
+  - Rest: dim (~0.3) glowing dots on two orbit rings, staggered twinkle; no labels. Rings slowly rotate on desktop, static on mobile.
+  - Reveal: mouse proximity (~36px, rAF distance check), keyboard focus, or tap → dot brightens + scales 1.5×, a connector line + glass tooltip (navy urban / yellow rural) slides in on the outward side (200–300ms). Exit fades out.
+  - Multiple simultaneous reveals supported (union of proximity + focus + tap sets). Mobile tap toggles; background tap clears. Dots are focusable `<button>`s; Enter/Space toggles. Reduced-motion disables twinkle.
+- Constellation CSS lives in `index.css` (`.orbit-dot*`, `@keyframes dot-twinkle`). Static "Ecosystem Factors" lists and both rivers untouched.
+- **Round 21 note**: dots are tiny and the two rings sit comfortably in the band between the circle edge and the column, with no overlap — the circle-shrink of Round 21 appears **unnecessary**.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.

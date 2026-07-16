@@ -1,13 +1,121 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 /**
- * Orbit rings around a circular illustration.
- * - Pills are positioned by exact polar coordinates each frame (constant radius, no drift).
- * - NO connector lines. Radii are large enough that pills never touch/overlap the circle.
- * - Outer captions at a larger fixed radius, inner captions at a smaller fixed radius.
- * - Constant rotation speed. Captions reveal one-by-one and stay permanent.
+ * Constellation of factor dots around a circular illustration.
+ * - Resting: dim, unlabeled glowing dots on two orbit rings, gently twinkling.
+ * - Reveal: hovering within proximity (desktop), focusing (keyboard) or tapping
+ *   (mobile) brightens the dot and slides in a connector + label tooltip.
+ * - Positions are updated each frame; on desktop the rings slowly rotate.
  */
+
+const DUR = 60; // seconds per full rotation (slow, calm)
+const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+
+function ringRadii(box, diameter) {
+  const half = box / 2;
+  const circleR = diameter / 2;
+  const band = Math.max(28, half - circleR);
+  return {
+    rInner: circleR + band * 0.42,
+    rOuter: circleR + band * 0.82,
+  };
+}
+
+function Constellation({ items, box, diameter, animate, theme, testid }) {
+  const hostRef = useRef(null);
+  const wrapRefs = useRef([]);
+  const mouseRef = useRef({ x: -9999, y: -9999, inside: false });
+  const focusSet = useRef(new Set());
+  const tapSet = useRef(new Set());
+
+  useEffect(() => {
+    let raf;
+    const start = performance.now();
+    const loop = (now) => {
+      const half = box / 2;
+      const { rInner, rOuter } = ringRadii(box, diameter);
+      const t = animate ? (((now - start) / 1000) / DUR) * 2 * Math.PI : 0;
+      const TH2 = 36 * 36;
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        const r = it.ring === "outer" ? rOuter : rInner;
+        const dir = it.ring === "outer" ? 1 : -1;
+        const a = it.base + dir * t;
+        const x = half + r * Math.cos(a);
+        const y = half + r * Math.sin(a);
+        const el = wrapRefs.current[i];
+        if (!el) continue;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.dataset.side = x >= half ? "right" : "left";
+        let active = focusSet.current.has(i) || tapSet.current.has(i);
+        if (!active && mouseRef.current.inside) {
+          const dx = x - mouseRef.current.x;
+          const dy = y - mouseRef.current.y;
+          active = dx * dx + dy * dy <= TH2;
+        }
+        el.classList.toggle("is-active", active);
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [items, box, diameter, animate]);
+
+  const onMove = (e) => {
+    const host = hostRef.current;
+    if (!host) return;
+    const r = host.getBoundingClientRect();
+    mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top, inside: true };
+  };
+  const onLeave = () => {
+    mouseRef.current.inside = false;
+  };
+  const toggleTap = (i) => {
+    if (tapSet.current.has(i)) tapSet.current.delete(i);
+    else tapSet.current.add(i);
+  };
+  const onHostClick = (e) => {
+    if (e.target === hostRef.current) tapSet.current.clear();
+  };
+
+  return (
+    <div
+      ref={hostRef}
+      className="absolute inset-0"
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      onClick={onHostClick}
+      data-testid={`${testid}-constellation`}
+    >
+      {items.map((it, i) => (
+        <button
+          key={it.label}
+          type="button"
+          ref={(el) => (wrapRefs.current[i] = el)}
+          className={`orbit-dot orbit-dot-${theme} absolute`}
+          style={{ transform: "translate(-50%, -50%)" }}
+          data-testid={`orbit-dot-${slug(it.label)}`}
+          aria-label={it.label}
+          onClick={() => toggleTap(i)}
+          onFocus={() => focusSet.current.add(i)}
+          onBlur={() => focusSet.current.delete(i)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              toggleTap(i);
+            }
+          }}
+        >
+          <span className="orbit-dot-core" style={{ animationDelay: `${((i * 0.73) % 4).toFixed(2)}s` }} />
+          <span className="orbit-connector" />
+          <span className="orbit-tooltip font-body">{it.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function OrbitRings({
   children,
   outer = [],
@@ -16,18 +124,11 @@ export default function OrbitRings({
   diameter = 200,
   animate = true,
   testid = "orbit",
-  onAllRevealed = null,
 }) {
-  const ref = useRef(null);
   const boxRef = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.3 });
-  const total = outer.length + inner.length;
-  const [revealed, setRevealed] = useState(0);
   const [box, setBox] = useState(0);
-  const allRevealed = revealed >= total;
 
-  useLayoutEffect(() => {
-    if (!animate) return;
+  useEffect(() => {
     const measure = () => {
       if (boxRef.current) setBox(boxRef.current.clientWidth);
     };
@@ -39,68 +140,33 @@ export default function OrbitRings({
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [animate]);
+  }, []);
 
-  useEffect(() => {
-    if (!animate || !inView) return;
-    const id = setInterval(() => {
-      setRevealed((r) => {
-        const next = Math.min(total, r + 1);
-        if (next >= total) clearInterval(id);
-        return next;
-      });
-    }, 320);
-    return () => clearInterval(id);
-  }, [animate, inView, total]);
+  const items = useMemo(() => {
+    const o = outer.map((label, i) => ({ label, ring: "outer", base: (2 * Math.PI * i) / Math.max(1, outer.length) }));
+    const n = inner.map((label, i) => ({ label, ring: "inner", base: (2 * Math.PI * i) / Math.max(1, inner.length) + 0.6 }));
+    return [...o, ...n];
+  }, [outer, inner]);
 
-  useEffect(() => {
-    if (allRevealed && onAllRevealed) onAllRevealed();
-  }, [allRevealed, onAllRevealed]);
-
-  useEffect(() => {
-    if (!animate && onAllRevealed) onAllRevealed();
-  }, [animate, onAllRevealed]);
-
-  // Static (mobile) fallback: everything visible, no orbit.
-  if (!animate) {
-    return (
-      <div ref={ref} data-testid={`${testid}-static`} className="flex flex-col items-center gap-6">
-        <div
-          className="rounded-full overflow-hidden shadow-xl"
-          style={{ width: Math.min(diameter, 280), height: Math.min(diameter, 280) }}
-        >
-          {children}
-        </div>
-        <div className="flex flex-wrap justify-center gap-2 max-w-md">
-          {[...outer, ...inner].map((c) => (
-            <CaptionPill key={c} text={c} theme={theme} />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // Radii chosen so pills (nowrap) always clear the circle at every angle,
-  // while keeping the enlarged circle + orbit within the grid column width.
-  const rInner = diameter / 2 + 70;
-  const rOuter = diameter / 2 + 120;
+  const { rInner, rOuter } = box > 0 ? ringRadii(box, diameter) : { rInner: 0, rOuter: 0 };
 
   return (
-    <div ref={ref} data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: rOuter * 2 + 180 }}>
+    <div data-testid={testid} className="relative mx-auto w-full" style={{ maxWidth: diameter + 240 }}>
       <div ref={boxRef} className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
-        {/* fixed-radius ring guides */}
-        {[rInner, rOuter].map((rr) => (
-          <div
-            key={rr}
-            className="absolute left-1/2 top-1/2 rounded-full"
-            style={{
-              width: rr * 2,
-              height: rr * 2,
-              transform: "translate(-50%,-50%)",
-              border: `1px dashed ${theme === "yellow" ? "rgba(252,221,21,0.25)" : "rgba(20,41,132,0.16)"}`,
-            }}
-          />
-        ))}
+        {/* orbit ring guides */}
+        {box > 0 &&
+          [rInner, rOuter].map((rr) => (
+            <div
+              key={rr}
+              className="absolute left-1/2 top-1/2 rounded-full pointer-events-none"
+              style={{
+                width: rr * 2,
+                height: rr * 2,
+                transform: "translate(-50%,-50%)",
+                border: `1px dashed ${theme === "yellow" ? "rgba(252,221,21,0.28)" : "rgba(20,41,132,0.16)"}`,
+              }}
+            />
+          ))}
 
         {/* central illustration circle */}
         <div
@@ -111,74 +177,9 @@ export default function OrbitRings({
         </div>
 
         {box > 0 && (
-          <>
-            <Ring items={outer} radius={rOuter} center={box / 2} dir="cw" theme={theme} revealed={revealed} offset={0} />
-            <Ring items={inner} radius={rInner} center={box / 2} dir="ccw" theme={theme} revealed={revealed} offset={outer.length} />
-          </>
+          <Constellation items={items} box={box} diameter={diameter} animate={animate} theme={theme} testid={testid} />
         )}
       </div>
     </div>
-  );
-}
-
-const DUR = 42; // seconds per full rotation (constant)
-
-function Ring({ items, radius, center, dir, theme, revealed, offset }) {
-  const pillRefs = useRef([]);
-
-  useEffect(() => {
-    let raf;
-    const start = performance.now();
-    const sign = dir === "cw" ? 1 : -1;
-    const base = items.map((_, i) => (2 * Math.PI * i) / items.length + (dir === "ccw" ? 0.6 : 0));
-    const loop = (now) => {
-      const theta = sign * (((now - start) / 1000) / DUR) * 2 * Math.PI;
-      for (let i = 0; i < items.length; i++) {
-        const a = base[i] + theta;
-        const p = pillRefs.current[i];
-        if (p) {
-          p.style.left = center + radius * Math.cos(a) + "px";
-          p.style.top = center + radius * Math.sin(a) + "px";
-        }
-      }
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [items, radius, center, dir]);
-
-  return (
-    <>
-      {items.map((text, i) => (
-        <div
-          key={text}
-          ref={(el) => (pillRefs.current[i] = el)}
-          className="absolute"
-          style={{
-            transform: "translate(-50%, -50%)",
-            opacity: offset + i < revealed ? 1 : 0,
-            transition: "opacity 0.5s ease",
-          }}
-        >
-          <CaptionPill text={text} theme={theme} />
-        </div>
-      ))}
-    </>
-  );
-}
-
-function CaptionPill({ text, theme }) {
-  const isYellow = theme === "yellow";
-  return (
-    <span
-      className="glass whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-body font-medium shadow-md"
-      style={{
-        background: isYellow ? "rgba(252,221,21,0.5)" : "rgba(20,41,132,0.35)",
-        color: "#142984",
-        border: isYellow ? "1px solid rgba(252,221,21,0.7)" : "1px solid rgba(20,41,132,0.5)",
-      }}
-    >
-      {text}
-    </span>
   );
 }
