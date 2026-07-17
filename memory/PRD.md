@@ -121,6 +121,9 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 ## Round 30 (2026-07-17) — VERIFIED
 - Replaced the binary "code condensation" logo labels with an icon + circuit-trace style. New `components/site/LogoFeatureIcons.jsx` provides 9 distinct gold line-art icons (gear+chip, gear+people, chip+check, bank+smile, pin+dots, mic+waves, gear+person, water-tower+house+gear, chip+wifi). In `ScalingWithPurpose.jsx` each node renders the icon + bold monospace navy label beneath, at the same 9 relative positions; navy right-angle PCB traces with hollow nodes connect each icon toward the logo (shared corridors near center = branching network). Central white logo capsule, purple data-stream, and background unchanged. Removed the old `CodeLabel`/`randBits` treatment.
 
+## Round 31 (2026-07-17) — VERIFIED
+- Rebuilt the 9 logo connector traces (`traceOf` in `ScalingWithPurpose.jsx`): each icon now routes via a short stub + 2 right-angle bends to its OWN distinct endpoint on the logo capsule edge (per-trace lane offset prevents collapse/shared spine), with 3 hollow nodes each (icon end + 2 bends). Strictly horizontal/vertical segments — the Intent & Ability diagonal is corrected. Line color/weight, icons, logo, background unchanged.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.

@@ -76,31 +76,42 @@ function LogoSolution({ isDesktop }) {
     return { c, a, x: C + Math.cos(a) * iconR, y: C + Math.sin(a) * iconR };
   });
 
-  // Orthogonal (right-angle) PCB-style trace from near the logo out to an icon.
-  const traceOf = (a) => {
-    const tx = C + Math.cos(a) * (iconR - 30);
-    const ty = C + Math.sin(a) * (iconR - 30);
-    const dx = tx - C;
-    const dy = ty - C;
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      const mx = C + Math.sign(dx) * Math.max(120, Math.abs(dx) * 0.5);
-      return [[C, C], [mx, C], [mx, ty], [tx, ty]];
+  // Orthogonal PCB trace: icon -> short stub -> 2 right-angle bends -> its own
+  // distinct endpoint on the logo capsule edge (no diagonals, no shared spine).
+  const traceOf = (a, i) => {
+    const A = [C + Math.cos(a) * (iconR - 30), C + Math.sin(a) * (iconR - 30)];
+    const hw = 168;
+    const hh = 74;
+    const t = 1 / Math.max(Math.abs(Math.cos(a)) / hw, Math.abs(Math.sin(a)) / hh);
+    let E = [C + Math.cos(a) * t, C + Math.sin(a) * t];
+    const vertical = Math.abs(Math.sin(a)) >= Math.abs(Math.cos(a));
+    const lane = ((i % 3) - 1) * 24; // -24, 0, 24 -> distinct jog per trace
+    const stub = 26;
+    if (vertical) {
+      E = [E[0] + lane, E[1]];
+      const s = Math.sign(E[1] - A[1]) || 1;
+      const p1 = [A[0], A[1] + s * stub];
+      const p2 = [E[0], p1[1]];
+      return [A, p1, p2, E];
     }
-    const my = C + Math.sign(dy) * Math.max(120, Math.abs(dy) * 0.5);
-    return [[C, C], [C, my], [tx, my], [tx, ty]];
+    E = [E[0], E[1] + lane];
+    const s = Math.sign(E[0] - A[0]) || 1;
+    const p1 = [A[0] + s * stub, A[1]];
+    const p2 = [p1[0], E[1]];
+    return [A, p1, p2, E];
   };
 
   return (
     <div className="relative mx-auto" style={{ width: SIZE, height: SIZE, maxWidth: "100%" }} data-testid="solution-logo">
       {/* Circuit-trace network (navy), tucked under the logo capsule */}
       <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 6 }} width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} fill="none">
-        {nodes.map((n) => {
-          const pts = traceOf(n.a);
+        {nodes.map((n, i) => {
+          const pts = traceOf(n.a, i);
           const d = "M " + pts.map((pt) => pt.join(" ")).join(" L ");
           return (
             <g key={n.c}>
               <path d={d} stroke="#142984" strokeWidth={1.6} fill="none" strokeLinejoin="round" strokeLinecap="round" />
-              {pts.slice(1).map((pt, k) => (
+              {pts.slice(0, 3).map((pt, k) => (
                 <circle key={k} cx={pt[0]} cy={pt[1]} r={3.6} fill="#FFFCFA" stroke="#142984" strokeWidth={1.3} />
               ))}
             </g>
