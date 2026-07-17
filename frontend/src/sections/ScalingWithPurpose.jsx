@@ -1,20 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useInView } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { STATS, SOLUTION_CAPTIONS } from "@/data/site";
-import { useCountUp } from "@/hooks/useCountUp";
+import { motion, AnimatePresence } from "framer-motion";
+import { Store, Coins, Cpu, TrendingUp, Mic, Database } from "lucide-react";
+import { SOLUTION_CAPTIONS, SERVICES_INTRO, PRAGATI_CARDS, LENDING_CARDS } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 
-function StatItem({ value, suffix, label, active }) {
-  const n = useCountUp(value, active);
+const ICONS = { Store, Coins, Cpu, TrendingUp, Mic, Database };
+
+function ServiceCard({ card, i }) {
+  const Icon = ICONS[card.icon];
   return (
-    <div className="text-center" data-testid={`stat-${label.toLowerCase()}`}>
-      <div className="font-head text-3xl lg:text-4xl text-[#FCDD15] tabular-nums whitespace-nowrap">
-        {n}
-        {suffix}
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: i * 0.08 }}
+      className="glass rounded-[24px] p-7 flex flex-col"
+      style={{ background: "rgba(20,41,132,0.45)" }}
+      data-testid={`service-card-${i}`}
+    >
+      <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 border border-[#142984]/20 bg-[#FCDD15]">
+        <Icon className="text-[#142984]" size={24} />
       </div>
-      <div className="font-body text-sm mt-1 text-[#FCDD15]/90">{label}</div>
-    </div>
+      <p className="font-head text-sm text-[#FCDD15] uppercase tracking-wide mb-2">{card.value}</p>
+      <h3 className="font-head text-lg text-[#FCDD15] mb-3">{card.title}</h3>
+      <p className="font-body text-sm leading-relaxed text-white/90">{card.body}</p>
+    </motion.div>
   );
 }
 
@@ -87,7 +96,7 @@ function LogoSolution({ isDesktop }) {
         }}
       />
 
-      {/* logo — large focal point, roughly the width of the stats box; river terminates here */}
+      {/* logo — large focal point; river terminates here */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] px-10 py-8 border border-[#142984]/10 z-10"
         data-testid="solution-logo-hub"
@@ -175,36 +184,65 @@ function CodeLabel({ text, active }) {
 }
 
 export default function ScalingWithPurpose() {
-  const ref = useRef(null);
-  const statsRef = useRef(null);
-  const statsInView = useInView(statsRef, { once: true, amount: 0.4 });
   const isDesktop = useIsDesktop();
+  const [tab, setTab] = useState("pragati");
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail === "pragati" || e.detail === "lending") setTab(e.detail);
+    };
+    window.addEventListener("cgreen:services-tab", handler);
+    return () => window.removeEventListener("cgreen:services-tab", handler);
+  }, []);
+
+  const cards = tab === "pragati" ? PRAGATI_CARDS : LENDING_CARDS;
+
+  const TabButton = ({ id, label }) => {
+    const active = tab === id;
+    return (
+      <button
+        onClick={() => setTab(id)}
+        data-testid={`services-tab-${id}`}
+        className={`glass rounded-full px-6 py-3 text-sm font-head font-bold transition-all ${
+          active ? "glass-yellow text-[#142984]" : "glass-navy text-[#142984]/70 hover:text-[#142984]"
+        }`}
+      >
+        {label}
+      </button>
+    );
+  };
 
   return (
-    <section id="solution" ref={ref} className="relative w-full py-24 overflow-hidden" data-testid="section-scaling">
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center relative z-10">
-        {/* Left column */}
-        <div ref={statsRef}>
-          <div className="glass glass-navy rounded-[28px] p-8" data-testid="stats-block">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-              {STATS.map((s) => (
-                <StatItem key={s.label} {...s} active={statsInView} />
+    <section id="solution" className="relative w-full py-24 overflow-hidden scroll-mt-24" data-testid="section-scaling">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-start relative z-10">
+        {/* Left column: Our Services (merged in) */}
+        <div id="services" className="scroll-mt-24" data-testid="section-services">
+          <h2 className="font-head text-3xl lg:text-4xl text-[#142984]">OUR SERVICES</h2>
+          <p className="font-body text-base lg:text-lg text-[#142984]/70 mt-1">THE CGREEN APPROACH</p>
+          <p className="font-body text-base text-[#142984]/80 mt-5 leading-relaxed">{SERVICES_INTRO}</p>
+
+          <div className="flex flex-wrap gap-3 mt-7 mb-7">
+            <TabButton id="pragati" label="For Pragati Kendra Partners" />
+            <TabButton id="lending" label="For Lending Institutions" />
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="flex flex-col gap-6"
+            >
+              {cards.map((card, i) => (
+                <ServiceCard key={card.title} card={card} i={i} />
               ))}
-            </div>
-          </div>
-
-          <p className="font-head text-2xl lg:text-3xl text-[#FCDD15] mt-8 leading-tight">
-            SCALING WITH PURPOSE, SOLVING FOR BHARAT
-          </p>
-
-          <div className="mt-8">
-            <h2 className="font-head text-3xl lg:text-4xl text-[#142984]">OUR SOLUTION</h2>
-            <p className="font-body text-base lg:text-lg text-[#142984]/70 mt-1">THE CGREEN APPROACH</p>
-            <ArrowRight className="text-[#142984] mt-3" size={30} />
-          </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Right column: logo sequence */}
+        {/* Right column: logo sequence (unchanged) */}
         <div className="flex justify-center">
           <LogoSolution isDesktop={isDesktop} />
         </div>

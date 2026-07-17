@@ -107,6 +107,10 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 ## Round 27 (2026-07-17) — VERIFIED
 - Fully rebuilt the Vision & Mission section (`PlatformVisionMission.jsx`) to the approved reference: cream→gold gradient bg; centered navy header with line–dot–line divider; staggered cascade (navy VISION card upper-left larger + yellow MISSION card lower-right smaller, overlapping stair-step); inverted card colors; outlined circular icon badges (lucide `Eye` yellow / `Target` navy) beside headings; yellow elbow SVG connector with end nodes linking Vision→Mission; flat matte cards, rounded-[28px], soft shadows. Copy unchanged. Platform subsection untouched.
 
+## Round 28 (2026-07-17) — VERIFIED
+- Merged "Our Services" into the cGreen logo section (`ScalingWithPurpose.jsx`). Left column: removed the stats box + "SCALING WITH PURPOSE" heading; heading changed OUR SOLUTION→OUR SERVICES (kept "THE CGREEN APPROACH"); moved in the services intro, the two tab toggles (same `cgreen:services-tab` behavior), and the 3 active-tab cards restacked as a single vertical column. Service cards now use glass fill `rgba(20,41,132,0.45)` + standard glass recipe (blur/border/specular). Right column (logo hub + binary captions) unchanged.
+- Deleted the standalone `OurServices.jsx` section entirely and removed it from `CGreenLanding.jsx` (no duplicate, no gap).
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.
