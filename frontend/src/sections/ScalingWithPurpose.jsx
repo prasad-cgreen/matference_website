@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Store, Coins, Cpu, TrendingUp, Mic, Database, ChevronLeft, ChevronRight } from "lucide-react";
 import { SOLUTION_CAPTIONS, SERVICES_INTRO, PRAGATI_CARDS, LENDING_CARDS } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
+import { FEATURE_ICONS } from "@/components/site/LogoFeatureIcons";
 
 const ICONS = { Store, Coins, Cpu, TrendingUp, Mic, Database };
+const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 
 function ServiceCard({ card }) {
   const Icon = ICONS[card.icon];
@@ -27,75 +29,99 @@ function ServiceCard({ card }) {
 }
 
 function LogoSolution({ isDesktop }) {
-  const ref = useRef(null);
   const firedRef = useRef(false);
-  const [fired, setFired] = useState(false);
   const [glow, setGlow] = useState(false);
-  const [revealed, setRevealed] = useState(0);
-  const total = SOLUTION_CAPTIONS.length;
 
-  // Fires when River 2 (rural -> logo) reaches the hub. Captions stay permanent.
+  // Yellow logo bloom fires when River 2 (rural -> logo) reaches the hub.
   useEffect(() => {
     if (!isDesktop) return;
     const onArrive = () => {
       if (firedRef.current) return;
       firedRef.current = true;
-      setFired(true);
       setGlow(true);
-      setTimeout(() => setGlow(false), 3000); // glow holds 3s then fades (cosmetic only)
+      setTimeout(() => setGlow(false), 3000);
     };
     window.addEventListener("river-logo-arrived", onArrive);
     return () => window.removeEventListener("river-logo-arrived", onArrive);
   }, [isDesktop]);
 
-  // Paced caption reveal after firing (self-clearing interval).
-  useEffect(() => {
-    if (!fired) return;
-    const id = setInterval(() => {
-      setRevealed((r) => {
-        const next = Math.min(total, r + 1);
-        if (next >= total) clearInterval(id);
-        return next;
-      });
-    }, 160);
-    return () => clearInterval(id);
-  }, [fired, total]);
-
   if (!isDesktop) {
     return (
-      <div ref={ref} className="flex flex-col items-center gap-6" data-testid="solution-logo-static">
+      <div className="flex flex-col items-center gap-6" data-testid="solution-logo-static">
         <img src="/cgreen-logo.png" alt="cGreen" className="w-56 h-auto" />
-        <div className="flex flex-wrap justify-center gap-2 max-w-md">
-          {SOLUTION_CAPTIONS.map((c) => (
-            <span key={c} className="glass glass-navy rounded-full px-3 py-1.5 text-xs font-body text-[#142984] border border-[#142984]/25">
-              {c}
-            </span>
-          ))}
+        <div className="flex flex-wrap justify-center gap-3 max-w-md">
+          {SOLUTION_CAPTIONS.map((c) => {
+            const Icon = FEATURE_ICONS[c];
+            return (
+              <div key={c} className="flex flex-col items-center text-center w-24" data-testid={`feature-${slug(c)}`}>
+                {Icon && Icon(36)}
+                <div className="mt-1" style={{ fontFamily: "'Courier New', monospace", fontSize: "11px", fontWeight: 800, lineHeight: 1.1, color: "#0F1F4B" }}>
+                  {c}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
   }
 
   const SIZE = 600;
-  const center = SIZE / 2;
-  const R = 238;
+  const C = SIZE / 2;
+  const iconR = 236;
+  const total = SOLUTION_CAPTIONS.length;
+
+  const nodes = SOLUTION_CAPTIONS.map((c, i) => {
+    const a = (Math.PI * 2 * i) / total - Math.PI / 2;
+    return { c, a, x: C + Math.cos(a) * iconR, y: C + Math.sin(a) * iconR };
+  });
+
+  // Orthogonal (right-angle) PCB-style trace from near the logo out to an icon.
+  const traceOf = (a) => {
+    const tx = C + Math.cos(a) * (iconR - 30);
+    const ty = C + Math.sin(a) * (iconR - 30);
+    const dx = tx - C;
+    const dy = ty - C;
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      const mx = C + Math.sign(dx) * Math.max(120, Math.abs(dx) * 0.5);
+      return [[C, C], [mx, C], [mx, ty], [tx, ty]];
+    }
+    const my = C + Math.sign(dy) * Math.max(120, Math.abs(dy) * 0.5);
+    return [[C, C], [C, my], [tx, my], [tx, ty]];
+  };
+
   return (
-    <div ref={ref} className="relative mx-auto" style={{ width: SIZE, height: SIZE, maxWidth: "100%" }} data-testid="solution-logo">
+    <div className="relative mx-auto" style={{ width: SIZE, height: SIZE, maxWidth: "100%" }} data-testid="solution-logo">
+      {/* Circuit-trace network (navy), tucked under the logo capsule */}
+      <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 6 }} width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} fill="none">
+        {nodes.map((n) => {
+          const pts = traceOf(n.a);
+          const d = "M " + pts.map((pt) => pt.join(" ")).join(" L ");
+          return (
+            <g key={n.c}>
+              <path d={d} stroke="#142984" strokeWidth={1.6} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+              {pts.slice(1).map((pt, k) => (
+                <circle key={k} cx={pt[0]} cy={pt[1]} r={3.6} fill="#FFFCFA" stroke="#142984" strokeWidth={1.3} />
+              ))}
+            </g>
+          );
+        })}
+      </svg>
+
       {/* yellow bloom / halo behind the logo */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
         style={{
           width: 380,
           height: 380,
-          background:
-            "radial-gradient(circle, rgba(252,221,21,0.95) 0%, rgba(252,221,21,0.5) 42%, rgba(252,221,21,0) 72%)",
+          background: "radial-gradient(circle, rgba(252,221,21,0.95) 0%, rgba(252,221,21,0.5) 42%, rgba(252,221,21,0) 72%)",
           filter: "blur(8px)",
           opacity: glow ? 1 : 0,
           transition: "opacity 0.9s ease",
         }}
       />
 
-      {/* logo — large focal point; river terminates here */}
+      {/* logo — central white capsule; river terminates here */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] px-10 py-8 border border-[#142984]/10 z-10"
         data-testid="solution-logo-hub"
@@ -110,74 +136,23 @@ function LogoSolution({ isDesktop }) {
         <img src="/cgreen-logo.png" alt="cGreen" className="w-[260px] h-auto" />
       </div>
 
-      {/* "code condensation" captions — no pill, no border, no connector line */}
-      {SOLUTION_CAPTIONS.map((c, i) => {
-        const a = (Math.PI * 2 * i) / total - Math.PI / 2;
-        const x = center + Math.cos(a) * R;
-        const y = center + Math.sin(a) * R;
+      {/* icon + label feature nodes */}
+      {nodes.map((n) => {
+        const Icon = FEATURE_ICONS[n.c];
         return (
           <div
-            key={c}
-            className="absolute z-20"
-            style={{ left: x, top: y, transform: "translate(-50%, -50%)", width: 180 }}
+            key={n.c}
+            className="absolute flex flex-col items-center text-center"
+            style={{ left: n.x, top: n.y, transform: "translate(-50%, -50%)", width: 160, zIndex: 20 }}
+            data-testid={`feature-${slug(n.c)}`}
           >
-            <CodeLabel text={c} active={i < revealed} />
+            {Icon && Icon(46)}
+            <div className="mt-1" style={{ fontFamily: "'Courier New', monospace", fontSize: "14px", fontWeight: 800, lineHeight: 1.15, color: "#0F1F4B" }}>
+              {n.c}
+            </div>
           </div>
         );
       })}
-    </div>
-  );
-}
-
-const randBits = (n) => Array.from({ length: n }, () => (Math.random() > 0.5 ? "1" : "0")).join("");
-
-// A single "decoded out of the data stream" caption: binary cycles then freezes, label resolves.
-function CodeLabel({ text, active }) {
-  const [line1, setLine1] = useState(() => randBits(5));
-  const [line2, setLine2] = useState(() => randBits(4));
-  const [resolved, setResolved] = useState(false);
-
-  useEffect(() => {
-    if (!active) return;
-    const cycle = setInterval(() => {
-      setLine1(randBits(5));
-      setLine2(randBits(4));
-    }, 55);
-    const stop = setTimeout(() => {
-      clearInterval(cycle);
-      setLine1(randBits(5));
-      setLine2(randBits(4));
-      setResolved(true);
-    }, 560);
-    return () => {
-      clearInterval(cycle);
-      clearTimeout(stop);
-    };
-  }, [active]);
-
-  return (
-    <div className="flex flex-col items-center text-center select-none" style={{ fontFamily: "'Courier New', monospace" }}>
-      <div
-        className="leading-[1.05] tracking-[0.15em]"
-        style={{ fontSize: "12px", color: "#0F1F4B", opacity: active ? 0.4 : 0 }}
-      >
-        <div>{line1}</div>
-        <div>{line2}</div>
-      </div>
-      <div
-        className="mt-1"
-        style={{
-          fontSize: "17px",
-          fontWeight: 800,
-          lineHeight: 1.15,
-          color: "#0F1F4B",
-          opacity: resolved ? 1 : 0,
-          transform: resolved ? "translateY(0)" : "translateY(2px)",
-          transition: "opacity 0.25s ease, transform 0.25s ease",
-        }}
-      >
-        {text}
-      </div>
     </div>
   );
 }
@@ -195,7 +170,6 @@ export default function ScalingWithPurpose() {
     return () => window.removeEventListener("cgreen:services-tab", handler);
   }, []);
 
-  // Switching tabs resets the carousel to its first card.
   useEffect(() => setIdx(0), [tab]);
 
   const cards = tab === "pragati" ? PRAGATI_CARDS : LENDING_CARDS;
@@ -232,7 +206,6 @@ export default function ScalingWithPurpose() {
             <TabButton id="lending" label="For Lending Institutions" inactiveText="text-[#FCDD15]" />
           </div>
 
-          {/* One-at-a-time carousel */}
           <AnimatePresence mode="wait">
             <motion.div
               key={`${tab}-${idx}`}
@@ -246,42 +219,22 @@ export default function ScalingWithPurpose() {
           </AnimatePresence>
 
           <div className="flex items-center justify-between mt-6" data-testid="services-carousel-controls">
-            <button
-              onClick={prev}
-              aria-label="Previous service"
-              data-testid="services-prev"
-              className="glass glass-navy w-11 h-11 rounded-full flex items-center justify-center text-[#142984] transition-transform hover:scale-105"
-            >
+            <button onClick={prev} aria-label="Previous service" data-testid="services-prev" className="glass glass-navy w-11 h-11 rounded-full flex items-center justify-center text-[#142984] transition-transform hover:scale-105">
               <ChevronLeft size={20} />
             </button>
-
             <div className="flex items-center gap-2" data-testid="services-indicator">
               {cards.map((c, i) => (
-                <button
-                  key={c.title}
-                  onClick={() => setIdx(i)}
-                  aria-label={`Go to service ${i + 1}`}
-                  data-testid={`services-dot-${i}`}
-                  className={`h-2.5 rounded-full transition-all ${i === idx ? "w-6 bg-[#142984]" : "w-2.5 bg-[#142984]/30"}`}
-                />
+                <button key={c.title} onClick={() => setIdx(i)} aria-label={`Go to service ${i + 1}`} data-testid={`services-dot-${i}`} className={`h-2.5 rounded-full transition-all ${i === idx ? "w-6 bg-[#142984]" : "w-2.5 bg-[#142984]/30"}`} />
               ))}
-              <span className="ml-2 font-body text-sm text-[#142984]/70 tabular-nums">
-                {idx + 1} of {cards.length}
-              </span>
+              <span className="ml-2 font-body text-sm text-[#142984]/70 tabular-nums">{idx + 1} of {cards.length}</span>
             </div>
-
-            <button
-              onClick={next}
-              aria-label="Next service"
-              data-testid="services-next"
-              className="glass glass-navy w-11 h-11 rounded-full flex items-center justify-center text-[#142984] transition-transform hover:scale-105"
-            >
+            <button onClick={next} aria-label="Next service" data-testid="services-next" className="glass glass-navy w-11 h-11 rounded-full flex items-center justify-center text-[#142984] transition-transform hover:scale-105">
               <ChevronRight size={20} />
             </button>
           </div>
         </div>
 
-        {/* Right column: logo sequence (unchanged) */}
+        {/* Right column: logo circuit diagram */}
         <div className="flex justify-center">
           <LogoSolution isDesktop={isDesktop} />
         </div>
