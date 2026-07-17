@@ -104,6 +104,9 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 ## Round 26 (2026-07-17) — VERIFIED
 - Rural description pill now uses the site's standard glass recipe: `glass glass-navy` (rgba(20,41,132,0.38) + backdrop blur(18px) + border + specular), text changed yellow → white. Reads as genuine translucent glass (blurred backdrop visible), legible. Urban yellow pill unchanged.
 
+## Round 27 (2026-07-17) — VERIFIED
+- Fully rebuilt the Vision & Mission section (`PlatformVisionMission.jsx`) to the approved reference: cream→gold gradient bg; centered navy header with line–dot–line divider; staggered cascade (navy VISION card upper-left larger + yellow MISSION card lower-right smaller, overlapping stair-step); inverted card colors; outlined circular icon badges (lucide `Eye` yellow / `Target` navy) beside headings; yellow elbow SVG connector with end nodes linking Vision→Mission; flat matte cards, rounded-[28px], soft shadows. Copy unchanged. Platform subsection untouched.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.
