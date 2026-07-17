@@ -17,27 +17,27 @@ import {
   Building2,
 } from "lucide-react";
 
-// Canonical factor -> icon mapping. Reused anywhere a factor is shown (static
-// list here + orbit tooltips) so the same factor always carries the same icon.
+// Canonical factor -> icon + one-line explanation. Reused wherever a factor is
+// shown so the same factor always carries the same icon and copy.
 export const URBAN_FACTORS = [
-  { label: "Bank", Icon: Landmark },
-  { label: "NBFC", Icon: BadgePercent },
-  { label: "Call Centres", Icon: Headset },
-  { label: "Collection Agencies", Icon: Folder },
-  { label: "Higher Trust", Icon: Handshake },
-  { label: "Financial Literacy", Icon: BookOpen },
-  { label: "Digital Infrastructure", Icon: RadioTower },
-  { label: "High Phone Connectivity", Icon: Smartphone },
-  { label: "Locatable Addresses", Icon: MapPin },
+  { label: "Bank", Icon: Landmark, desc: "Banks give the city direct access to formal credit and financial stability." },
+  { label: "NBFC", Icon: BadgePercent, desc: "NBFCs reach borrowers that traditional banks often turn away." },
+  { label: "Call Centres", Icon: Headset, desc: "Call centres create skilled local jobs and keep borrowers just a call away." },
+  { label: "Collection Agencies", Icon: Folder, desc: "Collection agencies step in early, resolving overdue accounts before they turn into losses." },
+  { label: "Higher Trust", Icon: Handshake, desc: "Years of financial history here mean lenders can extend credit with far less risk." },
+  { label: "Financial Literacy", Icon: BookOpen, desc: "Borrowers already understand their terms, so repayments come with fewer surprises or defaults." },
+  { label: "Digital Infrastructure", Icon: RadioTower, desc: "Strong digital infrastructure lets lenders verify and approve loans in real time instead of days." },
+  { label: "High Phone Connectivity", Icon: Smartphone, desc: "Agents can follow up quickly by phone instead of chasing borrowers in person." },
+  { label: "Locatable Addresses", Icon: MapPin, desc: "Clear addresses let lenders verify identity and follow up without costly field visits." },
 ];
 
 export const RURAL_FACTORS = [
-  { label: "High Delinquency", Icon: TrendingDown },
-  { label: "Broken Trust", Icon: HeartCrack },
-  { label: "No Empathy", Icon: Frown },
-  { label: "Lender Overload", Icon: Layers },
-  { label: "Financial Illiteracy", Icon: BookX },
-  { label: "Lack of Banks & NBFC", Icon: Building2 },
+  { label: "High Delinquency", Icon: TrendingDown, desc: "Missed payments pile up here, eroding lenders' willingness to extend future credit to the region." },
+  { label: "Broken Trust", Icon: HeartCrack, desc: "When trust breaks down, borrowers avoid lenders altogether, cutting off future credit access." },
+  { label: "No Empathy", Icon: Frown, desc: "Without empathy in these conversations, borrowers hide financial trouble instead of asking for help early." },
+  { label: "Lender Overload", Icon: Layers, desc: "Lenders are stretched too thin, so each borrower gets less time and follow-up than they need." },
+  { label: "Financial Illiteracy", Icon: BookX, desc: "Loan terms go unexplained, so borrowers often take on debt without realizing the real cost of repayment." },
+  { label: "Lack of Banks & NBFC", Icon: Building2, desc: "With no formal lender nearby, people get pushed toward costlier informal credit instead." },
 ];
 
 const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
@@ -46,6 +46,10 @@ const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 // Chips are two-way synced with the orbit dots via activeLabel + onHover.
 export default function EcosystemFactors({ factors, theme = "navy", activeLabel = null, onHover, testid }) {
   const navy = theme === "navy";
+  const title = navy ? "Ecosystem Advantages" : "Ecosystem Disadvantages";
+  const placeholder = navy
+    ? "Hover a factor to see why it strengthens urban lending."
+    : "Hover a factor to see why it weakens rural lending.";
   const lineCls = navy ? "bg-[#142984]/25" : "bg-[#FCDD15]/70";
   const restCls = navy
     ? "border-[#142984]/30 bg-white/70 text-[#142984]"
@@ -55,15 +59,30 @@ export default function EcosystemFactors({ factors, theme = "navy", activeLabel 
     : "border-[#FCDD15] bg-[#FCDD15] text-[#142984]";
   const set = (v) => onHover && onHover(v);
 
+  const activeFactor = factors.find((f) => f.label === activeLabel);
+  const desc = activeFactor?.desc;
+
   return (
-    <div className="w-full max-w-lg mx-auto mt-6" data-testid={testid}>
-      <div className="flex items-center gap-4 mb-4">
+    <div className="w-full max-w-lg mx-auto mt-3" data-testid={testid}>
+      <div className="flex items-center gap-4 mb-2.5">
         <span className={`h-px flex-1 ${lineCls}`} />
         <span className="text-xs font-body font-semibold tracking-[0.28em] uppercase text-[#142984] whitespace-nowrap">
-          Ecosystem Factors
+          {title}
         </span>
         <span className={`h-px flex-1 ${lineCls}`} />
       </div>
+
+      {/* Shared, synced explanation line */}
+      <p
+        data-testid={`${testid}-desc`}
+        aria-live="polite"
+        className={`min-h-[2.5rem] mb-3 text-center text-sm font-body leading-snug transition-opacity duration-200 ${
+          desc ? "opacity-100 text-[#142984]" : "opacity-60 text-[#142984]/55 italic"
+        }`}
+      >
+        {desc || placeholder}
+      </p>
+
       <div className="flex flex-wrap justify-center gap-2.5">
         {factors.map(({ label, Icon }) => {
           const active = activeLabel === label;

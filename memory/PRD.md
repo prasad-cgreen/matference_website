@@ -90,6 +90,11 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - **Circle shrink to fit list in-viewport (Round 21 done, not skipped)**: reduced urban & rural circle diameter 401→300 (desktop), tightened orbit band (`maxWidth diameter+150`), reduced hero padding (`pt-24 pb-12`) and factor-list top margin (`mt-6`). At 1440×900 the full Ecosystem Factors list bottom = 782 ≤ 900 → circle + complete list visible with no scroll (more headroom at 1920×1080).
 - **Bidirectional dot↔chip sync (Round 20)**: each section holds `dotActive`/`chipActive`; `active = chipActive || dotActive` drives both. `OrbitRings` gained `onActive` (reports its single primary locally-active factor) and `forcedActive` (a hovered chip forces its dot to reveal). `EcosystemFactors` chips are now buttons with `activeLabel` + `onHover`; the active chip inverts to a solid fill (navy+white urban / yellow+navy rural). Hovering/focusing/tapping either side highlights the pair; exit reverts both together; exactly one pair active at a time. Verified both directions + revert.
 
+## Round 23 (2026-07-17) — VERIFIED (desktop)
+- Tightened the factor list's top margin (`mt-6`→`mt-3`, header `mb-2.5`) so it sits closer to each circle without overlapping the lowest orbit dots (both sections).
+- Renamed headers via theme: urban → "ECOSYSTEM ADVANTAGES", rural → "ECOSYSTEM DISADVANTAGES".
+- Added a single shared, synced explanation line between the header and chip grid (`{testid}-desc`, `aria-live=polite`, fixed min-height to avoid layout jump). Neutral placeholder at rest; shows the active factor's bespoke one-liner (from per-factor `desc` in `URBAN_FACTORS`/`RURAL_FACTORS`) driven by the same `activeLabel`, appearing/clearing exactly in sync with the highlight. Urban list still fits in-viewport at 1440×900 (bottom 799 ≤ 900).
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.
