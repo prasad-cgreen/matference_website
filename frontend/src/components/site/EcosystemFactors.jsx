@@ -78,9 +78,8 @@ export default function EcosystemFactors({ factors, theme = "navy", activeLabel 
           data-testid={`${testid}-desc`}
           aria-live="polite"
           className={`inline-block text-center px-5 py-2.5 rounded-full text-sm font-body font-bold leading-snug ${
-            navy ? "glass glass-yellow text-[#142984]" : "border border-[#142984] text-[#FCDD15]"
+            navy ? "glass glass-yellow text-[#142984]" : "glass glass-navy text-white"
           }`}
-          style={navy ? undefined : { background: "rgba(20,41,132,0.92)" }}
         >
           {desc || placeholder}
         </span>

@@ -101,6 +101,9 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 ## Round 25 (2026-07-17) — VERIFIED
 - Fixed low-contrast rural description pill: replaced the faint `glass` + `rgba(20,41,132,0.15)` fill with a **solid navy** pill (`rgba(20,41,132,0.92)` + navy border, no glass overlay) keeping bold yellow #FCDD15 text. Now reads as a clearly solid navy pill (same weight as active chips). Urban yellow pill unchanged.
 
+## Round 26 (2026-07-17) — VERIFIED
+- Rural description pill now uses the site's standard glass recipe: `glass glass-navy` (rgba(20,41,132,0.38) + backdrop blur(18px) + border + specular), text changed yellow → white. Reads as genuine translucent glass (blurred backdrop visible), legible. Urban yellow pill unchanged.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.
