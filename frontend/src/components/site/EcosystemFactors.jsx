@@ -76,8 +76,8 @@ export default function EcosystemFactors({ factors, theme = "navy", activeLabel 
       <p
         data-testid={`${testid}-desc`}
         aria-live="polite"
-        className={`min-h-[2.5rem] mb-3 text-center text-sm font-body leading-snug transition-opacity duration-200 ${
-          desc ? "opacity-100 text-[#142984]" : "opacity-60 text-[#142984]/55 italic"
+        className={`min-h-[2.5rem] mb-3 text-center text-sm font-body font-semibold leading-snug transition-opacity duration-200 ${
+          desc ? "opacity-100 text-[#142984]" : "text-[#142984]/70 italic"
         }`}
       >
         {desc || placeholder}
