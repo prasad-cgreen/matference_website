@@ -111,6 +111,13 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - Merged "Our Services" into the cGreen logo section (`ScalingWithPurpose.jsx`). Left column: removed the stats box + "SCALING WITH PURPOSE" heading; heading changed OUR SOLUTION→OUR SERVICES (kept "THE CGREEN APPROACH"); moved in the services intro, the two tab toggles (same `cgreen:services-tab` behavior), and the 3 active-tab cards restacked as a single vertical column. Service cards now use glass fill `rgba(20,41,132,0.45)` + standard glass recipe (blur/border/specular). Right column (logo hub + binary captions) unchanged.
 - Deleted the standalone `OurServices.jsx` section entirely and removed it from `CGreenLanding.jsx` (no duplicate, no gap).
 
+## Round 29 (2026-07-17) — VERIFIED
+Within the merged services column (`ScalingWithPurpose.jsx`):
+1. Eyebrow label → pill badge using the inactive-tab glass fill (`glass glass-navy`), white text (no underline).
+2. 3 cards → one-at-a-time carousel: prev/next chevron buttons + dot indicator + "n of 3"; switching tabs resets to card 1.
+3. "For Lending Institutions" tab: inactive text now yellow #FCDD15 (active stays navy on yellow fill).
+4. Card text split: icon + heading stay yellow, eyebrow label white (in badge). Applied to both tab views.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.

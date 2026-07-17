@@ -1,29 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Store, Coins, Cpu, TrendingUp, Mic, Database } from "lucide-react";
+import { Store, Coins, Cpu, TrendingUp, Mic, Database, ChevronLeft, ChevronRight } from "lucide-react";
 import { SOLUTION_CAPTIONS, SERVICES_INTRO, PRAGATI_CARDS, LENDING_CARDS } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 
 const ICONS = { Store, Coins, Cpu, TrendingUp, Mic, Database };
 
-function ServiceCard({ card, i }) {
+function ServiceCard({ card }) {
   const Icon = ICONS[card.icon];
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: i * 0.08 }}
+    <div
       className="glass rounded-[24px] p-7 flex flex-col"
       style={{ background: "rgba(20,41,132,0.45)" }}
-      data-testid={`service-card-${i}`}
+      data-testid="service-card"
     >
       <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 border border-[#142984]/20 bg-[#FCDD15]">
         <Icon className="text-[#142984]" size={24} />
       </div>
-      <p className="font-head text-sm text-[#FCDD15] uppercase tracking-wide mb-2">{card.value}</p>
+      <span className="self-start glass glass-navy rounded-full px-3.5 py-1.5 text-xs font-head font-semibold uppercase tracking-wide text-white mb-3">
+        {card.value}
+      </span>
       <h3 className="font-head text-lg text-[#FCDD15] mb-3">{card.title}</h3>
       <p className="font-body text-sm leading-relaxed text-white/90">{card.body}</p>
-    </motion.div>
+    </div>
   );
 }
 
@@ -186,6 +185,7 @@ function CodeLabel({ text, active }) {
 export default function ScalingWithPurpose() {
   const isDesktop = useIsDesktop();
   const [tab, setTab] = useState("pragati");
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
     const handler = (e) => {
@@ -195,16 +195,22 @@ export default function ScalingWithPurpose() {
     return () => window.removeEventListener("cgreen:services-tab", handler);
   }, []);
 
-  const cards = tab === "pragati" ? PRAGATI_CARDS : LENDING_CARDS;
+  // Switching tabs resets the carousel to its first card.
+  useEffect(() => setIdx(0), [tab]);
 
-  const TabButton = ({ id, label }) => {
+  const cards = tab === "pragati" ? PRAGATI_CARDS : LENDING_CARDS;
+  const card = cards[idx];
+  const prev = () => setIdx((i) => (i - 1 + cards.length) % cards.length);
+  const next = () => setIdx((i) => (i + 1) % cards.length);
+
+  const TabButton = ({ id, label, inactiveText }) => {
     const active = tab === id;
     return (
       <button
         onClick={() => setTab(id)}
         data-testid={`services-tab-${id}`}
         className={`glass rounded-full px-6 py-3 text-sm font-head font-bold transition-all ${
-          active ? "glass-yellow text-[#142984]" : "glass-navy text-[#142984]/70 hover:text-[#142984]"
+          active ? "glass-yellow text-[#142984]" : `glass-navy ${inactiveText}`
         }`}
       >
         {label}
@@ -222,24 +228,57 @@ export default function ScalingWithPurpose() {
           <p className="font-body text-base text-[#142984]/80 mt-5 leading-relaxed">{SERVICES_INTRO}</p>
 
           <div className="flex flex-wrap gap-3 mt-7 mb-7">
-            <TabButton id="pragati" label="For Pragati Kendra Partners" />
-            <TabButton id="lending" label="For Lending Institutions" />
+            <TabButton id="pragati" label="For Pragati Kendra Partners" inactiveText="text-[#142984]/70 hover:text-[#142984]" />
+            <TabButton id="lending" label="For Lending Institutions" inactiveText="text-[#FCDD15]" />
           </div>
 
+          {/* One-at-a-time carousel */}
           <AnimatePresence mode="wait">
             <motion.div
-              key={tab}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              key={`${tab}-${idx}`}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.25 }}
-              className="flex flex-col gap-6"
             >
-              {cards.map((card, i) => (
-                <ServiceCard key={card.title} card={card} i={i} />
-              ))}
+              <ServiceCard card={card} />
             </motion.div>
           </AnimatePresence>
+
+          <div className="flex items-center justify-between mt-6" data-testid="services-carousel-controls">
+            <button
+              onClick={prev}
+              aria-label="Previous service"
+              data-testid="services-prev"
+              className="glass glass-navy w-11 h-11 rounded-full flex items-center justify-center text-[#142984] transition-transform hover:scale-105"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <div className="flex items-center gap-2" data-testid="services-indicator">
+              {cards.map((c, i) => (
+                <button
+                  key={c.title}
+                  onClick={() => setIdx(i)}
+                  aria-label={`Go to service ${i + 1}`}
+                  data-testid={`services-dot-${i}`}
+                  className={`h-2.5 rounded-full transition-all ${i === idx ? "w-6 bg-[#142984]" : "w-2.5 bg-[#142984]/30"}`}
+                />
+              ))}
+              <span className="ml-2 font-body text-sm text-[#142984]/70 tabular-nums">
+                {idx + 1} of {cards.length}
+              </span>
+            </div>
+
+            <button
+              onClick={next}
+              aria-label="Next service"
+              data-testid="services-next"
+              className="glass glass-navy w-11 h-11 rounded-full flex items-center justify-center text-[#142984] transition-transform hover:scale-105"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Right column: logo sequence (unchanged) */}
