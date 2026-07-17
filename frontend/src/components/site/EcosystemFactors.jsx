@@ -72,16 +72,19 @@ export default function EcosystemFactors({ factors, theme = "navy", activeLabel 
         <span className={`h-px flex-1 ${lineCls}`} />
       </div>
 
-      {/* Shared, synced explanation line */}
-      <p
-        data-testid={`${testid}-desc`}
-        aria-live="polite"
-        className={`min-h-[2.5rem] mb-3 text-center text-sm font-body font-semibold leading-snug transition-opacity duration-200 ${
-          desc ? "opacity-100 text-[#142984]" : "text-[#142984]/70 italic"
-        }`}
-      >
-        {desc || placeholder}
-      </p>
+      {/* Shared, synced explanation line — bold text inside a per-section pill */}
+      <div className="min-h-[3.5rem] mb-3 flex items-center justify-center">
+        <span
+          data-testid={`${testid}-desc`}
+          aria-live="polite"
+          className={`inline-block text-center px-5 py-2.5 rounded-full text-sm font-body font-bold leading-snug ${
+            navy ? "glass glass-yellow text-[#142984]" : "glass text-[#FCDD15]"
+          }`}
+          style={navy ? undefined : { background: "rgba(20,41,132,0.15)" }}
+        >
+          {desc || placeholder}
+        </span>
+      </div>
 
       <div className="flex flex-wrap justify-center gap-2.5">
         {factors.map(({ label, Icon }) => {

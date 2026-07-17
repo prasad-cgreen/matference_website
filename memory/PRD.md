@@ -95,6 +95,9 @@ reveal sequence, service toggle tabs, and a contact form (CRM target flagged und
 - Renamed headers via theme: urban → "ECOSYSTEM ADVANTAGES", rural → "ECOSYSTEM DISADVANTAGES".
 - Added a single shared, synced explanation line between the header and chip grid (`{testid}-desc`, `aria-live=polite`, fixed min-height to avoid layout jump). Neutral placeholder at rest; shows the active factor's bespoke one-liner (from per-factor `desc` in `URBAN_FACTORS`/`RURAL_FACTORS`) driven by the same `activeLabel`, appearing/clearing exactly in sync with the highlight. Urban list still fits in-viewport at 1440×900 (bottom 799 ≤ 900).
 
+## Round 24 (2026-07-17) — VERIFIED
+- Bolded the shared factor description (`font-bold`, 700) and wrapped it in a per-section pill: urban = `glass glass-yellow` (matches hero tagline pill) with navy #142984 text; rural = navy tint `rgba(20,41,132,0.15)` + glass blur/border with yellow #FCDD15 text. px-5 py-2.5 rounded-full, applied to both placeholder + active states, both sections.
+
 ## Backlog / Remaining
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.
