@@ -159,6 +159,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Map width = column width (706px, `w-full`), opacity 0.9, grid `items-start` + `lg:mt-[40px]` so the map's visible top tip aligns exactly with the "OUR FOOTPRINT IN ACTION" pill top (Δ0). Bottom tip is ~197px above the last stat box — aspect-ratio limited (landscape map can't span the 552px left column at fixed width without stretching); top alignment prioritized per spec.
 - Three live-coded `reach-glow-pulse` yellow glows at % coords MH 33.3/55.4, UP 50.8/28.6, AS 74.6/34.5; base 48px (min ~50px visible). Verified each sits directly on its baked-in dot — no individual nudge needed.
 
+## Round 42 (2026-06) — VERIFIED
+- Added gold line-art icons (site feature-icon style, #D4A017 stroke-2 48vb) left of each stat box's number/label: Lenders=bank (reused `Financial Inclusion`), States=pin (reused `Customer Place Verification`), Districts=new `Buildings`, Villages=new `House`. Box row = icon + centered number/label column.
+- Map height increased to span pill-top → Villages-box-bottom (topDelta 0, botDelta 1), aspect preserved. Solved the landscape-aspect conflict by cropping the transparent padding: `india-reach-map-v2.png` (666×375, 1.78:1) → `india-reach-map-v3.png` (395×338, 1.17:1). Rendered at `lg:w-[645px]` (< 706 column, so no column-widening), `lg:mt-[56px]`.
+- Glow % recomputed for the cropped image: MH 18.93/57.03, UP 48.44/27.29, AS 88.57/33.84; verified each still on its baked dot.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
