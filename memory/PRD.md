@@ -139,6 +139,12 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - **River 2 anchor**: `dstAnchor` in `CGreenLanding.jsx` changed to `x: D.x - D.R*1.15` so the purple end tucks behind the logo's left side (underlap; logo z-10 over river z-5).
 - **Tabs**: grid changed to `lg:grid-cols-[minmax(0,470px)_1fr]`; tab row `flex flex-wrap lg:flex-nowrap`, buttons `whitespace-nowrap shrink-0` → both tabs on one line, full width restored.
 
+## Round 37 (2026-06) — VERIFIED
+- New section `sections/OurReach.jsx` inserted in `CGreenLanding.jsx` between `PlatformVisionMission` and `OurTeam` (`id="reach"`, cream bg).
+- Two columns: left = "OUR REACH" heading (font-head navy, matches OUR SERVICES) + "OUR FOOTPRINT IN ACTION" pill (exact urban-pill CSS: `glass glass-yellow text-[#142984]`) + 4 stacked stat pills (exact rural-pill CSS `glass glass-navy`, white number+label): 10+ Lenders / 3 States / 35 Districts / 957K+ Villages.
+- Right = India network map. Downloaded artifact had a baked-in transparency checkerboard (RGB); cleaned to true alpha via border-flood-fill (scipy ndimage.label) preserving interior star-nodes → `/india-reach-map.png` (1254×1254 RGBA).
+- Three live-coded `#FCDD15` radial glows (reusing `@keyframes river-glow-pulse`) at % coords: UP 51.5%/31.5%, Maharashtra 32.5%/57%, Assam 82.3%/37.2% — verified in-state via marker overlay (UP was nudged east from the initial 43.9%/34.3% estimate).
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).

@@ -5,6 +5,7 @@ import HeroSection from "@/sections/HeroSection";
 import BharatProblem from "@/sections/BharatProblem";
 import ScalingWithPurpose from "@/sections/ScalingWithPurpose";
 import PlatformVisionMission from "@/sections/PlatformVisionMission";
+import OurReach from "@/sections/OurReach";
 import OurTeam from "@/sections/OurTeam";
 import PartnersInImpact from "@/sections/PartnersInImpact";
 import Lenders from "@/sections/Lenders";
@@ -63,6 +64,7 @@ export default function CGreenLanding() {
       </div>
 
       <PlatformVisionMission />
+      <OurReach />
       <OurTeam />
       <PartnersInImpact />
       <Lenders />
