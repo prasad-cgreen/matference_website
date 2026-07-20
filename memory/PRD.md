@@ -124,7 +124,13 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 ## Round 31 (2026-07-17) — VERIFIED
 - Rebuilt the 9 logo connector traces (`traceOf` in `ScalingWithPurpose.jsx`): each icon now routes via a short stub + 2 right-angle bends to its OWN distinct endpoint on the logo capsule edge (per-trace lane offset prevents collapse/shared spine), with 3 hollow nodes each (icon end + 2 bends). Strictly horizontal/vertical segments — the Intent & Ability diagonal is corrected. Line color/weight, icons, logo, background unchanged.
 
+## Round 33 (2026-07-20) — VERIFIED
+- Deleted the central white pill, the plain `/cgreen-logo.png` inside it, and all 9 navy connector traces from `ScalingWithPurpose.jsx` (removed from code — `traceOf` + trace SVG gone; `/cgreen-logo.png` now only in Navbar).
+- Inserted `brain-logo-composite.png` (transparent, native 666×375, aspect preserved, ~480px wide) in the same central position, in a boxless transparent container. Kept the `solution-logo-hub` testid on it so River 2 still anchors/glows here.
+- Widened icon radius (236→258) so the 9 icons keep even spacing around the larger composite. Icons intentionally have NO connector lines now (accepted temporary state per spec).
+
 ## Backlog / Remaining
+- **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
 - **P1**: Replace placeholders with real team photos, LinkedIn links, partner & lender logos.
 - **P2**: Real platform video in the purple video placeholder.

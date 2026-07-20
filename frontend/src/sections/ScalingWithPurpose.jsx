@@ -48,7 +48,7 @@ function LogoSolution({ isDesktop }) {
   if (!isDesktop) {
     return (
       <div className="flex flex-col items-center gap-6" data-testid="solution-logo-static">
-        <img src="/cgreen-logo.png" alt="cGreen" className="w-56 h-auto" />
+        <img src="/brain-logo-composite.png" alt="cGreen" className="w-72 h-auto" />
         <div className="flex flex-wrap justify-center gap-3 max-w-md">
           {SOLUTION_CAPTIONS.map((c) => {
             const Icon = FEATURE_ICONS[c];
@@ -68,7 +68,7 @@ function LogoSolution({ isDesktop }) {
 
   const SIZE = 600;
   const C = SIZE / 2;
-  const iconR = 236;
+  const iconR = 258;
   const total = SOLUTION_CAPTIONS.length;
 
   const nodes = SOLUTION_CAPTIONS.map((c, i) => {
@@ -76,75 +76,31 @@ function LogoSolution({ isDesktop }) {
     return { c, a, x: C + Math.cos(a) * iconR, y: C + Math.sin(a) * iconR };
   });
 
-  // Orthogonal PCB trace: icon -> short stub -> 2 right-angle bends -> its own
-  // distinct endpoint on the logo capsule edge (no diagonals, no shared spine).
-  const traceOf = (a, i) => {
-    const A = [C + Math.cos(a) * (iconR - 30), C + Math.sin(a) * (iconR - 30)];
-    const hw = 168;
-    const hh = 74;
-    const t = 1 / Math.max(Math.abs(Math.cos(a)) / hw, Math.abs(Math.sin(a)) / hh);
-    let E = [C + Math.cos(a) * t, C + Math.sin(a) * t];
-    const vertical = Math.abs(Math.sin(a)) >= Math.abs(Math.cos(a));
-    const lane = ((i % 3) - 1) * 24; // -24, 0, 24 -> distinct jog per trace
-    const stub = 26;
-    if (vertical) {
-      E = [E[0] + lane, E[1]];
-      const s = Math.sign(E[1] - A[1]) || 1;
-      const p1 = [A[0], A[1] + s * stub];
-      const p2 = [E[0], p1[1]];
-      return [A, p1, p2, E];
-    }
-    E = [E[0], E[1] + lane];
-    const s = Math.sign(E[0] - A[0]) || 1;
-    const p1 = [A[0] + s * stub, A[1]];
-    const p2 = [p1[0], E[1]];
-    return [A, p1, p2, E];
-  };
-
   return (
     <div className="relative mx-auto" style={{ width: SIZE, height: SIZE, maxWidth: "100%" }} data-testid="solution-logo">
-      {/* Circuit-trace network (navy), tucked under the logo capsule */}
-      <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 6 }} width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} fill="none">
-        {nodes.map((n, i) => {
-          const pts = traceOf(n.a, i);
-          const d = "M " + pts.map((pt) => pt.join(" ")).join(" L ");
-          return (
-            <g key={n.c}>
-              <path d={d} stroke="#142984" strokeWidth={1.6} fill="none" strokeLinejoin="round" strokeLinecap="round" />
-              {pts.slice(0, 3).map((pt, k) => (
-                <circle key={k} cx={pt[0]} cy={pt[1]} r={3.6} fill="#FFFCFA" stroke="#142984" strokeWidth={1.3} />
-              ))}
-            </g>
-          );
-        })}
-      </svg>
-
-      {/* yellow bloom / halo behind the logo */}
+      {/* yellow bloom / halo behind the composite (arrival feedback) */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
         style={{
-          width: 380,
-          height: 380,
-          background: "radial-gradient(circle, rgba(252,221,21,0.95) 0%, rgba(252,221,21,0.5) 42%, rgba(252,221,21,0) 72%)",
-          filter: "blur(8px)",
+          width: 420,
+          height: 420,
+          background: "radial-gradient(circle, rgba(252,221,21,0.85) 0%, rgba(252,221,21,0.4) 45%, rgba(252,221,21,0) 72%)",
+          filter: "blur(10px)",
           opacity: glow ? 1 : 0,
           transition: "opacity 0.9s ease",
         }}
       />
 
-      {/* logo — central white capsule; river terminates here */}
+      {/* brain + cGreen logo composite — river terminates here (keeps hub testid) */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FFFCFA] px-10 py-8 border border-[#142984]/10 z-10"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
         data-testid="solution-logo-hub"
         style={{
-          animation: glow ? "logo-pulse 1.2s ease-in-out infinite" : "none",
-          boxShadow: glow
-            ? "0 0 90px 26px rgba(252,221,21,0.9), 0 0 30px 6px rgba(252,221,21,1)"
-            : "0 12px 34px rgba(20,41,132,0.18)",
-          transition: "box-shadow 0.9s ease",
+          filter: glow ? "drop-shadow(0 0 26px rgba(252,221,21,0.95))" : "none",
+          transition: "filter 0.9s ease",
         }}
       >
-        <img src="/cgreen-logo.png" alt="cGreen" className="w-[260px] h-auto" />
+        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[480px] max-w-full h-auto select-none" draggable="false" />
       </div>
 
       {/* icon + label feature nodes */}
