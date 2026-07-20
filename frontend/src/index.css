@@ -140,6 +140,11 @@ body {
   0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(0.9); }
   50%      { opacity: 1;    transform: translate(-50%, -50%) scale(1.15); }
 }
+/* Our Reach state glows — same max as river glow, higher resting floor (Round 38) */
+@keyframes reach-glow-pulse {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.05); }
+  50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.15); }
+}
 
 /* ---------- CONSTELLATION DOTS ---------- */
 @keyframes dot-twinkle {

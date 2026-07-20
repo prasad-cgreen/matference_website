@@ -35,15 +35,16 @@ export default function OurReach() {
             </span>
           </div>
 
-          <div className="mt-8 flex flex-col gap-4 max-w-md" data-testid="reach-stats">
+          <div className="mt-8 flex flex-col gap-4" data-testid="reach-stats">
             {STATS.map((s) => (
               <div
                 key={s.label}
                 data-testid={`reach-stat-${slug(s.label)}`}
-                className="inline-flex items-baseline gap-4 px-7 py-4 rounded-full font-body font-bold leading-snug glass glass-navy text-white"
+                style={{ width: 224 }}
+                className="flex flex-col items-center justify-center text-center px-7 py-4 rounded-[28px] font-head leading-none glass glass-navy text-white"
               >
-                <span className="font-head text-3xl lg:text-4xl leading-none text-white tabular-nums">{s.value}</span>
-                <span className="text-base lg:text-lg text-white">{s.label}</span>
+                <span className="text-3xl lg:text-4xl text-white tabular-nums">{s.value}</span>
+                <span className="text-3xl lg:text-4xl text-white mt-2">{s.label}</span>
               </div>
             ))}
           </div>
@@ -51,11 +52,12 @@ export default function OurReach() {
 
         {/* Right column: India map with live-coded state glows */}
         <div className="flex justify-center">
-          <div className="relative w-full max-w-xl" data-testid="reach-map">
+          <div className="relative" style={{ width: 590, maxWidth: "100%" }} data-testid="reach-map">
             <img
               src="/india-reach-map.png"
               alt="cGreen network reach across India"
               className="w-full h-auto select-none"
+              style={{ opacity: 0.75 }}
               draggable="false"
             />
             {GLOWS.map((g) => (
@@ -72,7 +74,7 @@ export default function OurReach() {
                   transform: "translate(-50%, -50%)",
                   background:
                     "radial-gradient(circle, rgba(252,221,21,0.95) 0%, rgba(252,221,21,0.6) 34%, rgba(252,221,21,0) 70%)",
-                  animation: "river-glow-pulse 2.4s ease-in-out infinite",
+                  animation: "reach-glow-pulse 2.4s ease-in-out infinite",
                 }}
               />
             ))}

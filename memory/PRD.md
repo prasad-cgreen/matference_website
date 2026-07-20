@@ -145,6 +145,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Right = India network map. Downloaded artifact had a baked-in transparency checkerboard (RGB); cleaned to true alpha via border-flood-fill (scipy ndimage.label) preserving interior star-nodes → `/india-reach-map.png` (1254×1254 RGBA).
 - Three live-coded `#FCDD15` radial glows (reusing `@keyframes river-glow-pulse`) at % coords: UP 51.5%/31.5%, Maharashtra 32.5%/57%, Assam 82.3%/37.2% — verified in-state via marker overlay (UP was nudged east from the initial 43.9%/34.3% estimate).
 
+## Round 38 (2026-06) — VERIFIED
+- Our Reach map width set to exactly 590px (opacity 0.75 on the image only; glows stay full intensity).
+- New `@keyframes reach-glow-pulse` (floor raised to scale 1.05, max 1.15 unchanged, 2.4s) for the 3 state glows; positions are % so they auto-scaled correctly after resize (UP/Maharashtra/Assam still in-state).
+- Four stat boxes: pills → `rounded-[28px]` rectangles (matches Vision/Mission cards), width fixed 224px, number stacked over label, both `font-head text-3xl lg:text-4xl` white, centered. Verified no text overflow at 224px.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
