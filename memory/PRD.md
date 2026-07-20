@@ -150,6 +150,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - New `@keyframes reach-glow-pulse` (floor raised to scale 1.05, max 1.15 unchanged, 2.4s) for the 3 state glows; positions are % so they auto-scaled correctly after resize (UP/Maharashtra/Assam still in-state).
 - Four stat boxes: pills → `rounded-[28px]` rectangles (matches Vision/Mission cards), width fixed 224px, number stacked over label, both `font-head text-3xl lg:text-4xl` white, centered. Verified no text overflow at 224px.
 
+## Round 39 (2026-06) — VERIFIED
+- Our Reach: column ratio 50/50 → 40/60 (`lg:grid-cols-[2fr_3fr]`); map now `w-full` filling its column (~706px at 1440), aspect preserved, glows (%) scaled with it and stay in-state.
+- Stat boxes: fixed 224px → `w-full` (470px, matches text column), content centered; label font reduced to `text-sm lg:text-base` (~44% of number) so all four boxes + full map fit within 1440×900 without scroll.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
