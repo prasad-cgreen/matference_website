@@ -154,6 +154,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Our Reach: column ratio 50/50 → 40/60 (`lg:grid-cols-[2fr_3fr]`); map now `w-full` filling its column (~706px at 1440), aspect preserved, glows (%) scaled with it and stay in-state.
 - Stat boxes: fixed 224px → `w-full` (470px, matches text column), content centered; label font reduced to `text-sm lg:text-base` (~44% of number) so all four boxes + full map fit within 1440×900 without scroll.
 
+## Round 41 (2026-06) — VERIFIED
+- Replaced Our Reach map: deleted `india-reach-map.png` (file + code) and its old glows; inserted `india-reach-map-v2.png` (transparent RGBA 666×375, landscape, baked-in dots+labels for MH/UP/AS).
+- Map width = column width (706px, `w-full`), opacity 0.9, grid `items-start` + `lg:mt-[40px]` so the map's visible top tip aligns exactly with the "OUR FOOTPRINT IN ACTION" pill top (Δ0). Bottom tip is ~197px above the last stat box — aspect-ratio limited (landscape map can't span the 552px left column at fixed width without stretching); top alignment prioritized per spec.
+- Three live-coded `reach-glow-pulse` yellow glows at % coords MH 33.3/55.4, UP 50.8/28.6, AS 74.6/34.5; base 48px (min ~50px visible). Verified each sits directly on its baked-in dot — no individual nudge needed.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).

@@ -9,18 +9,19 @@ const STATS = [
   { value: "957K+", label: "Villages" },
 ];
 
-// Live-coded yellow glows over the India map, positioned as a % of the map image.
+// Live-coded yellow pulsing glows layered over the baked-in dots on the map image.
+// Coordinates are a % of the map image's own width/height.
 const GLOWS = [
-  { name: "Uttar Pradesh", left: "51.5%", top: "31.5%" },
-  { name: "Maharashtra", left: "32.5%", top: "57%" },
-  { name: "Assam", left: "82.3%", top: "37.2%" },
+  { name: "Maharashtra", left: "33.3%", top: "55.4%" },
+  { name: "Uttar Pradesh", left: "50.8%", top: "28.6%" },
+  { name: "Assam", left: "74.6%", top: "34.5%" },
 ];
 
 export default function OurReach() {
   return (
     <section id="reach" className="relative w-full py-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-reach">
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[2fr_3fr] gap-14 items-center relative z-10">
-        {/* Left column: heading, subheading pill, stat pills */}
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[2fr_3fr] gap-14 items-start relative z-10">
+        {/* Left column: heading, subheading pill, stat boxes */}
         <div>
           <h2 className="font-head text-3xl lg:text-4xl text-[#142984]" data-testid="reach-heading">
             OUR REACH
@@ -49,14 +50,14 @@ export default function OurReach() {
           </div>
         </div>
 
-        {/* Right column: India map with live-coded state glows */}
+        {/* Right column: India map with live-coded pulsing glows over baked-in dots */}
         <div className="flex justify-center">
-          <div className="relative w-full" data-testid="reach-map">
+          <div className="relative w-full lg:mt-[40px]" data-testid="reach-map">
             <img
-              src="/india-reach-map.png"
+              src="/india-reach-map-v2.png"
               alt="cGreen network reach across India"
               className="w-full h-auto select-none"
-              style={{ opacity: 0.75 }}
+              style={{ opacity: 0.9 }}
               draggable="false"
             />
             {GLOWS.map((g) => (
@@ -68,8 +69,8 @@ export default function OurReach() {
                 style={{
                   left: g.left,
                   top: g.top,
-                  width: 60,
-                  height: 60,
+                  width: 48,
+                  height: 48,
                   transform: "translate(-50%, -50%)",
                   background:
                     "radial-gradient(circle, rgba(252,221,21,0.95) 0%, rgba(252,221,21,0.6) 34%, rgba(252,221,21,0) 70%)",
