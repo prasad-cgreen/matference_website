@@ -66,14 +66,17 @@ function LogoSolution({ isDesktop }) {
     );
   }
 
-  const SIZE = 600;
+  const SIZE = 680;
   const C = SIZE / 2;
-  const iconR = 258;
+  // Pill / capsule layout: wider horizontal spread, vertically squashed (~0.7) so
+  // the ring hugs the enlarged brain composite's landscape aspect ratio.
+  const radiusX = 300;
+  const radiusY = 182;
   const total = SOLUTION_CAPTIONS.length;
 
   const nodes = SOLUTION_CAPTIONS.map((c, i) => {
     const a = (Math.PI * 2 * i) / total - Math.PI / 2;
-    return { c, a, x: C + Math.cos(a) * iconR, y: C + Math.sin(a) * iconR };
+    return { c, a, x: C + Math.cos(a) * radiusX, y: C + Math.sin(a) * radiusY };
   });
 
   return (
@@ -82,8 +85,8 @@ function LogoSolution({ isDesktop }) {
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
         style={{
-          width: 420,
-          height: 420,
+          width: 520,
+          height: 520,
           background: "radial-gradient(circle, rgba(252,221,21,0.85) 0%, rgba(252,221,21,0.4) 45%, rgba(252,221,21,0) 72%)",
           filter: "blur(10px)",
           opacity: glow ? 1 : 0,
@@ -100,7 +103,7 @@ function LogoSolution({ isDesktop }) {
           transition: "filter 0.9s ease",
         }}
       >
-        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[480px] max-w-full h-auto select-none" draggable="false" />
+        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[560px] max-w-full h-auto select-none" draggable="false" />
       </div>
 
       {/* icon + label feature nodes */}

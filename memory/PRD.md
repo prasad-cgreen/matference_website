@@ -129,6 +129,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Inserted `brain-logo-composite.png` (transparent, native 666×375, aspect preserved, ~480px wide) in the same central position, in a boxless transparent container. Kept the `solution-logo-hub` testid on it so River 2 still anchors/glows here.
 - Widened icon radius (236→258) so the 9 icons keep even spacing around the larger composite. Icons intentionally have NO connector lines now (accepted temporary state per spec).
 
+## Round 34 (2026-06) — VERIFIED
+- Enlarged `brain-logo-composite.png` from 480px → 560px wide in `ScalingWithPurpose.jsx`.
+- Reshaped the 9 feature icons from a circle into a horizontal pill/capsule: replaced single `iconR=258` with independent `radiusX=300` and `radiusY=182` (~0.7 vertical squash), so top/bottom icons sit closer to center while sides keep a slightly wider spread. Container `SIZE` bumped 600→680; bloom halo 420→520px. Connector lines remain off per Round 33.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
