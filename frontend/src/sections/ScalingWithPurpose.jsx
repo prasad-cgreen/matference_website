@@ -68,25 +68,33 @@ function LogoSolution({ isDesktop }) {
 
   const SIZE = 740;
   const C = SIZE / 2;
-  // Pill / capsule layout sized to the 740px graphic column: side icons sit just
-  // outside the enlarged (660px) composite, vertically squashed for a landscape pill.
+  // Pill / capsule layout sized to the 740px graphic canvas: side icons sit just
+  // outside the 600px composite, vertically squashed for a landscape pill.
   const radiusX = 295;
   const radiusY = 190;
   const total = SOLUTION_CAPTIONS.length;
 
+  // Per-icon nudges so the 3 icons nearest the wide wordmark clear it (Round 36).
+  const OFFSETS = {
+    "Financial Inclusion": { dx: 60, dy: 0 },
+    "Customer Place Verification": { dx: 75, dy: 35 },
+    "Voice Transcription": { dx: -45, dy: 0 },
+  };
+
   const nodes = SOLUTION_CAPTIONS.map((c, i) => {
     const a = (Math.PI * 2 * i) / total - Math.PI / 2;
-    return { c, a, x: C + Math.cos(a) * radiusX, y: C + Math.sin(a) * radiusY };
+    const o = OFFSETS[c] || { dx: 0, dy: 0 };
+    return { c, a, x: C + Math.cos(a) * radiusX + o.dx, y: C + Math.sin(a) * radiusY + o.dy };
   });
 
   return (
-    <div className="relative mx-auto" style={{ width: SIZE, height: SIZE, maxWidth: "100%" }} data-testid="solution-logo">
+    <div className="relative mx-auto" style={{ width: SIZE, height: SIZE }} data-testid="solution-logo">
       {/* yellow bloom / halo behind the composite (arrival feedback) */}
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
         style={{
-          width: 560,
-          height: 560,
+          width: 500,
+          height: 500,
           background: "radial-gradient(circle, rgba(252,221,21,0.85) 0%, rgba(252,221,21,0.4) 45%, rgba(252,221,21,0) 72%)",
           filter: "blur(10px)",
           opacity: glow ? 1 : 0,
@@ -103,7 +111,7 @@ function LogoSolution({ isDesktop }) {
           transition: "filter 0.9s ease",
         }}
       >
-        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[660px] max-w-none h-auto select-none" draggable="false" />
+        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[600px] max-w-none h-auto select-none" draggable="false" />
       </div>
 
       {/* icon + label feature nodes */}
@@ -113,7 +121,7 @@ function LogoSolution({ isDesktop }) {
           <div
             key={n.c}
             className="absolute flex flex-col items-center text-center"
-            style={{ left: n.x, top: n.y, transform: "translate(-50%, -50%)", width: 150, zIndex: 20 }}
+            style={{ left: n.x, top: n.y, transform: "translate(-50%, -50%)", width: 140, zIndex: 20 }}
             data-testid={`feature-${slug(n.c)}`}
           >
             {Icon && Icon(46)}
@@ -153,7 +161,7 @@ export default function ScalingWithPurpose() {
       <button
         onClick={() => setTab(id)}
         data-testid={`services-tab-${id}`}
-        className={`glass rounded-full px-6 py-3 text-sm font-head font-bold transition-all ${
+        className={`glass rounded-full px-6 py-3 text-sm font-head font-bold whitespace-nowrap shrink-0 transition-all ${
           active ? "glass-yellow text-[#142984]" : `glass-navy ${inactiveText}`
         }`}
       >
@@ -164,14 +172,14 @@ export default function ScalingWithPurpose() {
 
   return (
     <section id="solution" className="relative w-full py-24 overflow-hidden scroll-mt-24" data-testid="section-scaling">
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[1fr_740px] gap-14 items-start relative z-10">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[minmax(0,470px)_1fr] gap-14 items-start relative z-10">
         {/* Left column: Our Services (merged in) */}
         <div id="services" className="scroll-mt-24" data-testid="section-services">
           <h2 className="font-head text-3xl lg:text-4xl text-[#142984]">OUR SERVICES</h2>
           <p className="font-body text-base lg:text-lg text-[#142984]/70 mt-1">THE CGREEN APPROACH</p>
           <p className="font-body text-base text-[#142984]/80 mt-5 leading-relaxed">{SERVICES_INTRO}</p>
 
-          <div className="flex flex-wrap gap-3 mt-7 mb-7">
+          <div className="flex flex-wrap lg:flex-nowrap gap-3 mt-7 mb-7">
             <TabButton id="pragati" label="For Pragati Kendra Partners" inactiveText="text-[#142984]/70 hover:text-[#142984]" />
             <TabButton id="lending" label="For Lending Institutions" inactiveText="text-[#FCDD15]" />
           </div>

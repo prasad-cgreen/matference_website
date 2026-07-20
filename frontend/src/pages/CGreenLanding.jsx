@@ -51,7 +51,7 @@ export default function CGreenLanding() {
           srcSel="rural-scene-img"
           dstSel="solution-logo-hub"
           srcAnchor={(S) => ({ x: S.x + S.R * 0.62, y: S.y + S.R * 0.62 })}
-          dstAnchor={(D) => ({ x: D.x - D.R * 2.0, y: D.y })}
+          dstAnchor={(D) => ({ x: D.x - D.R * 1.15, y: D.y })}
           onArrive={notifyLogoArrival}
           flowReverse
           testid="data-river-overlay-2"

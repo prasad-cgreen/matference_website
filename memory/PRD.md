@@ -133,6 +133,12 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Enlarged `brain-logo-composite.png` from 480px → 560px wide in `ScalingWithPurpose.jsx`.
 - Reshaped the 9 feature icons from a circle into a horizontal pill/capsule: replaced single `iconR=258` with independent `radiusX=300` and `radiusY=182` (~0.7 vertical squash), so top/bottom icons sit closer to center while sides keep a slightly wider spread. Container `SIZE` bumped 600→680; bloom halo 420→520px. Connector lines remain off per Round 33.
 
+## Round 36 (2026-06) — VERIFIED
+- **Logo locked at 600px** (`w-[600px] max-w-none`; note: Tailwind Preflight `img{max-width:100%}` + prior `max-w-full` had been clamping it — `max-w-none` is required for the width to apply).
+- **Icon overlaps fixed** via per-icon `OFFSETS` in `ScalingWithPurpose.jsx` (base radiusX=295/radiusY=190, canvas SIZE=740, label width 140): Financial Inclusion dx+60, Customer Place Verification dx+75/dy+35, Voice Transcription dx-45. Other 6 icons unchanged.
+- **River 2 anchor**: `dstAnchor` in `CGreenLanding.jsx` changed to `x: D.x - D.R*1.15` so the purple end tucks behind the logo's left side (underlap; logo z-10 over river z-5).
+- **Tabs**: grid changed to `lg:grid-cols-[minmax(0,470px)_1fr]`; tab row `flex flex-wrap lg:flex-nowrap`, buttons `whitespace-nowrap shrink-0` → both tabs on one line, full width restored.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
