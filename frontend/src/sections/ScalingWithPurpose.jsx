@@ -66,12 +66,12 @@ function LogoSolution({ isDesktop }) {
     );
   }
 
-  const SIZE = 680;
+  const SIZE = 740;
   const C = SIZE / 2;
-  // Pill / capsule layout: wider horizontal spread, vertically squashed (~0.7) so
-  // the ring hugs the enlarged brain composite's landscape aspect ratio.
-  const radiusX = 300;
-  const radiusY = 182;
+  // Pill / capsule layout sized to the 740px graphic column: side icons sit just
+  // outside the enlarged (660px) composite, vertically squashed for a landscape pill.
+  const radiusX = 295;
+  const radiusY = 190;
   const total = SOLUTION_CAPTIONS.length;
 
   const nodes = SOLUTION_CAPTIONS.map((c, i) => {
@@ -85,8 +85,8 @@ function LogoSolution({ isDesktop }) {
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
         style={{
-          width: 520,
-          height: 520,
+          width: 560,
+          height: 560,
           background: "radial-gradient(circle, rgba(252,221,21,0.85) 0%, rgba(252,221,21,0.4) 45%, rgba(252,221,21,0) 72%)",
           filter: "blur(10px)",
           opacity: glow ? 1 : 0,
@@ -103,7 +103,7 @@ function LogoSolution({ isDesktop }) {
           transition: "filter 0.9s ease",
         }}
       >
-        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[560px] max-w-full h-auto select-none" draggable="false" />
+        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[660px] max-w-none h-auto select-none" draggable="false" />
       </div>
 
       {/* icon + label feature nodes */}
@@ -113,7 +113,7 @@ function LogoSolution({ isDesktop }) {
           <div
             key={n.c}
             className="absolute flex flex-col items-center text-center"
-            style={{ left: n.x, top: n.y, transform: "translate(-50%, -50%)", width: 160, zIndex: 20 }}
+            style={{ left: n.x, top: n.y, transform: "translate(-50%, -50%)", width: 150, zIndex: 20 }}
             data-testid={`feature-${slug(n.c)}`}
           >
             {Icon && Icon(46)}
@@ -164,7 +164,7 @@ export default function ScalingWithPurpose() {
 
   return (
     <section id="solution" className="relative w-full py-24 overflow-hidden scroll-mt-24" data-testid="section-scaling">
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-start relative z-10">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[1fr_740px] gap-14 items-start relative z-10">
         {/* Left column: Our Services (merged in) */}
         <div id="services" className="scroll-mt-24" data-testid="section-services">
           <h2 className="font-head text-3xl lg:text-4xl text-[#142984]">OUR SERVICES</h2>
