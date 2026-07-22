@@ -164,6 +164,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Map height increased to span pill-top → Villages-box-bottom (topDelta 0, botDelta 1), aspect preserved. Solved the landscape-aspect conflict by cropping the transparent padding: `india-reach-map-v2.png` (666×375, 1.78:1) → `india-reach-map-v3.png` (395×338, 1.17:1). Rendered at `lg:w-[645px]` (< 706 column, so no column-widening), `lg:mt-[56px]`.
 - Glow % recomputed for the cropped image: MH 18.93/57.03, UP 48.44/27.29, AS 88.57/33.84; verified each still on its baked dot.
 
+## Round 43 (2026-06) — VERIFIED
+- Replaced stat-box icons with the new yellow (#FCDD15) line-art set drawn locally in OurReach: PeopleGroup→Lenders, MapPin→States, Buildings→Districts, Houses→Villages (removed FEATURE_ICONS import / gold set). Size 42px, consistent.
+- Icon+number+label centered as one group (`flex items-center justify-center`) — verified equal left/right gaps on all four boxes.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
