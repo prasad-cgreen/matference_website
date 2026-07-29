@@ -44,11 +44,11 @@ function OrbitNode({ node, onHover, hovered }) {
   const top = 50 + 50 * Math.sin((node.angle * Math.PI) / 180);
   return (
     <div
-      className="absolute"
+      className="absolute pointer-events-none"
       style={{ left: `${left}%`, top: `${top}%`, transform: "translate(-50%, -50%)" }}
     >
       {/* counter-rotates so the node stays upright while it revolves */}
-      <div className="plat-upright relative flex flex-col items-center">
+      <div className="plat-upright relative flex flex-col items-center pointer-events-auto">
         <button
           type="button"
           data-testid={`platform-node-${node.id}`}
@@ -88,13 +88,14 @@ function OrbitNode({ node, onHover, hovered }) {
   );
 }
 
-function SidePanelCard({ card, hot, onHover }) {
+function SidePanelCard({ card, onHover }) {
   const { Icon } = card;
+  const [hot, setHot] = useState(false);
   return (
     <div
       data-testid={`platform-card-${card.id}`}
-      onMouseEnter={onHover ? () => onHover(card.id) : undefined}
-      onMouseLeave={onHover ? () => onHover(null) : undefined}
+      onMouseEnter={() => { setHot(true); onHover && onHover(true); }}
+      onMouseLeave={() => { setHot(false); onHover && onHover(false); }}
       className="glass rounded-2xl flex items-center gap-3 px-4 py-3 transition-colors duration-200"
       style={
         hot
@@ -160,7 +161,7 @@ export default function PlatformDiagram() {
 
       {/* Orbit ring with 6 continuously revolving nodes */}
       <div
-        className="plat-ring absolute"
+        className="plat-ring absolute pointer-events-none"
         style={{ left: `${CX}%`, top: `${CY}%`, height: `${RING_H}%`, aspectRatio: "1 / 1" }}
         data-testid="platform-orbit-ring"
       >
@@ -172,7 +173,7 @@ export default function PlatformDiagram() {
       {/* Left panel: Data Sources */}
       <div
         className="plat-ambient absolute rounded-3xl glass p-4 flex flex-col"
-        style={{ left: "3%", top: "16.3%", width: "17.9%", height: "48.9%", background: "rgba(255,255,255,0.55)", border: "1px solid rgba(20,41,132,0.14)" }}
+        style={{ left: "3%", top: "16.3%", width: "17.9%", height: "48.9%", background: "rgba(255,255,255,0.55)", border: "1.5px solid #FCDD15" }}
         data-testid="platform-panel-data-sources"
       >
         <h4 className="font-head text-xs lg:text-sm text-[#142984] mb-3 tracking-wide">DATA SOURCES</h4>
@@ -181,23 +182,22 @@ export default function PlatformDiagram() {
             <SidePanelCard
               key={c.id}
               card={c}
-              hot={c.id === "lender-data" && lenderHot}
-              onHover={c.id === "lender-data" ? (v) => setLenderHot(v === "lender-data") : undefined}
+              onHover={c.id === "lender-data" ? setLenderHot : undefined}
             />
           ))}
         </div>
       </div>
 
-      {/* Right panel: Omni-Channel Sub Channels */}
+      {/* Right panel: Omni-Channel Sub Channels — mirrors Data Sources height */}
       <div
         className={`plat-ambient absolute rounded-3xl glass p-4 flex flex-col ${omniHot ? "plat-panel-hot" : ""}`}
         style={{
           left: "77.6%",
-          top: "27.3%",
+          top: "16.3%",
           width: "18.9%",
-          height: "44.6%",
+          height: "48.9%",
           background: omniHot ? "rgba(252,221,21,0.18)" : "rgba(255,255,255,0.55)",
-          border: omniHot ? "1px solid #FCDD15" : "1px solid rgba(20,41,132,0.14)",
+          border: "1.5px solid #FCDD15",
         }}
         data-testid="platform-panel-omni"
       >

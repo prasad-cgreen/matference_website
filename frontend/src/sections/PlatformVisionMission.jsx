@@ -76,15 +76,7 @@ export default function PlatformVisionMission() {
         <div id="platform" className="mt-20 scroll-mt-28" data-testid="platform-subsection">
           <h3 className="font-head text-2xl lg:text-3xl text-[#142984] mb-6">PLATFORM</h3>
           {/* Interactive capability diagram: orbiting nodes + glass hub + side panels */}
-          <div className="mb-12">
-            <PlatformDiagram />
-          </div>
-          {/* Purple-gradient glass box with empty 16:9 video placeholder (intentional one-off color) */}
-          <div className="glass glass-purple rounded-[24px] p-3">
-            <div className="w-full rounded-2xl" style={{ aspectRatio: "16 / 9" }} data-testid="video-placeholder">
-              {/* empty framed video placeholder — no play button, no thumbnail, no text */}
-            </div>
-          </div>
+          <PlatformDiagram />
         </div>
       </div>
     </section>

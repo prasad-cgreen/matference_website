@@ -177,6 +177,12 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - CSS added to index.css: plat-orbit-spin/counter/icon, plat-ambient (+@property), plat-panel-pulse; reduced-motion disables them.
 - Note: Playwright can't hover a continuously-animating node ("element not stable"); verified Omni→panel + tooltip via synthetic mouseover event.
 
+## Round 45 (2026-06) — VERIFIED
+- Platform diagram fixes: each of the 6 side-panel cards now owns its own hover state in `SidePanelCard` (useState) → only the hovered card turns yellow; Lender Data also brightens its hub connector. Root-cause fix: spinning ring square corners were intercepting panel hovers → set `.plat-ring` container `pointer-events-none` and node wrappers `pointer-events-auto`.
+- Right "Omni-Channel Sub Channels" panel repositioned to mirror Data Sources (top 16.3%, height 48.9%).
+- Removed the leftover video placeholder box from `PlatformVisionMission.jsx`.
+- Both panels given a static (non-animated) 1.5px #FCDD15 border, in addition to the existing ambient chasing glow.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
