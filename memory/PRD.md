@@ -187,6 +187,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Omni-Channel Sub Channels panel now vertically centered on the hub: top 16.3%→21.1% (height 48.9% → center = 45.55% = hub CY). Verified panel-center vs hub-center delta = 0; Data Sources untouched (top 16.3%).
 - Root-cause fix: `.plat-ambient` (defined after Tailwind utilities) set `position:relative`, overriding the `absolute` utility → both panels were in normal flow, so % `top` never resolved against the container. Added inline `position:"absolute"` to both panels (inline beats class).
 
+## Round 47 (2026-06) — VERIFIED
+- Added right-side connector in PlatformDiagram SVG: `M 886 482 H 1173` (hub right edge → Omni-Channel Sub Channels panel left edge, at shared center y=482), with matching endpoint dots.
+- Restyled both left & right connectors with a faint metallic-blue sheen: `linearGradient #metalBlue` (navy→#A9C3F4 highlight→navy, userSpaceOnUse across the connector span) at group `opacity 0.6`, replacing flat #142984. Endpoint dots → #3A5BBF @0.6. Lender Data connector keeps its yellow-on-hover (full opacity).
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).

@@ -125,21 +125,44 @@ export default function PlatformDiagram() {
     >
       {/* SVG: concentric circles + static Data-Sources connectors to hub */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1512 1058" fill="none">
-        {/* left data-source connectors → vertical bus → hub */}
-        <g stroke="#142984" strokeWidth="2.2" fill="none" strokeLinecap="round">
-          <path d={`M 316 307 H 372`} stroke={lenderHot ? "#FCDD15" : "#142984"} strokeWidth={lenderHot ? 3.2 : 2.2} />
+        {/* metallic-blue sheen gradient for connector lines */}
+        <defs>
+          <linearGradient id="metalBlue" gradientUnits="userSpaceOnUse" x1="316" y1="470" x2="1173" y2="494">
+            <stop offset="0%" stopColor="#1B347F" />
+            <stop offset="38%" stopColor="#4E71C9" />
+            <stop offset="50%" stopColor="#A9C3F4" />
+            <stop offset="62%" stopColor="#4E71C9" />
+            <stop offset="100%" stopColor="#1B347F" />
+          </linearGradient>
+        </defs>
+
+        {/* left (Data Sources) + right (Omni-Channel) connectors — faint metallic-blue sheen */}
+        <g stroke="url(#metalBlue)" strokeWidth="2.2" fill="none" strokeLinecap="round" opacity="0.6">
           <path d="M 316 465 H 372" />
           <path d="M 316 603 H 372" />
           <path d="M 372 307 V 603" />
           <path d="M 372 465 H 470 Q 490 465 490 482 V 482" />
           <path d="M 470 465 H 545" />
+          {/* right connector: hub → Omni-Channel Sub Channels panel */}
+          <path d="M 886 482 H 1173" />
         </g>
-        <g fill="#142984">
-          <circle cx="316" cy="307" r="4.5" fill={lenderHot ? "#FCDD15" : "#142984"} />
-          <circle cx="316" cy="465" r="4.5" />
-          <circle cx="316" cy="603" r="4.5" />
-          <circle cx="545" cy="465" r="4.5" />
+        {/* Lender Data connector (brightens yellow on hover) */}
+        <path
+          d="M 316 307 H 372"
+          fill="none"
+          strokeLinecap="round"
+          stroke={lenderHot ? "#FCDD15" : "url(#metalBlue)"}
+          strokeWidth={lenderHot ? 3.2 : 2.2}
+          opacity={lenderHot ? 1 : 0.6}
+        />
+        <g opacity="0.6">
+          <circle cx="316" cy="465" r="4.5" fill="#3A5BBF" />
+          <circle cx="316" cy="603" r="4.5" fill="#3A5BBF" />
+          <circle cx="545" cy="465" r="4.5" fill="#3A5BBF" />
+          <circle cx="886" cy="482" r="4.5" fill="#3A5BBF" />
+          <circle cx="1173" cy="482" r="4.5" fill="#3A5BBF" />
         </g>
+        <circle cx="316" cy="307" r="4.5" fill={lenderHot ? "#FCDD15" : "#3A5BBF"} opacity={lenderHot ? 1 : 0.6} />
 
         {/* outer boundary circle (nodes orbit along it) */}
         <circle cx="713.7" cy="482" r="293" stroke="#142984" strokeOpacity="0.55" strokeWidth="1.6" strokeDasharray="2 7" />
