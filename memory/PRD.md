@@ -196,6 +196,12 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Cream section w/ "COMING SOON" header + subtitle; bordered dark-navy container (yellow border) holding: header ("AI COMMAND CENTER" + tagline + yellow COMING SOON badge); left sidebar 3 persona tabs (Lending Institution active=yellow, other two inactive/no logic); flat AI Risk Score gauge (SVG, 72%/Low Risk, tri-color legend dots, no 3D); Live Voice AI panel (live dot, call timer, 5 transcript lines w/ sentiment tags, waveform bars, "Sentiment: At Risk" footer); 3 alert cards; 4 bottom stat cards.
 - Static only — Rounds 49/50 will add tab switching + live behavior.
 
+## Round 49 (2026-06) — VERIFIED
+- AICommandCenter refactored to a `DATA` map keyed by persona + `useState` active tab (default lending-institution). Clicking any sidebar tab highlights it yellow, deactivates others, and swaps gauge / live panel / alerts / bottom stats.
+- Pragati Kendra: Franchise Health 88%/Excellent, Live Field Activity feed, franchise alerts, village stats, "collections by village" bar chart.
+- Internal Ops: Team Efficiency 91%/High, Live Agent Queue, ops alerts, agent stats, "call volume by hour" bar chart.
+- New generic `BarChart` (navy/yellow) infographic for both new tabs; Lending keeps waveform + Sentiment footer. TagPill extended (Positive/Active green, At Risk amber, Follow-up Needed blue). All illustrative preview data.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
