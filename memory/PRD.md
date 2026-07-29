@@ -168,6 +168,15 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Replaced stat-box icons with the new yellow (#FCDD15) line-art set drawn locally in OurReach: PeopleGroup→Lenders, MapPin→States, Buildings→Districts, Houses→Villages (removed FEATURE_ICONS import / gold set). Size 42px, consistent.
 - Icon+number+label centered as one group (`flex items-center justify-center`) — verified equal left/right gaps on all four boxes.
 
+## Round 44 (2026-06) — VERIFIED
+- New `sections/PlatformDiagram.jsx` rendered under the PLATFORM heading in `PlatformVisionMission.jsx` (video placeholder kept below).
+- Concentric SVG circles (outer dashed boundary r293 + inner hub r172) centered at (47.2%,45.55%); hub = cgreen-logo + "Empower. Enrich. Enable." No hub↔node connectors.
+- Six capability nodes on a CSS square ring (`.plat-ring`, 20s linear) revolving continuously; each node counter-rotates (`.plat-upright`) to stay upright while its icon re-rotates (`.plat-icon`) to follow the curve. Glass-navy circles + labels + hover tooltip. Orbit never pauses (pure CSS). Hover uses native hit-testing on transformed elements.
+- Left Data Sources panel (glass) w/ 3 cards + navy SVG connectors to hub; ambient chasing glow via `@property --plat-ang` conic-gradient border mask; Lender Data highlights yellow on hover only + its connector brightens.
+- Right Omni-Channel Sub Channels panel (glass, ambient glow); hovering the Omni-Channel Outreach node pulses this panel yellow (`.plat-panel-hot`) via shared React state; no literal connector to the moving node.
+- CSS added to index.css: plat-orbit-spin/counter/icon, plat-ambient (+@property), plat-panel-pulse; reduced-motion disables them.
+- Note: Playwright can't hover a continuously-animating node ("element not stable"); verified Omni→panel + tooltip via synthetic mouseover event.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).

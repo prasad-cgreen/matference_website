@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Eye, Target } from "lucide-react";
 import { VISION, MISSION } from "@/data/site";
+import PlatformDiagram from "@/sections/PlatformDiagram";
 
 export default function PlatformVisionMission() {
   return (
@@ -74,6 +75,10 @@ export default function PlatformVisionMission() {
         {/* Platform subsection */}
         <div id="platform" className="mt-20 scroll-mt-28" data-testid="platform-subsection">
           <h3 className="font-head text-2xl lg:text-3xl text-[#142984] mb-6">PLATFORM</h3>
+          {/* Interactive capability diagram: orbiting nodes + glass hub + side panels */}
+          <div className="mb-12">
+            <PlatformDiagram />
+          </div>
           {/* Purple-gradient glass box with empty 16:9 video placeholder (intentional one-off color) */}
           <div className="glass glass-purple rounded-[24px] p-3">
             <div className="w-full rounded-2xl" style={{ aspectRatio: "16 / 9" }} data-testid="video-placeholder">
