@@ -202,6 +202,14 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Internal Ops: Team Efficiency 91%/High, Live Agent Queue, ops alerts, agent stats, "call volume by hour" bar chart.
 - New generic `BarChart` (navy/yellow) infographic for both new tabs; Lending keeps waveform + Sentiment footer. TagPill extended (Positive/Active green, At Risk amber, Follow-up Needed blue). All illustrative preview data.
 
+## Round 50 (2026-06) — VERIFIED (screenshot)
+- AICommandCenter live-feel animations. Dashboard content extracted into `<DashboardBody key={active} />` so switching tabs forces a full remount → all animations restart from scratch.
+- `useCountUp` RAF hook (ease-out cubic): gauge counts 0→pct with arc filling in sync; stat cards count 0→target via `AnimatedStatValue` (preserves ₹/%/commas/decimals via regex, en-IN formatting).
+- `useLiveFeed` hook reveals live-panel rows one-by-one every 2.2s then loops from empty; each row uses `.ai-line-in` entrance.
+- Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
+- Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
+
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).

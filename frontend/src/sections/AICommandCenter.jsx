@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Building2, Users, Cog, AlertTriangle, HandCoins, MapPin, TrendingUp,
   FileText, TrendingDown, GraduationCap, UserMinus, Clock, ArrowUpRight,
@@ -93,6 +93,25 @@ const TAG_STYLES = {
   "Follow-up Needed": { c: "#60A5FA", b: "rgba(96,165,250,0.16)", br: "rgba(96,165,250,0.45)" },
 };
 
+// Count a numeric value from 0 -> target over `duration` ms (ease-out).
+function useCountUp(target, duration = 1200) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    let raf, start;
+    const step = (ts) => {
+      if (start == null) start = ts;
+      const p = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setVal(target * eased);
+      if (p < 1) raf = requestAnimationFrame(step);
+      else setVal(target);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return val;
+}
+
 function TagPill({ tag }) {
   if (!tag) return null;
   const s = TAG_STYLES[tag] || TAG_STYLES.Positive;
@@ -104,7 +123,9 @@ function TagPill({ tag }) {
 }
 
 function RiskGauge({ pct, label, color }) {
-  const r = 62, c = 2 * Math.PI * r, dash = (pct / 100) * c;
+  const r = 62, c = 2 * Math.PI * r;
+  const anim = useCountUp(pct, 1300);
+  const dash = (anim / 100) * c;
   return (
     <div className="relative flex items-center justify-center" style={{ width: 168, height: 168 }}>
       <svg width="168" height="168" viewBox="0 0 168 168" className="-rotate-90">
@@ -112,11 +133,23 @@ function RiskGauge({ pct, label, color }) {
         <circle cx="84" cy="84" r={r} fill="none" stroke="#FCDD15" strokeWidth="12" strokeLinecap="round" strokeDasharray={`${dash} ${c - dash}`} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-head text-4xl text-white leading-none">{pct}%</span>
+        <span className="font-head text-4xl text-white leading-none">{Math.round(anim)}%</span>
         <span className="mt-1 text-xs font-semibold" style={{ color }}>{label}</span>
       </div>
     </div>
   );
+}
+
+// Animate the numeric portion of a stat string (preserves prefix/suffix, commas, decimals).
+function AnimatedStatValue({ value }) {
+  const m = String(value).match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
+  const numStr = m ? m[2] : "0";
+  const target = parseFloat(numStr.replace(/,/g, ""));
+  const decimals = numStr.includes(".") ? numStr.split(".")[1].length : 0;
+  const anim = useCountUp(target, 1200);
+  if (!m) return <>{value}</>;
+  const shown = anim.toLocaleString("en-IN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return <>{m[1]}{shown}{m[3]}</>;
 }
 
 function BarChart({ chart }) {
@@ -126,7 +159,7 @@ function BarChart({ chart }) {
       <div className="flex items-end justify-between gap-2" style={{ height: 96 }}>
         {chart.data.map((v, i) => (
           <div key={i} className="flex-1 flex items-end justify-center h-full">
-            <div className="w-full max-w-[26px] rounded-t-md" style={{ height: `${18 + (v / max) * 78}%`, background: "linear-gradient(180deg,#FCDD15,#e9c400)" }} />
+            <div className="w-full max-w-[26px] rounded-t-md ai-bar-grow" style={{ height: `${18 + (v / max) * 78}%`, background: "linear-gradient(180deg,#FCDD15,#e9c400)", animationDelay: `${i * 90}ms` }} />
           </div>
         ))}
       </div>
@@ -139,6 +172,120 @@ function BarChart({ chart }) {
 }
 
 const panel = "rounded-2xl border border-white/10 bg-white/[0.04]";
+
+// Reveals rows one-by-one every `interval` ms, then loops from empty.
+function useLiveFeed(count, interval = 2000) {
+  const [visible, setVisible] = useState(1);
+  useEffect(() => {
+    setVisible(1);
+    const id = setInterval(() => {
+      setVisible((v) => (v >= count ? 1 : v + 1));
+    }, interval);
+    return () => clearInterval(id);
+  }, [count, interval]);
+  return visible;
+}
+
+// Extracted body — remounts on tab change via `key`, restarting all animations.
+function DashboardBody({ d }) {
+  const visibleRows = useLiveFeed(d.rows.length, 2200);
+
+  return (
+    <div className="flex-1 min-w-0 flex flex-col gap-5" data-testid="ai-dashboard-body">
+      <div className="grid grid-cols-1 xl:grid-cols-[220px_1fr_260px] gap-5">
+        {/* Gauge */}
+        <div className={`${panel} p-5 flex flex-col items-center`} data-testid="ai-risk-score">
+          <div className="w-full flex items-center justify-between mb-3">
+            <span className="font-head text-[11px] tracking-wider text-white/80 leading-tight">{d.gaugeTitle}</span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full" style={{ background: "#34D399" }} />
+              <span className="w-2 h-2 rounded-full" style={{ background: "#FCDD15" }} />
+              <span className="w-2 h-2 rounded-full" style={{ background: "#F87171" }} />
+            </span>
+          </div>
+          <RiskGauge pct={d.pct} label={d.riskLabel} color={d.riskColor} />
+          <div className="grid grid-cols-2 gap-2 w-full mt-4">
+            {d.metrics.map((m, i) => (
+              <div key={i} className="rounded-xl bg-white/[0.04] border border-white/10 px-3 py-2 text-center">
+                <div className="text-[15px] font-head" style={{ color: m.c }}>{m.v}</div>
+                <div className="text-[10px] text-white/50">{m.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Live panel */}
+        <div className={`${panel} p-5 min-w-0`} data-testid="ai-live-panel">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-head text-sm tracking-wider flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#F87171" }} />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: "#F87171" }} />
+              </span>
+              {d.liveTitle}
+            </span>
+            <span className="text-[11px] text-white/60">{d.liveMeta}</span>
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            {d.rows.slice(0, visibleRows).map((l, i) => (
+              <div key={`${visibleRows}-${i}`} className="flex items-start gap-2.5 ai-line-in" data-testid={`ai-row-${i}`}>
+                <span className="text-[10px] text-white/40 font-mono pt-1 w-9 shrink-0">{l.t}</span>
+                <div className="flex-1 min-w-0">
+                  {l.who && <span className={`text-[11px] font-semibold ${l.who.startsWith("Customer") ? "text-[#60A5FA]" : "text-[#FCDD15]"}`}>{l.who} </span>}
+                  <span className="text-[12px] text-white/85">{l.text}</span>
+                </div>
+                <TagPill tag={l.tag} />
+              </div>
+            ))}
+          </div>
+
+          {d.bottom === "waveform" ? (
+            <>
+              <div className="flex items-center justify-center gap-[3px] h-12 mt-4" data-testid="ai-waveform">
+                {WAVE.map((h, i) => (<span key={i} className="w-[3px] rounded-full" style={{ height: h, background: "rgba(252,221,21,0.7)" }} />))}
+              </div>
+              <div className="mt-3 flex justify-end">
+                <span className="text-[11px] font-semibold px-3 py-1 rounded-full" style={{ color: "#FBBF24", background: "rgba(251,191,36,0.16)", border: "1px solid rgba(251,191,36,0.45)" }}>{d.footerTag}</span>
+              </div>
+            </>
+          ) : (
+            <BarChart chart={d.chart} />
+          )}
+        </div>
+
+        {/* Alerts */}
+        <div className="flex flex-col gap-3" data-testid="ai-alerts">
+          {d.alerts.map((a, i) => (
+            <div key={i} className={`${panel} p-4 flex gap-3 ai-hover-card ai-alert-pulse`} style={{ "--pulse-color": `${a.color}80`, animationDelay: `${i * 0.7}s` }} data-testid={`ai-alert-${i}`}>
+              <span className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ background: `${a.color}22`, border: `1px solid ${a.color}66` }}>
+                <a.Icon size={16} style={{ color: a.color }} />
+              </span>
+              <div className="min-w-0">
+                <div className="text-[13px] font-head">{a.title}</div>
+                <div className="text-[11px] text-white/60 leading-snug">{a.desc}</div>
+                <div className="text-[10px] text-white/35 mt-1">{a.time}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-testid="ai-stat-cards">
+        {d.stats.map((s, i) => (
+          <div key={i} className={`${panel} p-4 ai-hover-card`} data-testid={`ai-stat-${i}`}>
+            <div className="text-[11px] text-white/55 tracking-wide">{s.label}</div>
+            <div className="font-head text-2xl mt-1"><AnimatedStatValue value={s.value} /></div>
+            <div className="flex items-center gap-1 mt-1 text-[11px]" style={{ color: "#34D399" }}>
+              <TrendingUp size={13} /><span>{s.trend}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function AICommandCenter() {
   const [active, setActive] = useState("lending-institution");
@@ -178,99 +325,9 @@ export default function AICommandCenter() {
               })}
             </div>
 
-            {/* Main content (swaps per tab) */}
-            <div className="flex-1 min-w-0 flex flex-col gap-5" data-testid={`ai-content-${active}`}>
-              <div className="grid grid-cols-1 xl:grid-cols-[220px_1fr_260px] gap-5">
-                {/* Gauge */}
-                <div className={`${panel} p-5 flex flex-col items-center`} data-testid="ai-risk-score">
-                  <div className="w-full flex items-center justify-between mb-3">
-                    <span className="font-head text-[11px] tracking-wider text-white/80 leading-tight">{d.gaugeTitle}</span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full" style={{ background: "#34D399" }} />
-                      <span className="w-2 h-2 rounded-full" style={{ background: "#FCDD15" }} />
-                      <span className="w-2 h-2 rounded-full" style={{ background: "#F87171" }} />
-                    </span>
-                  </div>
-                  <RiskGauge pct={d.pct} label={d.riskLabel} color={d.riskColor} />
-                  <div className="grid grid-cols-2 gap-2 w-full mt-4">
-                    {d.metrics.map((m, i) => (
-                      <div key={i} className="rounded-xl bg-white/[0.04] border border-white/10 px-3 py-2 text-center">
-                        <div className="text-[15px] font-head" style={{ color: m.c }}>{m.v}</div>
-                        <div className="text-[10px] text-white/50">{m.l}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Live panel */}
-                <div className={`${panel} p-5 min-w-0`} data-testid="ai-live-panel">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-head text-sm tracking-wider flex items-center gap-2">
-                      <span className="relative flex h-2.5 w-2.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#F87171" }} />
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: "#F87171" }} />
-                      </span>
-                      {d.liveTitle}
-                    </span>
-                    <span className="text-[11px] text-white/60">{d.liveMeta}</span>
-                  </div>
-
-                  <div className="flex flex-col gap-2.5">
-                    {d.rows.map((l, i) => (
-                      <div key={i} className="flex items-start gap-2.5" data-testid={`ai-row-${i}`}>
-                        <span className="text-[10px] text-white/40 font-mono pt-1 w-9 shrink-0">{l.t}</span>
-                        <div className="flex-1 min-w-0">
-                          {l.who && <span className={`text-[11px] font-semibold ${l.who.startsWith("Customer") ? "text-[#60A5FA]" : "text-[#FCDD15]"}`}>{l.who} </span>}
-                          <span className="text-[12px] text-white/85">{l.text}</span>
-                        </div>
-                        <TagPill tag={l.tag} />
-                      </div>
-                    ))}
-                  </div>
-
-                  {d.bottom === "waveform" ? (
-                    <>
-                      <div className="flex items-center justify-center gap-[3px] h-12 mt-4" data-testid="ai-waveform">
-                        {WAVE.map((h, i) => (<span key={i} className="w-[3px] rounded-full" style={{ height: h, background: "rgba(252,221,21,0.7)" }} />))}
-                      </div>
-                      <div className="mt-3 flex justify-end">
-                        <span className="text-[11px] font-semibold px-3 py-1 rounded-full" style={{ color: "#FBBF24", background: "rgba(251,191,36,0.16)", border: "1px solid rgba(251,191,36,0.45)" }}>{d.footerTag}</span>
-                      </div>
-                    </>
-                  ) : (
-                    <BarChart chart={d.chart} />
-                  )}
-                </div>
-
-                {/* Alerts */}
-                <div className="flex flex-col gap-3" data-testid="ai-alerts">
-                  {d.alerts.map((a, i) => (
-                    <div key={i} className={`${panel} p-4 flex gap-3`} data-testid={`ai-alert-${i}`}>
-                      <span className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ background: `${a.color}22`, border: `1px solid ${a.color}66` }}>
-                        <a.Icon size={16} style={{ color: a.color }} />
-                      </span>
-                      <div className="min-w-0">
-                        <div className="text-[13px] font-head">{a.title}</div>
-                        <div className="text-[11px] text-white/60 leading-snug">{a.desc}</div>
-                        <div className="text-[10px] text-white/35 mt-1">{a.time}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bottom stats */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-testid="ai-stat-cards">
-                {d.stats.map((s, i) => (
-                  <div key={i} className={`${panel} p-4`} data-testid={`ai-stat-${i}`}>
-                    <div className="text-[11px] text-white/55 tracking-wide">{s.label}</div>
-                    <div className="font-head text-2xl mt-1">{s.value}</div>
-                    <div className="flex items-center gap-1 mt-1 text-[11px]" style={{ color: "#34D399" }}>
-                      <TrendingUp size={13} /><span>{s.trend}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {/* Main content — key forces full remount per tab, restarting all animations */}
+            <div className="flex-1 min-w-0" data-testid={`ai-content-${active}`}>
+              <DashboardBody key={active} d={d} />
             </div>
           </div>
         </div>

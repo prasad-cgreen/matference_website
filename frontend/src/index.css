@@ -322,4 +322,6 @@ body {
 .ai-alert-pulse { animation: ai-alert-pulse 3.2s ease-in-out infinite; }
 .ai-hover-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .ai-hover-card:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(252,221,21,0.28); }
-@media (prefers-reduced-motion: reduce) { .ai-line-in, .ai-fade-scale, .ai-alert-pulse { animation: none; } }
+@keyframes ai-bar-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.ai-bar-grow { transform-origin: bottom; animation: ai-bar-grow 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+@media (prefers-reduced-motion: reduce) { .ai-line-in, .ai-fade-scale, .ai-alert-pulse, .ai-bar-grow { animation: none; } }
