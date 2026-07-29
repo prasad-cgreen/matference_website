@@ -173,7 +173,7 @@ export default function PlatformDiagram() {
       {/* Left panel: Data Sources */}
       <div
         className="plat-ambient absolute rounded-3xl glass p-4 flex flex-col"
-        style={{ left: "3%", top: "16.3%", width: "17.9%", height: "48.9%", background: "rgba(255,255,255,0.55)", border: "1.5px solid #FCDD15" }}
+        style={{ position: "absolute", left: "3%", top: "16.3%", width: "17.9%", height: "48.9%", background: "rgba(255,255,255,0.55)", border: "1.5px solid #FCDD15" }}
         data-testid="platform-panel-data-sources"
       >
         <h4 className="font-head text-xs lg:text-sm text-[#142984] mb-3 tracking-wide">DATA SOURCES</h4>
@@ -192,8 +192,9 @@ export default function PlatformDiagram() {
       <div
         className={`plat-ambient absolute rounded-3xl glass p-4 flex flex-col ${omniHot ? "plat-panel-hot" : ""}`}
         style={{
+          position: "absolute",
           left: "77.6%",
-          top: "16.3%",
+          top: "21.1%",
           width: "18.9%",
           height: "48.9%",
           background: omniHot ? "rgba(252,221,21,0.18)" : "rgba(255,255,255,0.55)",

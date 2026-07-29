@@ -183,6 +183,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Removed the leftover video placeholder box from `PlatformVisionMission.jsx`.
 - Both panels given a static (non-animated) 1.5px #FCDD15 border, in addition to the existing ambient chasing glow.
 
+## Round 46 (2026-06) — VERIFIED
+- Omni-Channel Sub Channels panel now vertically centered on the hub: top 16.3%→21.1% (height 48.9% → center = 45.55% = hub CY). Verified panel-center vs hub-center delta = 0; Data Sources untouched (top 16.3%).
+- Root-cause fix: `.plat-ambient` (defined after Tailwind utilities) set `position:relative`, overriding the `absolute` utility → both panels were in normal flow, so % `top` never resolved against the container. Added inline `position:"absolute"` to both panels (inline beats class).
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
