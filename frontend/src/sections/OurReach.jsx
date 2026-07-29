@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 
@@ -74,7 +74,53 @@ const GLOWS = [
   { name: "Assam", left: "88.57%", top: "33.84%" },
 ];
 
+// Fires once when `ref` first enters the viewport.
+function useInViewOnce(ref, threshold = 0.35) {
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || seen) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSeen(true);
+          obs.disconnect();
+        }
+      },
+      { threshold }
+    );
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, [ref, seen, threshold]);
+  return seen;
+}
+
+// Counts the numeric part of a stat (e.g. "957K+") from 0 to target once `start` is true.
+function CountUpStat({ value, start, duration = 1800 }) {
+  const m = String(value).match(/^([\d,]+)(.*)$/);
+  const target = m ? parseInt(m[1].replace(/,/g, ""), 10) : 0;
+  const suffix = m ? m[2] : String(value);
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let raf, s0;
+    const step = (ts) => {
+      if (s0 == null) s0 = ts;
+      const p = Math.min((ts - s0) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setN(Math.round(target * eased));
+      if (p < 1) raf = requestAnimationFrame(step);
+      else setN(target);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [start, target, duration]);
+  return <>{n.toLocaleString("en-IN")}{suffix}</>;
+}
+
 export default function OurReach() {
+  const statsRef = useRef(null);
+  const started = useInViewOnce(statsRef);
   return (
     <section id="reach" className="relative w-full py-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-reach">
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[2fr_3fr] gap-14 items-start relative z-10">
@@ -93,7 +139,7 @@ export default function OurReach() {
             </span>
           </div>
 
-          <div className="mt-8 flex flex-col gap-4" data-testid="reach-stats">
+          <div className="mt-8 flex flex-col gap-4" data-testid="reach-stats" ref={statsRef}>
             {STATS.map((s) => (
               <div
                 key={s.label}
@@ -104,7 +150,9 @@ export default function OurReach() {
                   {s.Icon && s.Icon(42)}
                 </span>
                 <div className="flex flex-col items-center justify-center text-center font-head leading-none">
-                  <span className="text-3xl lg:text-4xl text-white tabular-nums">{s.value}</span>
+                  <span className="text-3xl lg:text-4xl text-white tabular-nums">
+                    <CountUpStat value={s.value} start={started} />
+                  </span>
                   <span className="text-sm lg:text-base text-white mt-2">{s.label}</span>
                 </div>
               </div>

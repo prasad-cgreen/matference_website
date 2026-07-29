@@ -30,9 +30,14 @@ export default function Navbar() {
 
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl" data-testid="navbar">
-      <nav
-        className={`glass glass-nav ${scrolled ? "glass-nav-scrolled" : ""} rounded-full px-4 py-2.5 flex items-center justify-between transition-[background] duration-500`}
-      >
+      <nav className="relative rounded-full px-4 py-2.5">
+        {/* Glass/shine layer — isolated so its overflow:hidden doesn't clip the dropdowns */}
+        <span
+          aria-hidden="true"
+          className={`glass glass-nav ${scrolled ? "glass-nav-scrolled" : ""} absolute inset-0 rounded-full transition-[background] duration-500`}
+          style={{ zIndex: 0 }}
+        />
+        <div className="relative z-10 flex items-center justify-between">
         {/* Logo */}
         <button
           onClick={() => scrollToId("hero")}
@@ -61,7 +66,7 @@ export default function Navbar() {
               </button>
 
               {item.dropdown && openMenu === item.label && (
-                <div className="absolute left-0 top-full pt-2">
+                <div className="absolute left-0 top-full pt-2 z-[60]">
                   <div className="glass glass-nav rounded-2xl p-2 min-w-[210px] shadow-xl">
                     {item.dropdown.map((d) => (
                       <button
@@ -108,6 +113,7 @@ export default function Navbar() {
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}

@@ -209,6 +209,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 51 (2026-06) — VERIFIED (screenshot)
+- Fixed nav dropdowns (About Us / Services) rendering clipped/behind content. Root cause: `<nav>` used `.glass` (which sets `overflow:hidden`), trapping the absolute dropdown. Moved glass/shine to an isolated absolute inset `<span>` (own overflow-hidden clips its streak) and wrapped nav content in `relative z-10`; nav itself now overflows freely. Dropdown wrapper raised to `z-[60]`. Glass look unchanged.
+- OurReach: scroll-triggered count-up. `useInViewOnce` (IntersectionObserver, threshold 0.35, fires once) + `CountUpStat` (RAF, ease-out cubic, ~1.8s) animate 10+/3/35/957K+ from 0 on first viewport entry; does not replay on re-scroll.
+
+
 
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
