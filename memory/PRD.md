@@ -191,6 +191,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Added right-side connector in PlatformDiagram SVG: `M 886 482 H 1173` (hub right edge → Omni-Channel Sub Channels panel left edge, at shared center y=482), with matching endpoint dots.
 - Restyled both left & right connectors with a faint metallic-blue sheen: `linearGradient #metalBlue` (navy→#A9C3F4 highlight→navy, userSpaceOnUse across the connector span) at group `opacity 0.6`, replacing flat #142984. Endpoint dots → #3A5BBF @0.6. Lender Data connector keeps its yellow-on-hover (full opacity).
 
+## Round 48 (2026-06) — VERIFIED
+- New `sections/AICommandCenter.jsx` inserted between OurReach and OurTeam (`#ai-command-center`). Static "Coming Soon" AI dashboard, Lending Institution tab content only.
+- Cream section w/ "COMING SOON" header + subtitle; bordered dark-navy container (yellow border) holding: header ("AI COMMAND CENTER" + tagline + yellow COMING SOON badge); left sidebar 3 persona tabs (Lending Institution active=yellow, other two inactive/no logic); flat AI Risk Score gauge (SVG, 72%/Low Risk, tri-color legend dots, no 3D); Live Voice AI panel (live dot, call timer, 5 transcript lines w/ sentiment tags, waveform bars, "Sentiment: At Risk" footer); 3 alert cards; 4 bottom stat cards.
+- Static only — Rounds 49/50 will add tab switching + live behavior.
+
 ## Backlog / Remaining
 - **P1 — Reconnect feature icons to the composite** (Round 33 accepted gap): route new connector lines (or another treatment) from the 9 floating icons to the brain+logo composite.
 - **P1**: Wire contact form to real CRM/endpoint once provided (currently DB stub, FLAGGED-UNDECIDED).
