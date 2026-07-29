@@ -34,8 +34,8 @@ export default function Navbar() {
         {/* Glass/shine layer — isolated so its overflow:hidden doesn't clip the dropdowns */}
         <span
           aria-hidden="true"
-          className={`glass glass-nav ${scrolled ? "glass-nav-scrolled" : ""} absolute inset-0 rounded-full transition-[background] duration-500`}
-          style={{ zIndex: 0 }}
+          className={`glass glass-nav ${scrolled ? "glass-nav-scrolled" : ""} inset-0 rounded-full transition-[background] duration-500`}
+          style={{ position: "absolute", zIndex: 0 }}
         />
         <div className="relative z-10 flex items-center justify-between">
         {/* Logo */}
