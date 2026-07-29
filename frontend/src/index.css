@@ -312,3 +312,14 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .plat-ring, .plat-upright, .plat-icon, .plat-ambient::before, .plat-panel-hot { animation: none; }
 }
+
+/* ---------- AI COMMAND CENTER (Round 50) ---------- */
+@keyframes ai-line-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.ai-line-in { animation: ai-line-in 0.5s ease-out both; }
+@keyframes ai-fade-scale { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: none; } }
+.ai-fade-scale { animation: ai-fade-scale 0.6s ease-out both; }
+@keyframes ai-alert-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); } 50% { box-shadow: 0 0 11px 1px var(--pulse-color, rgba(252,221,21,0.5)); } }
+.ai-alert-pulse { animation: ai-alert-pulse 3.2s ease-in-out infinite; }
+.ai-hover-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.ai-hover-card:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(252,221,21,0.28); }
+@media (prefers-reduced-motion: reduce) { .ai-line-in, .ai-fade-scale, .ai-alert-pulse { animation: none; } }
