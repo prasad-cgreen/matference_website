@@ -209,6 +209,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 53 (2026-06) — VERIFIED (screenshot)
+- Footer redesigned to reference layout on existing navy bg: 4 cols — Brand (white logo + description), Company links, Address (bold "Communication Address Office" + "Registered Address" headings), Socials (LinkedIn/Instagram/YouTube circular buttons + bold EMAIL/Website/CIN/GST/Contact labels), centered copyright "© {year} Matference Technologies India Private Limited". Updated FOOTER data in site.js with real content from reference (addresses, CIN U66190MH2021PTC358948, GST 27AAOCM5134C1ZJ, info@cgreen.in, +91-96533 13952).
+- PlatformDiagram: removed stray diagonal line (was `.glass::before` specular streak) via new `.glass-no-shine` class applied only to the Data Sources panel. Bracket connectors untouched.
+- PlatformDiagram hover fix: replaced single `lenderHot` bool with `hotSource` id; extracted all 3 Data-Sources branch stubs (lender y307, socio y465, environment y603) into individually highlightable paths+dots; wired every card's onHover. All three now brighten their own branch yellow on hover.
+
 ## Round 52 (2026-06) — VERIFIED (screenshot)
 - Fixed Round 51 glass regression. Cause: `.glass` is defined after `@tailwind utilities`, so its `position:relative` overrode the Tailwind `absolute` class on the nav shine layer → the layer collapsed and the frosted blur vanished. Fix: force `position:absolute` on the shine `<span>` via inline style (highest priority). Glass blur restored AND dropdown stacking fix intact.
 

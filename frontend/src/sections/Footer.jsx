@@ -1,35 +1,36 @@
 import React from "react";
-import { Linkedin, Instagram, Youtube, Mail, Globe, Phone } from "lucide-react";
+import { Linkedin, Instagram, Youtube } from "lucide-react";
 import { FOOTER } from "@/data/site";
+
+const SOCIALS = [
+  { Icon: Linkedin, label: "LinkedIn" },
+  { Icon: Instagram, label: "Instagram" },
+  { Icon: Youtube, label: "YouTube" },
+];
 
 export default function Footer() {
   return (
     <footer className="relative w-full bg-[#142984] text-[#FFFCFA] pt-16 pb-8" data-testid="footer">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-10">
-        {/* Brand + tagline */}
-        <div className="md:col-span-2">
-          <img src="/cgreen-logo-white.png" alt="cGreen" className="h-9 w-auto mb-4" />
-          <p className="font-body text-sm text-[#FFFCFA]/80 max-w-sm">{FOOTER.tagline}</p>
-          <div className="flex gap-3 mt-6">
-            {[Linkedin, Instagram, Youtube].map((Icon, i) => (
-              <span
-                key={i}
-                className="w-10 h-10 rounded-full border border-white/25 flex items-center justify-center hover:bg-[#FCDD15] hover:text-[#142984] transition-colors cursor-pointer"
-                data-testid={`footer-social-${i}`}
-              >
-                <Icon size={18} />
-              </span>
-            ))}
-          </div>
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
+        {/* Brand + description */}
+        <div className="md:col-span-3" data-testid="footer-brand">
+          <img src="/cgreen-logo-white.png" alt="cGreen" className="h-10 w-auto mb-5" />
+          <p className="font-body text-sm text-[#FFFCFA]/75 leading-relaxed max-w-xs">
+            {FOOTER.description}
+          </p>
         </div>
 
-        {/* Company links */}
-        <div>
-          <h4 className="font-head text-[#FCDD15] mb-4">Company</h4>
-          <ul className="space-y-2">
+        {/* Company */}
+        <div className="md:col-span-2" data-testid="footer-company">
+          <h4 className="font-head text-base text-[#FCDD15] mb-4">Company</h4>
+          <ul className="space-y-2.5">
             {FOOTER.companyLinks.map((l) => (
               <li key={l.label}>
-                <a href={l.href} className="font-body text-sm text-[#FFFCFA]/80 hover:text-[#FCDD15] transition-colors">
+                <a
+                  href={l.href}
+                  data-testid={`footer-link-${l.label.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}
+                  className="font-body text-sm text-[#FFFCFA]/80 hover:text-[#FCDD15] transition-colors"
+                >
                   {l.label}
                 </a>
               </li>
@@ -37,28 +38,49 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact */}
-        <div>
-          <h4 className="font-head text-[#FCDD15] mb-4">Reach Us</h4>
-          <ul className="space-y-3 font-body text-sm text-[#FFFCFA]/80">
-            <li className="flex items-center gap-2"><Mail size={15} /> {FOOTER.email}</li>
-            <li className="flex items-center gap-2"><Globe size={15} /> {FOOTER.website}</li>
-            <li className="flex items-center gap-2"><Phone size={15} /> {FOOTER.phone}</li>
+        {/* Address */}
+        <div className="md:col-span-4" data-testid="footer-address">
+          <h4 className="font-head text-base text-[#FCDD15] mb-4">Address</h4>
+          <p className="font-body text-sm leading-relaxed">
+            <span className="font-semibold text-[#FFFCFA]">{FOOTER.commAddressLabel}</span>
+            <span className="block text-[#FFFCFA]/75 mt-0.5">{FOOTER.commAddress}</span>
+          </p>
+          <p className="font-body text-sm leading-relaxed mt-4">
+            <span className="font-semibold text-[#FFFCFA]">{FOOTER.regAddressLabel}</span>
+            <span className="block text-[#FFFCFA]/75 mt-0.5">{FOOTER.regAddress}</span>
+          </p>
+        </div>
+
+        {/* Socials */}
+        <div className="md:col-span-3" data-testid="footer-socials">
+          <h4 className="font-head text-base text-[#FCDD15] mb-4">Socials</h4>
+          <div className="flex gap-3 mb-5">
+            {SOCIALS.map(({ Icon, label }) => (
+              <a
+                key={label}
+                href="#"
+                aria-label={label}
+                data-testid={`footer-social-${label.toLowerCase()}`}
+                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#FFFCFA] hover:bg-[#FCDD15] hover:text-[#142984] hover:border-[#FCDD15] transition-colors"
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+          </div>
+          <ul className="space-y-2 font-body text-sm text-[#FFFCFA]/80">
+            <li><span className="font-semibold text-[#FFFCFA]">EMAIL:</span> {FOOTER.email}</li>
+            <li><span className="font-semibold text-[#FFFCFA]">Website:</span> {FOOTER.website}</li>
+            <li><span className="font-semibold text-[#FFFCFA]">CIN:</span> {FOOTER.cin}</li>
+            <li><span className="font-semibold text-[#FFFCFA]">GST:</span> {FOOTER.gst}</li>
+            <li><span className="font-semibold text-[#FFFCFA]">Contact:</span> {FOOTER.phone}</li>
           </ul>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 mt-12 grid md:grid-cols-2 gap-6">
-        <p className="font-body text-xs text-[#FFFCFA]/60">{FOOTER.commAddress}</p>
-        <p className="font-body text-xs text-[#FFFCFA]/60">{FOOTER.regAddress}</p>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 mt-8 pt-6 border-t border-white/15 flex flex-col md:flex-row justify-between gap-3">
-        <p className="font-body text-xs text-[#FFFCFA]/60">
-          CIN: {FOOTER.cin} &nbsp;•&nbsp; GST: {FOOTER.gst}
-        </p>
-        <p className="font-body text-xs text-[#FFFCFA]/60">
-          © {new Date().getFullYear()} cGreen. All rights reserved.
+      {/* Copyright */}
+      <div className="max-w-7xl mx-auto px-6 mt-14 pt-6 border-t border-white/15">
+        <p className="font-body text-xs text-[#FFFCFA]/60 text-center" data-testid="footer-copyright">
+          Copyright © {new Date().getFullYear()} {FOOTER.legalName}. All Rights Reserved.
         </p>
       </div>
     </footer>

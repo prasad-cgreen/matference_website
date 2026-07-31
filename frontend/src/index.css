@@ -89,6 +89,11 @@ body {
   background: rgba(20, 41, 132, 0.38);
 }
 
+/* Suppress the diagonal specular streak on specific glass surfaces */
+.glass-no-shine::before {
+  content: none;
+}
+
 .glass-yellow {
   background: rgba(252, 221, 21, 0.38);
 }

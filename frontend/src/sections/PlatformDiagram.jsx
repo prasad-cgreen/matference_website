@@ -32,6 +32,13 @@ const LEFT_CARDS = [
   { id: "environment", label: "Environment", Icon: Leaf },
 ];
 
+// Branch stub y-positions (SVG units) matching each Data-Sources card.
+const BRANCHES = [
+  { id: "lender-data", y: 307 },
+  { id: "socio-economic", y: 465 },
+  { id: "environment", y: 603 },
+];
+
 const RIGHT_CARDS = [
   { id: "digital-connect", label: "Digital Connect", Icon: Globe },
   { id: "remote-connect", label: "Remote Connect", Icon: Phone },
@@ -113,7 +120,7 @@ function SidePanelCard({ card, onHover }) {
 
 export default function PlatformDiagram() {
   const [hoverNode, setHoverNode] = useState(null);
-  const [lenderHot, setLenderHot] = useState(false);
+  const [hotSource, setHotSource] = useState(null);
 
   const omniHot = hoverNode === "omni-channel-outreach";
 
@@ -136,33 +143,36 @@ export default function PlatformDiagram() {
           </linearGradient>
         </defs>
 
-        {/* left (Data Sources) + right (Omni-Channel) connectors — faint metallic-blue sheen */}
+        {/* shared trunk: vertical bracket bar + bar→hub + right connector */}
         <g stroke="url(#metalBlue)" strokeWidth="2.2" fill="none" strokeLinecap="round" opacity="0.6">
-          <path d="M 316 465 H 372" />
-          <path d="M 316 603 H 372" />
           <path d="M 372 307 V 603" />
           <path d="M 372 465 H 470 Q 490 465 490 482 V 482" />
           <path d="M 470 465 H 545" />
           {/* right connector: hub → Omni-Channel Sub Channels panel */}
           <path d="M 886 482 H 1173" />
         </g>
-        {/* Lender Data connector (brightens yellow on hover) */}
-        <path
-          d="M 316 307 H 372"
-          fill="none"
-          strokeLinecap="round"
-          stroke={lenderHot ? "#FCDD15" : "url(#metalBlue)"}
-          strokeWidth={lenderHot ? 3.2 : 2.2}
-          opacity={lenderHot ? 1 : 0.6}
-        />
+        {/* three Data-Sources branch stubs — each brightens yellow when its card is hovered */}
+        {BRANCHES.map((b) => {
+          const on = hotSource === b.id;
+          return (
+            <g key={b.id} data-testid={`platform-branch-${b.id}`}>
+              <path
+                d={`M 316 ${b.y} H 372`}
+                fill="none"
+                strokeLinecap="round"
+                stroke={on ? "#FCDD15" : "url(#metalBlue)"}
+                strokeWidth={on ? 3.2 : 2.2}
+                opacity={on ? 1 : 0.6}
+              />
+              <circle cx="316" cy={b.y} r="4.5" fill={on ? "#FCDD15" : "#3A5BBF"} opacity={on ? 1 : 0.6} />
+            </g>
+          );
+        })}
         <g opacity="0.6">
-          <circle cx="316" cy="465" r="4.5" fill="#3A5BBF" />
-          <circle cx="316" cy="603" r="4.5" fill="#3A5BBF" />
           <circle cx="545" cy="465" r="4.5" fill="#3A5BBF" />
           <circle cx="886" cy="482" r="4.5" fill="#3A5BBF" />
           <circle cx="1173" cy="482" r="4.5" fill="#3A5BBF" />
         </g>
-        <circle cx="316" cy="307" r="4.5" fill={lenderHot ? "#FCDD15" : "#3A5BBF"} opacity={lenderHot ? 1 : 0.6} />
 
         {/* outer boundary circle (nodes orbit along it) */}
         <circle cx="713.7" cy="482" r="293" stroke="#142984" strokeOpacity="0.55" strokeWidth="1.6" strokeDasharray="2 7" />
@@ -195,7 +205,7 @@ export default function PlatformDiagram() {
 
       {/* Left panel: Data Sources */}
       <div
-        className="plat-ambient absolute rounded-3xl glass p-4 flex flex-col"
+        className="plat-ambient glass-no-shine absolute rounded-3xl glass p-4 flex flex-col"
         style={{ position: "absolute", left: "3%", top: "16.3%", width: "17.9%", height: "48.9%", background: "rgba(255,255,255,0.55)", border: "1.5px solid #FCDD15" }}
         data-testid="platform-panel-data-sources"
       >
@@ -205,7 +215,7 @@ export default function PlatformDiagram() {
             <SidePanelCard
               key={c.id}
               card={c}
-              onHover={c.id === "lender-data" ? setLenderHot : undefined}
+              onHover={(v) => setHotSource(v ? c.id : null)}
             />
           ))}
         </div>

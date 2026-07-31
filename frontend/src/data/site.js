@@ -127,7 +127,8 @@ export const SUBJECTS = [
 ];
 
 export const FOOTER = {
-  tagline: "Where rural truth meets resolution — restoring dignity, trust, and clarity across Bharat.",
+  description:
+    "CGreen is committed to ethical collections, secure data management, and providing actionable feedback to lenders.",
   companyLinks: [
     { label: "Home", href: "#hero" },
     { label: "About Us", href: "#about" },
@@ -137,11 +138,16 @@ export const FOOTER = {
     { label: "Terms & Conditions", href: "#" },
     { label: "Privacy Policy", href: "#" },
   ],
-  commAddress: "Communication Address: 4th Floor, Fintech Hub, Bandra Kurla Complex, Mumbai, Maharashtra 400051, India.",
-  regAddress: "Registered Address: Unit 12, Green Enclave, Andheri East, Mumbai, Maharashtra 400069, India.",
-  email: "connect@cgreen.in",
+  commAddressLabel: "Communication Address Office",
+  commAddress:
+    "Matference Technologies India Pvt Ltd, 705, Bay B, Rupa Solitaire Building, Sector -1, Millennium Business Park, Mahape, Navi Mumbai- 400710",
+  regAddressLabel: "Registered Address",
+  regAddress:
+    "C-602, Balaji Towers, Plot 8, Sec-22, Nerul (West), Navi Mumbai- 400706",
+  email: "info@cgreen.in",
   website: "www.cgreen.in",
-  cin: "U65990MH2023PTC000000",
-  gst: "27AABCC0000A1Z5",
-  phone: "+91 22 4000 0000",
+  cin: "U66190MH2021PTC358948",
+  gst: "27AAOCM5134C1ZJ",
+  phone: "+91-96533 13952",
+  legalName: "Matference Technologies India Private Limited",
 };
