@@ -49,9 +49,9 @@ export default function HeroSection() {
             Customer • Collect • Credit
           </span>
           <h1 className="font-head text-4xl sm:text-5xl lg:text-6xl leading-[1.02] text-[#142984]">
-            Borrower intelligence,<br />better{" "}
+            Borrower Intelligence,<br />Better{" "}
             <span className="relative inline-block">
-              resolution
+              Resolution
               <span className="absolute left-0 -bottom-1 h-2 w-full bg-[#FCDD15] -z-10 rounded" />
             </span>.
           </h1>
