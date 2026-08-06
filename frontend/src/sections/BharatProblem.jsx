@@ -56,9 +56,11 @@ export default function BharatProblem() {
           <h2 className="font-head text-3xl lg:text-4xl text-[#142984] mb-5">
             THE BHARAT PROBLEM
           </h2>
-          <p className="font-body text-base lg:text-lg leading-relaxed text-[#142984]/90">
-            {BHARAT_COPY}
-          </p>
+          {BHARAT_COPY.map((para, i) => (
+            <p key={i} className={`font-body text-base lg:text-lg leading-relaxed text-[#142984]/90${i > 0 ? " mt-4" : ""}`}>
+              {para}
+            </p>
+          ))}
         </motion.div>
       </div>
     </section>

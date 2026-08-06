@@ -209,6 +209,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 55 (2026-06) — VERIFIED (screenshot)
+- Hero headline → "Borrower intelligence, better resolution." (yellow underline kept on "resolution"); hero subtext → new Customer 360 copy. Styling unchanged.
+- BHARAT_COPY changed to a 2-paragraph array; BharatProblem renders both `<p>` with same styling + gap. New copy applied.
+
 ## Round 54 (2026-06) — VERIFIED (screenshot)
 - 9 feature labels (ScalingWithPurpose solution logo): replaced Courier New monospace/800 with Inter Tight/600 (medium-bold); color/size/position unchanged.
 - PlatformDiagram: Omni-Channel card "Smart Connect" → "Smart Collect" (others unchanged); removed hub tagline "Empower. Enrich. Enable." (logo/circle kept).

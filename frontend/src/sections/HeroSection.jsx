@@ -49,15 +49,16 @@ export default function HeroSection() {
             Customer • Collect • Credit
           </span>
           <h1 className="font-head text-4xl sm:text-5xl lg:text-6xl leading-[1.02] text-[#142984]">
-            Where rural truth<br />meets{" "}
+            Borrower intelligence,<br />better{" "}
             <span className="relative inline-block">
               resolution
               <span className="absolute left-0 -bottom-1 h-2 w-full bg-[#FCDD15] -z-10 rounded" />
-            </span>
+            </span>.
           </h1>
           <p className="mt-6 max-w-md font-body text-base sm:text-lg text-[#142984]/75">
-            An AI-powered debt resolution network built for Bharat — uncovering the delta
-            between borrowing and repayment, and restoring dignity, trust, and clarity.
+            CGreen brings lender data, digital signals, multilingual conversations and local
+            execution together through an AI-powered Customer 360. It helps lenders identify whom
+            to contact, how to engage and the right next step for responsible resolution.
           </p>
         </motion.div>
 

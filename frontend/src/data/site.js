@@ -32,8 +32,10 @@ export const RURAL_ORBIT = {
   inner: ["Lender Overload", "Financial Illiteracy", "Lack of Banks & NBFC"],
 };
 
-export const BHARAT_COPY =
-  "Rural India faces a mounting debt resolution crisis where borrowers' changing realities go unseen, lenders' tools fall short, and the system prioritizes collection over resolution. Without empathetic engagement, verified data, and a structured infrastructure, both borrowers and lenders remain stuck: borrowers spiral into distress, while lenders face rising non-performing assets. cGreen was created to break this cycle — by uncovering the delta between borrowing and repayment, empowering local agents, and building a scalable, AI-powered resolution network that restores dignity, trust, and clarity across Bharat.";
+export const BHARAT_COPY = [
+  "Across Bharat, changing borrower realities often remain invisible to traditional collection systems. Outdated data and disconnected channels can cause genuine hardship, disputes and intentional non-payment to be treated alike. Borrowers face increasing distress, while lenders struggle with rising delinquencies and limited customer understanding.",
+  "CGreen bridges this gap by combining verified data, empathetic engagement and local execution.",
+];
 
 export const STATS = [
   { value: 10, suffix: "+", label: "Lenders" },
