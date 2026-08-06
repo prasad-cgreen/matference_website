@@ -209,6 +209,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 54 (2026-06) — VERIFIED (screenshot)
+- 9 feature labels (ScalingWithPurpose solution logo): replaced Courier New monospace/800 with Inter Tight/600 (medium-bold); color/size/position unchanged.
+- PlatformDiagram: Omni-Channel card "Smart Connect" → "Smart Collect" (others unchanged); removed hub tagline "Empower. Enrich. Enable." (logo/circle kept).
+- OurReach: Lenders stat value "10+" → "29+" (label/icon/others unchanged).
+
 ## Round 53 (2026-06) — VERIFIED (screenshot)
 - Footer redesigned to reference layout on existing navy bg: 4 cols — Brand (white logo + description), Company links, Address (bold "Communication Address Office" + "Registered Address" headings), Socials (LinkedIn/Instagram/YouTube circular buttons + bold EMAIL/Website/CIN/GST/Contact labels), centered copyright "© {year} Matference Technologies India Private Limited". Updated FOOTER data in site.js with real content from reference (addresses, CIN U66190MH2021PTC358948, GST 27AAOCM5134C1ZJ, info@cgreen.in, +91-96533 13952).
 - PlatformDiagram: removed stray diagonal line (was `.glass::before` specular streak) via new `.glass-no-shine` class applied only to the Data Sources panel. Bracket connectors untouched.

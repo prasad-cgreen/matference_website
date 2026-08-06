@@ -125,7 +125,7 @@ function LogoSolution({ isDesktop }) {
             data-testid={`feature-${slug(n.c)}`}
           >
             {Icon && Icon(46)}
-            <div className="mt-1" style={{ fontFamily: "'Courier New', monospace", fontSize: "14px", fontWeight: 800, lineHeight: 1.15, color: "#0F1F4B" }}>
+            <div className="mt-1" style={{ fontFamily: "'Inter Tight', sans-serif", fontSize: "14px", fontWeight: 600, lineHeight: 1.15, color: "#0F1F4B" }}>
               {n.c}
             </div>
           </div>

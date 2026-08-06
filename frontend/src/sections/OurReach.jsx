@@ -61,7 +61,7 @@ const Houses = (s) => (
 );
 
 const STATS = [
-  { value: "10+", label: "Lenders", Icon: PeopleGroup },
+  { value: "29+", label: "Lenders", Icon: PeopleGroup },
   { value: "3", label: "States", Icon: MapPin },
   { value: "35", label: "Districts", Icon: Buildings },
   { value: "957K+", label: "Villages", Icon: Houses },

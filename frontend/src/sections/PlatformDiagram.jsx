@@ -42,7 +42,7 @@ const BRANCHES = [
 const RIGHT_CARDS = [
   { id: "digital-connect", label: "Digital Connect", Icon: Globe },
   { id: "remote-connect", label: "Remote Connect", Icon: Phone },
-  { id: "smart-connect", label: "Smart Connect", Icon: Share2 },
+  { id: "smart-connect", label: "Smart Collect", Icon: Share2 },
 ];
 
 function OrbitNode({ node, onHover, hovered }) {
@@ -187,9 +187,6 @@ export default function PlatformDiagram() {
         data-testid="platform-hub"
       >
         <img src="/cgreen-logo.png" alt="cGreen" className="w-full h-auto max-w-[190px]" draggable="false" />
-        <span className="mt-1 font-body text-[11px] lg:text-xs font-medium text-[#142984]/80">
-          Empower. Enrich. Enable.
-        </span>
       </div>
 
       {/* Orbit ring with 6 continuously revolving nodes */}
