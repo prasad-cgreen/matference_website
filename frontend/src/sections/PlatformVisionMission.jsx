@@ -4,6 +4,13 @@ import { Eye, Target } from "lucide-react";
 import { VISION, MISSION } from "@/data/site";
 import PlatformDiagram from "@/sections/PlatformDiagram";
 
+const AUDIENCE_BOXES = [
+  { id: "lenders", hex: "#7E8FCB", heading: "For Lenders", body: "Deeper district-level reach without having to create a separate physical operating infrastructure for every service." },
+  { id: "customers", hex: "#5568AD", heading: "For Customers", body: "A nearby, technology-enabled point for communication, verification, payment assistance and responsible resolution." },
+  { id: "entrepreneurs", hex: "#2C3D8F", heading: "For Local Entrepreneurs", body: "A structured opportunity connected to institutional work, technology, training and measurable operating standards." },
+  { id: "cgreen", hex: "#142984", heading: "For CGreen", body: "A collections-first operating network that can support a wider range of lender and customer services over time." },
+];
+
 export default function PlatformVisionMission() {
   return (
     <section
@@ -70,6 +77,32 @@ export default function PlatformVisionMission() {
             </div>
             <p className="font-body text-base lg:text-lg leading-relaxed text-[#142984]">{MISSION}</p>
           </motion.div>
+        </div>
+
+        {/* Branching connector (copies Vision→Mission elbow style) + four audience boxes */}
+        <div className="max-w-6xl mx-auto mt-10">
+          <svg className="hidden md:block w-full h-auto" viewBox="0 0 1000 130" fill="none" aria-hidden="true" data-testid="vm-branch-connector">
+            <path d="M 740 8 V 55" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <path d="M 125 55 H 875" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <path d="M 125 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <path d="M 375 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <path d="M 625 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <path d="M 875 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <circle cx="740" cy="8" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
+            <circle cx="125" cy="122" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
+            <circle cx="375" cy="122" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
+            <circle cx="625" cy="122" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
+            <circle cx="875" cy="122" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
+          </svg>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5 md:mt-1" data-testid="vm-audience-boxes">
+            {AUDIENCE_BOXES.map((b) => (
+              <div key={b.id} className="rounded-2xl p-6 flex flex-col" style={{ background: b.hex }} data-testid={`vm-box-${b.id}`}>
+                <h4 className="font-head text-lg text-[#FFFCFA] mb-2">{b.heading}</h4>
+                <p className="font-body text-sm leading-relaxed text-[#FFFCFA]/90">{b.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Platform subsection */}

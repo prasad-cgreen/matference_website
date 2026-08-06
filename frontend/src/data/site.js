@@ -57,10 +57,10 @@ export const SOLUTION_CAPTIONS = [
 ];
 
 export const VISION =
-  "To transform the way debt collections are performed in India by prioritizing customer engagement and utilizing technology to provide a seamless and effective collection experience. Our goal is to empower lenders with valuable insights and secure, efficient collections while upholding the highest ethical standards and protecting customer data.";
+  "To build Bharat's most trusted, AI-led customer-resolution network—combining digital scale, multilingual intelligence, responsible human engagement and dependable local presence. We envision a future where lenders do not act only on delinquency status, but on a continuously updated understanding of the customer's intent, ability, contactability and circumstances.";
 
 export const MISSION =
-  "To become a leading player in the Indian collection sector by providing a customer-focused and technology-driven solution. Utilizing a gig network and cutting-edge AI/ML technology, we are committed to delivering effective customer engagement, efficient collections, and secure data management. Our goal is to achieve 10% market share within the next 3 years by upholding the highest ethical standards and providing valuable insights to lenders.";
+  "CGreen's mission is to build a connected, technology-enabled resolution network across 200 districts in Bharat. Through one cloud platform, trained remote teams and local Pragati Kendras, we aim to deliver digital, remote and field collections, contact-point verification and actionable customer intelligence. Over time, this infrastructure will enable a broader range of lender-approved assistance, verification and documentation services closer to the customer.";
 
 export const SERVICES_TAGLINE =
   "Digital when possible. Human when needed. Local when it matters.";

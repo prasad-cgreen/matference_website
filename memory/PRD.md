@@ -209,6 +209,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 60 (2026-06) — VERIFIED (screenshot)
+- Vision & Mission copy replaced in site.js (longer AI-led resolution network text); cards auto-expand, no overflow.
+- Added branching connector below Mission (copies Vision→Mission elbow style: #FCDD15 stroke 2.5, r5 nodes navy stroke): trunk from Mission bottom → horizontal bus → 4 legs into boxes, SVG viewBox 1000x130 w-full.
+- Added 4 stepped-navy audience boxes (grid-cols-4): For Lenders #7E8FCB, For Customers #5568AD, For Local Entrepreneurs #2C3D8F, For CGreen #142984; white bold heading + cream body, no title above.
+
 ## Round 59 (2026-06) — VERIFIED (screenshot)
 - Closed oversized gap between Our Services and Vision & Mission. ScalingWithPurpose py-24 → pt-24 pb-6; PlatformVisionMission py-24 → pt-12 pb-24. Only inter-section padding reduced; internal spacing untouched.
 
