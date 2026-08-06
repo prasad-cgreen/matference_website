@@ -173,17 +173,19 @@ export default function ScalingWithPurpose() {
   return (
     <section id="solution" className="relative w-full py-24 overflow-hidden scroll-mt-24" data-testid="section-scaling">
       {/* Full-width heading / tagline / banner block */}
-      <div id="services" className="max-w-7xl mx-auto px-6 text-center relative z-10 scroll-mt-24 mb-16" data-testid="section-services">
+      <div id="services" className="max-w-7xl mx-auto px-6 text-center relative z-10 scroll-mt-24 mb-6" data-testid="section-services">
         <h2 className="font-head text-3xl lg:text-5xl text-[#142984]">OUR SERVICES</h2>
-        <p className="font-body font-light text-base md:text-lg text-[#142984]/80 mt-4">
-          {SERVICES_TAGLINE}
-        </p>
+        <div className="mt-4 flex justify-center">
+          <span className="inline-block text-center px-5 py-2.5 rounded-full text-sm font-body font-bold leading-snug glass glass-yellow text-[#142984]">
+            {SERVICES_TAGLINE}
+          </span>
+        </div>
         <p className="font-body font-light text-base md:text-lg text-[#142984]/80 mt-6 leading-relaxed">
           {SERVICES_BANNER}
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[minmax(0,470px)_1fr] gap-14 items-start relative z-10">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[minmax(0,470px)_1fr] gap-14 items-start relative z-10 lg:-mt-16">
         {/* Left column: toggle tabs + service carousel */}
         <div className="lg:mt-[140px]">
           <div className="flex flex-wrap lg:flex-nowrap gap-3 mb-7">

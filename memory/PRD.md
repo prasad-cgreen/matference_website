@@ -209,6 +209,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 57 (2026-06) — VERIFIED (screenshot)
+- OUR SERVICES tagline wrapped in a centered glass-yellow pill (copied Our Reach pill CSS: px-5 py-2.5 rounded-full glass glass-yellow), placed below heading, above banner.
+- Closed banner→tabs/hub gap: top block mb-16→mb-6 and grid lg:-mt-16 (pulls both columns up together, tab/hub alignment preserved, section position unchanged).
+
 ## Round 56 (2026-06) — VERIFIED (screenshot)
 - OUR SERVICES restructured. Added full-width centered top block: heading "OUR SERVICES", plain tagline (SERVICES_TAGLINE, no pill) + full-width banner paragraph (SERVICES_BANNER). Replaced SERVICES_INTRO in site.js with these two constants.
 - Removed old left-column heading, "THE CGREEN APPROACH" subheading, and old intro paragraph. Left column now starts directly with toggle tabs + carousel (unchanged content).
