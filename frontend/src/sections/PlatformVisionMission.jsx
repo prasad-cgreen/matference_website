@@ -5,7 +5,7 @@ import { VISION, MISSION } from "@/data/site";
 import PlatformDiagram from "@/sections/PlatformDiagram";
 
 const AUDIENCE_BOXES = [
-  { id: "lenders", hex: "#B3C9F2", Icon: Landmark, heading: "For Lenders", body: "Deeper district-level reach without having to create a separate physical operating infrastructure for every service." },
+  { id: "lenders", hex: "#7C97D6", Icon: Landmark, heading: "For Lenders", body: "Deeper district-level reach without having to create a separate physical operating infrastructure for every service." },
   { id: "customers", hex: "#5568AD", Icon: Users, heading: "For Customers", body: "A nearby, technology-enabled point for communication, verification, payment assistance and responsible resolution." },
   { id: "entrepreneurs", hex: "#2C3D8F", Icon: Store, heading: "For Local Entrepreneurs", body: "A structured opportunity connected to institutional work, technology, training and measurable operating standards." },
   { id: "cgreen", hex: "#142984", Icon: Network, heading: "For CGreen", body: "A collections-first operating network that can support a wider range of lender and customer services over time." },
@@ -80,7 +80,7 @@ export default function PlatformVisionMission() {
         </div>
 
         {/* Branching connector (copies Vision→Mission elbow style) + four audience boxes */}
-        <div className="max-w-6xl mx-auto mt-8 md:-mt-3">
+        <div className="max-w-6xl mx-auto relative z-0 mt-8 md:-mt-[26px]">
           <svg className="hidden md:block w-full h-auto" viewBox="0 0 1000 130" fill="none" aria-hidden="true" data-testid="vm-branch-connector">
             <path d="M 740 6 V 55" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             <path d="M 125 55 H 875" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
