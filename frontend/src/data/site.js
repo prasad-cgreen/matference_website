@@ -62,8 +62,11 @@ export const VISION =
 export const MISSION =
   "To become a leading player in the Indian collection sector by providing a customer-focused and technology-driven solution. Utilizing a gig network and cutting-edge AI/ML technology, we are committed to delivering effective customer engagement, efficient collections, and secure data management. Our goal is to achieve 10% market share within the next 3 years by upholding the highest ethical standards and providing valuable insights to lenders.";
 
-export const SERVICES_INTRO =
-  "Our innovative suite of financial products and services is oriented toward small businesses operating across the BFSI sector. Our offerings empower small businesses to forward their services and grow in underserved markets, bridging gaps in financial inclusion, starting from small-ticket collections and moving on to other financial services such as lending.";
+export const SERVICES_TAGLINE =
+  "Digital when possible. Human when needed. Local when it matters.";
+
+export const SERVICES_BANNER =
+  "Traditional collections rely on fragmented data, disconnected teams and static customer information. CGreen brings every digital interaction, call, field visit, dispute, promise and payment into one continuously updated Customer 360. Our AI-powered platform identifies why a customer has not paid, recommends the right channel, timing and treatment, and prioritises the next best action. Every outcome improves the next decision—making collections more connected, intelligent, traceable and resolution-focused.";
 
 export const PRAGATI_CARDS = [
   {

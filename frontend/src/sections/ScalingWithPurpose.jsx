@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Store, Coins, Cpu, TrendingUp, Mic, Database, ChevronLeft, ChevronRight } from "lucide-react";
-import { SOLUTION_CAPTIONS, SERVICES_INTRO, PRAGATI_CARDS, LENDING_CARDS } from "@/data/site";
+import { SOLUTION_CAPTIONS, SERVICES_TAGLINE, SERVICES_BANNER, PRAGATI_CARDS, LENDING_CARDS } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 import { FEATURE_ICONS } from "@/components/site/LogoFeatureIcons";
 
@@ -172,14 +172,21 @@ export default function ScalingWithPurpose() {
 
   return (
     <section id="solution" className="relative w-full py-24 overflow-hidden scroll-mt-24" data-testid="section-scaling">
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[minmax(0,470px)_1fr] gap-14 items-start relative z-10">
-        {/* Left column: Our Services (merged in) */}
-        <div id="services" className="scroll-mt-24" data-testid="section-services">
-          <h2 className="font-head text-3xl lg:text-4xl text-[#142984]">OUR SERVICES</h2>
-          <p className="font-body text-base lg:text-lg text-[#142984]/70 mt-1">THE CGREEN APPROACH</p>
-          <p className="font-body text-base text-[#142984]/80 mt-5 leading-relaxed">{SERVICES_INTRO}</p>
+      {/* Full-width heading / tagline / banner block */}
+      <div id="services" className="max-w-7xl mx-auto px-6 text-center relative z-10 scroll-mt-24 mb-16" data-testid="section-services">
+        <h2 className="font-head text-3xl lg:text-5xl text-[#142984]">OUR SERVICES</h2>
+        <p className="font-body font-light text-base md:text-lg text-[#142984]/80 mt-4">
+          {SERVICES_TAGLINE}
+        </p>
+        <p className="font-body font-light text-base md:text-lg text-[#142984]/80 mt-6 leading-relaxed">
+          {SERVICES_BANNER}
+        </p>
+      </div>
 
-          <div className="flex flex-wrap lg:flex-nowrap gap-3 mt-7 mb-7">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[minmax(0,470px)_1fr] gap-14 items-start relative z-10">
+        {/* Left column: toggle tabs + service carousel */}
+        <div className="lg:mt-[140px]">
+          <div className="flex flex-wrap lg:flex-nowrap gap-3 mb-7">
             <TabButton id="pragati" label="For Pragati Kendra Partners" inactiveText="text-[#142984]/70 hover:text-[#142984]" />
             <TabButton id="lending" label="For Lending Institutions" inactiveText="text-[#FCDD15]" />
           </div>
