@@ -209,6 +209,9 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 58 (2026-06) — VERIFIED (screenshot)
+- Replaced all 6 service card texts (PRAGATI_CARDS + LENDING_CARDS in site.js): number-title → heading, short line → eyebrow pill (value), paragraph → body. Icons/structure/carousel unchanged. Pragati: Institutional Work Opportunities / Technology-Enabled Field Operations / Training, Support and Growth. Lending: Digital and Remote Collections / Field Collections and Verification / Customer and Voice Intelligence.
+
 ## Round 57 (2026-06) — VERIFIED (screenshot)
 - OUR SERVICES tagline wrapped in a centered glass-yellow pill (copied Our Reach pill CSS: px-5 py-2.5 rounded-full glass glass-yellow), placed below heading, above banner.
 - Closed banner→tabs/hub gap: top block mb-16→mb-6 and grid lg:-mt-16 (pulls both columns up together, tab/hub alignment preserved, section position unchanged).

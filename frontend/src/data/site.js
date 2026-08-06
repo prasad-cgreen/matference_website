@@ -71,42 +71,42 @@ export const SERVICES_BANNER =
 export const PRAGATI_CARDS = [
   {
     icon: "Store",
-    value: "Own a certified franchise",
-    title: "Franchisee Onboarding",
-    body: "Become a certified Pragati Kendra franchisee with full onboarding, training, and operational support, and then offer a comprehensive suite of financial products to end customers.",
+    value: "Build a trusted local financial-services business",
+    title: "Institutional Work Opportunities",
+    body: "Access collection, verification and customer-assistance assignments from lending institutions through the CGreen network. Manage opportunities within your territory while building and expanding a trained local team.",
   },
   {
     icon: "Coins",
-    value: "Earn across financial services",
-    title: "Cross-sell Financial Products",
-    body: "Seamlessly access banking and financial products, insurance sales, investments, transactions, and liability — delivered through one powerful platform, fully integrated to meet rural customers' needs.",
+    value: "Plan better. Execute faster. Report transparently.",
+    title: "Technology-Enabled Field Operations",
+    body: "Receive prioritised assignments, Customer 360 summaries, route plans and nearby-customer mapping through the CGreen platform. Capture geo-tagged visits, customer responses, documents, payment commitments and field evidence in real time.",
   },
   {
     icon: "Cpu",
-    value: "Recover more, faster",
-    title: "Collections Engine",
-    body: "A technology-enabled collections engine built for rural India. Our platform empowers agents to track, follow up, and recover small-ticket loans efficiently with AI-driven insights and customer interaction tools.",
+    value: "Grow with structured processes and wider opportunities",
+    title: "Training, Support and Growth",
+    body: "CGreen provides training, compliance guidance, performance dashboards and transparent task and payout visibility. High-performing Kendras can qualify for larger territories and additional lender-approved service lines.",
   },
 ];
 
 export const LENDING_CARDS = [
   {
     icon: "TrendingUp",
-    value: "Boost repayment, cut NPAs",
-    title: "ML-Powered Debt Collection",
-    body: "Boost repayment rates with our AI/ML-driven collection engine. We analyze borrower behavior, predict repayment probabilities, and equip agents with personalized communication prompts — delivering smarter, scalable recovery for small-ticket loans in rural India.",
+    value: "Scalable, multilingual engagement across customer portfolios",
+    title: "Digital and Remote Collections",
+    body: "Reach customers through SMS, WhatsApp, IVR, voice bots and trained telecalling teams. Every response, promise, dispute and payment outcome updates the Customer 360 and helps determine the next best action.",
   },
   {
     icon: "Mic",
-    value: "Turn conversations into insight",
-    title: "Customer Feedback & Transcription Services",
-    body: "Every borrower-agent interaction is recorded, transcribed, and analyzed using NLP. This creates actionable insights, voice-based borrower profiling, and quality assurance to improve engagement strategies and collection outcomes.",
+    value: "Responsible last-mile execution across Bharat",
+    title: "Field Collections and Verification",
+    body: "Deploy technology-enabled local teams for field collections, residence, business and employment verification. Receive geo-tagged, time-stamped and lender-ready evidence supported by complete digital audit trails.",
   },
   {
     icon: "Database",
-    value: "One 360° borrower view",
-    title: "Data Management & Analytics",
-    body: "We centralize and cleanse credit bureau, lender, and field data to generate 360° borrower views. Our dashboards and analytics models help banks make informed decisions on collections, risk, and product design.",
+    value: "Understand the reason behind every overdue account",
+    title: "Customer and Voice Intelligence",
+    body: "Convert multilingual conversations, digital behaviour, payment history and field findings into actionable customer insights. Identify repayment intent, ability, hardship, disputes, contact changes and the most suitable channel, tone and resolution path.",
   },
 ];
 
