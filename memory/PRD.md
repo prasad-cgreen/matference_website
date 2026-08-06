@@ -209,6 +209,9 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 59 (2026-06) — VERIFIED (screenshot)
+- Closed oversized gap between Our Services and Vision & Mission. ScalingWithPurpose py-24 → pt-24 pb-6; PlatformVisionMission py-24 → pt-12 pb-24. Only inter-section padding reduced; internal spacing untouched.
+
 ## Round 58 (2026-06) — VERIFIED (screenshot)
 - Replaced all 6 service card texts (PRAGATI_CARDS + LENDING_CARDS in site.js): number-title → heading, short line → eyebrow pill (value), paragraph → body. Icons/structure/carousel unchanged. Pragati: Institutional Work Opportunities / Technology-Enabled Field Operations / Training, Support and Growth. Lending: Digital and Remote Collections / Field Collections and Verification / Customer and Voice Intelligence.
 

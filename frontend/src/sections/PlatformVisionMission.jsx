@@ -7,7 +7,7 @@ import PlatformDiagram from "@/sections/PlatformDiagram";
 export default function PlatformVisionMission() {
   return (
     <section
-      className="relative w-full py-24 overflow-hidden"
+      className="relative w-full pt-12 pb-24 overflow-hidden"
       style={{ background: "linear-gradient(135deg, #FFFDF7 0%, #FAF0CE 55%, #F4E5A2 100%)" }}
       data-testid="section-platform-vision"
     >

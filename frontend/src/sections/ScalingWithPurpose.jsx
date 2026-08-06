@@ -171,7 +171,7 @@ export default function ScalingWithPurpose() {
   };
 
   return (
-    <section id="solution" className="relative w-full py-24 overflow-hidden scroll-mt-24" data-testid="section-scaling">
+    <section id="solution" className="relative w-full pt-24 pb-6 overflow-hidden scroll-mt-24" data-testid="section-scaling">
       {/* Full-width heading / tagline / banner block */}
       <div id="services" className="max-w-7xl mx-auto px-6 text-center relative z-10 scroll-mt-24 mb-6" data-testid="section-services">
         <h2 className="font-head text-3xl lg:text-5xl text-[#142984]">OUR SERVICES</h2>
