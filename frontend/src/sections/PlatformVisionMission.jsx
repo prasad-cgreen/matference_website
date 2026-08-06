@@ -1,14 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Eye, Target } from "lucide-react";
+import { Eye, Target, Landmark, Users, Store, Network } from "lucide-react";
 import { VISION, MISSION } from "@/data/site";
 import PlatformDiagram from "@/sections/PlatformDiagram";
 
 const AUDIENCE_BOXES = [
-  { id: "lenders", hex: "#7E8FCB", heading: "For Lenders", body: "Deeper district-level reach without having to create a separate physical operating infrastructure for every service." },
-  { id: "customers", hex: "#5568AD", heading: "For Customers", body: "A nearby, technology-enabled point for communication, verification, payment assistance and responsible resolution." },
-  { id: "entrepreneurs", hex: "#2C3D8F", heading: "For Local Entrepreneurs", body: "A structured opportunity connected to institutional work, technology, training and measurable operating standards." },
-  { id: "cgreen", hex: "#142984", heading: "For CGreen", body: "A collections-first operating network that can support a wider range of lender and customer services over time." },
+  { id: "lenders", hex: "#B3C9F2", Icon: Landmark, heading: "For Lenders", body: "Deeper district-level reach without having to create a separate physical operating infrastructure for every service." },
+  { id: "customers", hex: "#5568AD", Icon: Users, heading: "For Customers", body: "A nearby, technology-enabled point for communication, verification, payment assistance and responsible resolution." },
+  { id: "entrepreneurs", hex: "#2C3D8F", Icon: Store, heading: "For Local Entrepreneurs", body: "A structured opportunity connected to institutional work, technology, training and measurable operating standards." },
+  { id: "cgreen", hex: "#142984", Icon: Network, heading: "For CGreen", body: "A collections-first operating network that can support a wider range of lender and customer services over time." },
 ];
 
 export default function PlatformVisionMission() {
@@ -80,15 +80,15 @@ export default function PlatformVisionMission() {
         </div>
 
         {/* Branching connector (copies Vision→Mission elbow style) + four audience boxes */}
-        <div className="max-w-6xl mx-auto mt-10">
+        <div className="max-w-6xl mx-auto mt-8 md:-mt-3">
           <svg className="hidden md:block w-full h-auto" viewBox="0 0 1000 130" fill="none" aria-hidden="true" data-testid="vm-branch-connector">
-            <path d="M 740 8 V 55" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <path d="M 740 6 V 55" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             <path d="M 125 55 H 875" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             <path d="M 125 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             <path d="M 375 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             <path d="M 625 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
             <path d="M 875 55 V 122" stroke="#FCDD15" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-            <circle cx="740" cy="8" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
+            <circle cx="740" cy="6" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
             <circle cx="125" cy="122" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
             <circle cx="375" cy="122" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
             <circle cx="625" cy="122" r="5" fill="#FCDD15" stroke="#142984" strokeWidth="1.5" />
@@ -98,7 +98,10 @@ export default function PlatformVisionMission() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-5 md:mt-1" data-testid="vm-audience-boxes">
             {AUDIENCE_BOXES.map((b) => (
               <div key={b.id} className="rounded-2xl p-6 flex flex-col" style={{ background: b.hex }} data-testid={`vm-box-${b.id}`}>
-                <h4 className="font-head text-lg text-[#FFFCFA] mb-2">{b.heading}</h4>
+                <span className="w-12 h-12 rounded-full border-2 border-[#FCDD15] flex items-center justify-center mb-4">
+                  <b.Icon size={22} strokeWidth={2} className="text-[#FCDD15]" />
+                </span>
+                <h4 className="font-head text-lg text-[#FCDD15] mb-2">{b.heading}</h4>
                 <p className="font-body text-sm leading-relaxed text-[#FFFCFA]/90">{b.body}</p>
               </div>
             ))}

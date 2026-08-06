@@ -209,6 +209,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 61 (2026-06) — VERIFIED (screenshot)
+- Branch connector now touches Mission bottom (connector div mt-10→md:-mt-3, trunk node cy 8→6). 
+- Added circular yellow icon badges (Vision/Mission style, border-#FCDD15) above each box heading; all 4 headings + icons yellow (#FCDD15); body stays cream. Icons: Landmark/Users/Store/Network.
+- For Lenders box #7E8FCB → pastel blue #B3C9F2 (lightest kept; others unchanged).
+
 ## Round 60 (2026-06) — VERIFIED (screenshot)
 - Vision & Mission copy replaced in site.js (longer AI-led resolution network text); cards auto-expand, no overflow.
 - Added branching connector below Mission (copies Vision→Mission elbow style: #FCDD15 stroke 2.5, r5 nodes navy stroke): trunk from Mission bottom → horizontal bus → 4 legs into boxes, SVG viewBox 1000x130 w-full.
