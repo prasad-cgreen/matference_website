@@ -209,6 +209,13 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 69 (2026-06) — VERIFIED (screenshots + testing_agent iteration_10, 100% frontend pass)
+- Spacing: AICommandCenter py-24→pt-10 pb-24 (Coming Soon top gap). PlatformVisionMission pb-24→pb-8; OurReach py-24→pt-12 pb-24 (Platform→Our Reach gap).
+- OurTeam: sub-headings now letter-spaced uppercase (text-lg/xl) — "MANAGING TEAM" added above 6 cards, plus "NOMINEE DIRECTORS ON BOARD" and "ADVISORS TO THE BOARD". Main "OUR TEAM" kept large. Updated 6 member titles/bios (Co-Founder titles, years of experience) in site.js TEAM.
+- OurReach map: replaced with /india-map-outlined.png (states pre-outlined in yellow in artwork); removed coded GLOWS dots; added navy bold labels Uttar Pradesh/Maharashtra/Assam; repositioned lg:-mt-6 to align top with heading.
+- Contact: ContactUs listens for CustomEvent 'cgreen:contact-subject'; Navbar goPragatiKendra() dispatches 'Start a Pragati Kendra' + scrolls/navigates to #contact (works cross-page from /life-at-cgreen).
+- Footer: social links wired (LinkedIn/YouTube/Instagram, target _blank noopener); email mailto:, phone tel:.
+
 ## Round 68b (2026-06) — VERIFIED (screenshot)
 - Swapped logos to transparent-background versions: /cgreen-logo-transparent.png (nav, platform hub, footer with brightness-0 invert → clean white on navy, no white box) and /brain-logo-composite-transparent.png (Our Services hub, both desktop w-[600px] + mobile w-72). Orbit nodes, feature icons and connectors unchanged.
 
