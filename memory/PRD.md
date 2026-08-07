@@ -209,6 +209,9 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 68b (2026-06) — VERIFIED (screenshot)
+- Swapped logos to transparent-background versions: /cgreen-logo-transparent.png (nav, platform hub, footer with brightness-0 invert → clean white on navy, no white box) and /brain-logo-composite-transparent.png (Our Services hub, both desktop w-[600px] + mobile w-72). Orbit nodes, feature icons and connectors unchanged.
+
 ## Round 68 (2026-06) — VERIFIED (screenshot)
 - Nav: added "Be a Pragati Kendra" CTA (outlined secondary) beside "Book a Demo" (primary); scrolls to #contact; added to mobile menu.
 - Our Reach map: swapped to /india-map-2026.png; GLOWS recoordinated Maharashtra 33.6/54.9, UP 45.3/36.6, Assam 81.5/38.9.

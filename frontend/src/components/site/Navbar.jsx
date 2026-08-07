@@ -60,7 +60,7 @@ export default function Navbar() {
           className="flex items-center shrink-0 pl-1"
           data-testid="nav-logo"
         >
-          <img src="/cgreen-logo-2026.webp" alt="cGreen" className="h-10 w-auto md:h-12" />
+          <img src="/cgreen-logo-transparent.png" alt="cGreen" className="h-10 w-auto md:h-12" />
         </button>
 
         {/* Center nav (desktop) */}

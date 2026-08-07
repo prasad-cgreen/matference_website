@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
         {/* Brand + description */}
         <div className="md:col-span-3" data-testid="footer-brand">
-          <img src="/cgreen-logo-2026.webp" alt="cGreen" className="h-12 w-auto mb-5 bg-white rounded-lg p-1.5" />
+          <img src="/cgreen-logo-transparent.png" alt="cGreen" className="h-11 w-auto mb-5 brightness-0 invert" />
           <p className="font-body text-sm text-[#FFFCFA]/75 leading-relaxed max-w-xs">
             {FOOTER.description}
           </p>
