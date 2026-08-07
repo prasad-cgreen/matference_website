@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { NAV } from "@/data/site";
-
-const scrollToId = (id) => {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-};
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -18,8 +16,26 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const scrollToId = (id) => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const handleNav = (item) => {
     setMobileOpen(false);
+    if (item.to) {
+      navigate(item.to);
+      window.scrollTo({ top: 0 });
+      return;
+    }
     if (item.tab) {
       window.dispatchEvent(new CustomEvent("cgreen:services-tab", { detail: item.tab }));
     }

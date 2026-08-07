@@ -209,6 +209,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 65 (2026-06) — VERIFIED (screenshot)
+- New standalone page /life-at-cgreen (App.js now uses BrowserRouter: "/" landing, "/life-at-cgreen"). Nav: "Our Solution" replaced with "Life at CGreen" (to:"/life-at-cgreen"); #solution section kept on landing, just unlinked. Navbar refactored with useNavigate/useLocation so hash links work cross-page (navigate "/" then scroll).
+- LifeAtCGreen.jsx: cream header (LIFE AT CGREEN / Moments from our Journey), vertical timeline with `.timeline-line` metallic-blue shimmer (keyframe timeline-flow in index.css), year nodes 2026/2025/2024/2023. 2026+2025 = 3 category glass boxes (Business Events/Cultural Event/Team Photos); 2024+2023 = single wide pooled box. Placeholder images via picsum seeds (counts vary).
+- GalleryModal: dimmed backdrop, grid of category/pooled images, close button + click-outside + ESC, body scroll lock; handles any image count. Verified nav routing, timeline, category-specific + pooled modals, click-outside close.
+
 ## Round 64 (2026-06) — VERIFIED (screenshot)
 - OurTeam restructured into 3 sub-sections (same card design + shared TeamCard component, avatar = User icon placeholder). Our Team: 6 members (Vipir Raj Bhardwaj MD & CEO, Vinay Shetty, Dipanshu Rajpurohit COO [no bio], Nikhar Agrawal, Makrand Manjrekar, Vineet Singh); bio hidden when empty. Nominee Directors On Board: Vikas Guru, Ankit Kumar (NOMINEE_DIRECTORS in site.js). Advisors To The Board: visible "Coming Soon" card.
 

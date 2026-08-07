@@ -18,7 +18,7 @@ export const NAV = [
       { label: "Lending Institution", href: "#services", tab: "lending" },
     ],
   },
-  { label: "Our Solution", href: "#solution" },
+  { label: "Life at CGreen", to: "/life-at-cgreen" },
   { label: "Contact Us", href: "#contact" },
 ];
 
