@@ -44,6 +44,24 @@ export default function Navbar() {
     }
   };
 
+  const goPragatiKendra = () => {
+    setMobileOpen(false);
+    const fire = () =>
+      window.dispatchEvent(new CustomEvent("cgreen:contact-subject", { detail: "Start a Pragati Kendra" }));
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        fire();
+        const el = document.getElementById("contact");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200);
+    } else {
+      fire();
+      const el = document.getElementById("contact");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl" data-testid="navbar">
       <nav className="relative rounded-full px-4 py-2.5">
@@ -113,7 +131,7 @@ export default function Navbar() {
             Login
           </a>
           <button
-            onClick={() => scrollToId("contact")}
+            onClick={goPragatiKendra}
             data-testid="nav-be-pragati-kendra"
             className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
           >
@@ -182,7 +200,7 @@ export default function Navbar() {
             </button>
           </div>
           <button
-            onClick={() => { setMobileOpen(false); scrollToId("contact"); }}
+            onClick={goPragatiKendra}
             className="w-full mt-2 px-4 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-medium"
             data-testid="nav-be-pragati-kendra-mobile"
           >

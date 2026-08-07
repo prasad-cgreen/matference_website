@@ -3,9 +3,9 @@ import { Linkedin, Instagram, Youtube } from "lucide-react";
 import { FOOTER } from "@/data/site";
 
 const SOCIALS = [
-  { Icon: Linkedin, label: "LinkedIn" },
-  { Icon: Instagram, label: "Instagram" },
-  { Icon: Youtube, label: "YouTube" },
+  { Icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/cgreenindia/" },
+  { Icon: Instagram, label: "Instagram", href: "https://www.instagram.com/cgreendebt?igsh=MWIyeWowdWVvYmdmdw%3D%3D" },
+  { Icon: Youtube, label: "YouTube", href: "https://www.youtube.com/@cGreen23" },
 ];
 
 export default function Footer() {
@@ -55,10 +55,12 @@ export default function Footer() {
         <div className="md:col-span-3" data-testid="footer-socials">
           <h4 className="font-head text-base text-[#FCDD15] mb-4">Socials</h4>
           <div className="flex gap-3 mb-5">
-            {SOCIALS.map(({ Icon, label }) => (
+            {SOCIALS.map(({ Icon, label, href }) => (
               <a
                 key={label}
-                href="#"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label={label}
                 data-testid={`footer-social-${label.toLowerCase()}`}
                 className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#FFFCFA] hover:bg-[#FCDD15] hover:text-[#142984] hover:border-[#FCDD15] transition-colors"
@@ -68,11 +70,17 @@ export default function Footer() {
             ))}
           </div>
           <ul className="space-y-2 font-body text-sm text-[#FFFCFA]/80">
-            <li><span className="font-semibold text-[#FFFCFA]">EMAIL:</span> {FOOTER.email}</li>
+            <li>
+              <span className="font-semibold text-[#FFFCFA]">EMAIL:</span>{" "}
+              <a href={`mailto:${FOOTER.email}`} className="hover:text-[#FCDD15] transition-colors" data-testid="footer-email">{FOOTER.email}</a>
+            </li>
             <li><span className="font-semibold text-[#FFFCFA]">Website:</span> {FOOTER.website}</li>
             <li><span className="font-semibold text-[#FFFCFA]">CIN:</span> {FOOTER.cin}</li>
             <li><span className="font-semibold text-[#FFFCFA]">GST:</span> {FOOTER.gst}</li>
-            <li><span className="font-semibold text-[#FFFCFA]">Contact:</span> {FOOTER.phone}</li>
+            <li>
+              <span className="font-semibold text-[#FFFCFA]">Contact:</span>{" "}
+              <a href={`tel:${FOOTER.phone.replace(/\s+/g, "")}`} className="hover:text-[#FCDD15] transition-colors" data-testid="footer-phone">{FOOTER.phone}</a>
+            </li>
           </ul>
         </div>
       </div>

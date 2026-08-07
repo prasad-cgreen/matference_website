@@ -111,12 +111,12 @@ export const LENDING_CARDS = [
 ];
 
 export const TEAM = [
-  { name: "Vipir Raj Bhardwaj", title: "MD & CEO", bio: "Ex-FINO, Suryoday, ICICI. Built rural distribution networks and recovery units." },
-  { name: "Vinay Shetty", title: "Head, Tech", bio: "Ex-FINO. Core tech builder for scalable banking systems." },
-  { name: "Dipanshu Rajpurohit", title: "COO", bio: "" },
-  { name: "Nikhar Agrawal", title: "Head, Product", bio: "Ex-Spandana, Vaya, Suryoday. Unsecured systems and design expert." },
-  { name: "Makrand Manjrekar", title: "Head, Ops Risk & Compliance", bio: "Ex-IDBI Bank, Fino Payments Bank." },
-  { name: "Vineet Singh", title: "Head, Collections Unit", bio: "Ex-ICICI Bank, HDB, Spocto, VGM." },
+  { name: "Vipir Raj Bhardwaj", title: "Co-Founder, MD & CEO", bio: "Financial services leader with 24 years of experience across ICICI, FINO, and Suryoday, with deep expertise in rural distribution and collections." },
+  { name: "Vinay Shetty", title: "Co-Founder & Head of Technology", bio: "Technology leader with 22 years of experience building scalable banking and financial services platforms, formerly with FINO." },
+  { name: "Nikhar Agrawal", title: "Co-Founder & Head of Finance", bio: "Finance leader with 13 years of experience across microfinance, lending, collections, BC banking, and rural financial services, formerly with Spandana, Vaya, and Suryoday." },
+  { name: "Dipanshu Rajpurohit", title: "Co-Founder & COO", bio: "Business and product leader with 18 years of experience across Lendingkart, Bajaj Finance, YES Bank, and FINO Finance." },
+  { name: "Makrand Manjrekar", title: "Head, Operations Risk & Compliance", bio: "Risk and operations leader with 20 years of experience across IDBI Bank and FINO Payments Bank, specialising in risk controls, compliance, and fraud prevention." },
+  { name: "Vineet Singh", title: "Head, Collections Unit", bio: "Collections leader with 17 years of experience across ICICI Bank, HDB, Spocto, and VGM, with deep expertise in remote collections and recovery." },
 ];
 
 export const NOMINEE_DIRECTORS = [

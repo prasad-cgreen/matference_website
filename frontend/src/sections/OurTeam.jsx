@@ -44,17 +44,19 @@ function TeamCard({ member, index, testidPrefix }) {
   );
 }
 
-const subHeading = "font-head text-4xl lg:text-5xl text-[#142984] mb-8";
+const subHeading = "font-head text-lg lg:text-xl tracking-[0.18em] uppercase text-[#142984] mb-6";
 
 export default function OurTeam() {
   return (
     <section id="team" className="relative w-full py-24 scroll-mt-24" data-testid="section-team">
       <div className="max-w-7xl mx-auto px-6">
         {/* Our Team */}
-        <h2 className="font-head text-4xl lg:text-5xl text-[#142984] mb-3" data-testid="team-heading">Our Team</h2>
+        <h2 className="font-head text-4xl lg:text-5xl text-[#142984] mb-3" data-testid="team-heading">OUR TEAM</h2>
         <p className="font-body text-base lg:text-lg text-[#142984]/70 mb-12 max-w-2xl">
           Operators and builders who have scaled rural distribution, collections, and technology across India's leading financial institutions.
         </p>
+
+        <h3 className={subHeading} data-testid="managing-team-heading">Managing Team</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {TEAM.map((m, i) => (
             <TeamCard key={m.name} member={m} index={i} testidPrefix="team" />
@@ -62,7 +64,7 @@ export default function OurTeam() {
         </div>
 
         {/* Nominee Directors On Board */}
-        <h2 className={`${subHeading} mt-20`} data-testid="nominee-heading">Nominee Directors On Board</h2>
+        <h3 className={`${subHeading} mt-20`} data-testid="nominee-heading">Nominee Directors On Board</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {NOMINEE_DIRECTORS.map((m, i) => (
             <TeamCard key={m.name} member={m} index={i} testidPrefix="nominee" />
@@ -70,7 +72,7 @@ export default function OurTeam() {
         </div>
 
         {/* Advisors To The Board */}
-        <h2 className={`${subHeading} mt-20`} data-testid="advisors-heading">Advisors To The Board</h2>
+        <h3 className={`${subHeading} mt-20`} data-testid="advisors-heading">Advisors To The Board</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className={`${cardCls} flex items-center justify-center min-h-[140px]`} data-testid="advisors-coming-soon">
             <span className="font-head text-2xl text-[#142984]/80">Coming Soon</span>

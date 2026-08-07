@@ -67,11 +67,11 @@ const STATS = [
   { value: "957K+", label: "Villages", Icon: Houses },
 ];
 
-// Live-coded yellow pulsing glows over the baked-in dots — % of the cropped map image.
-const GLOWS = [
-  { name: "Maharashtra", left: "33.6%", top: "54.9%" },
-  { name: "Uttar Pradesh", left: "45.3%", top: "36.6%" },
-  { name: "Assam", left: "81.5%", top: "38.9%" },
+// Yellow-outlined states are baked into the map image; these are just text labels.
+const LABELS = [
+  { name: "Uttar Pradesh", left: "50%", top: "1%", align: "center" },
+  { name: "Maharashtra", left: "0%", top: "60%", align: "left" },
+  { name: "Assam", left: "83%", top: "20%", align: "left" },
 ];
 
 // Fires once when `ref` first enters the viewport.
@@ -122,7 +122,7 @@ export default function OurReach() {
   const statsRef = useRef(null);
   const started = useInViewOnce(statsRef);
   return (
-    <section id="reach" className="relative w-full py-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-reach">
+    <section id="reach" className="relative w-full pt-12 pb-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-reach">
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[2fr_3fr] gap-14 items-start relative z-10">
         {/* Left column: heading, subheading pill, stat boxes */}
         <div>
@@ -160,33 +160,24 @@ export default function OurReach() {
           </div>
         </div>
 
-        {/* Right column: India map with live-coded pulsing glows over baked-in dots */}
+        {/* Right column: India map (states pre-outlined in the artwork) with labels */}
         <div className="flex justify-center">
-          <div className="relative w-full lg:w-[645px] lg:mt-[56px]" data-testid="reach-map">
+          <div className="relative w-full lg:w-[645px] lg:-mt-6" data-testid="reach-map">
             <img
-              src="/india-map-2026.png"
-              alt="cGreen network reach across India"
+              src="/india-map-outlined.png"
+              alt="cGreen network reach across India — Maharashtra, Uttar Pradesh, Assam"
               className="w-full h-auto select-none"
-              style={{ opacity: 0.9 }}
               draggable="false"
             />
-            {GLOWS.map((g) => (
+            {LABELS.map((l) => (
               <span
-                key={g.name}
-                data-testid={`reach-glow-${slug(g.name)}`}
-                aria-hidden="true"
-                className="absolute rounded-full pointer-events-none"
-                style={{
-                  left: g.left,
-                  top: g.top,
-                  width: 48,
-                  height: 48,
-                  transform: "translate(-50%, -50%)",
-                  background:
-                    "radial-gradient(circle, rgba(252,221,21,0.95) 0%, rgba(252,221,21,0.6) 34%, rgba(252,221,21,0) 70%)",
-                  animation: "reach-glow-pulse 2.4s ease-in-out infinite",
-                }}
-              />
+                key={l.name}
+                data-testid={`map-label-${slug(l.name)}`}
+                className="absolute font-head text-sm lg:text-base font-bold text-[#142984] whitespace-nowrap"
+                style={{ left: l.left, top: l.top }}
+              >
+                {l.name}
+              </span>
             ))}
           </div>
         </div>

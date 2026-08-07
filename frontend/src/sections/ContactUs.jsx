@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,15 @@ export default function ContactUs() {
     setForm((f) => ({ ...f, [k]: v }));
     setErrors((e) => ({ ...e, [k]: undefined }));
   };
+
+  // Pre-select subject when arriving via a specific CTA (e.g. "Be a Pragati Kendra").
+  useEffect(() => {
+    const onSubject = (e) => {
+      if (e.detail) setForm((f) => ({ ...f, subject: e.detail }));
+    };
+    window.addEventListener("cgreen:contact-subject", onSubject);
+    return () => window.removeEventListener("cgreen:contact-subject", onSubject);
+  }, []);
 
   const validate = () => {
     const e = {};
