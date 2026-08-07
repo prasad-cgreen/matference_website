@@ -209,6 +209,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 66 (2026-06) — VERIFIED (screenshot)
+- Life at CGreen subheading "Moments from our Journey" wrapped in glass-yellow pill (same CSS as other site pills), centered under heading.
+- Timeline restructured: year markers moved to left edge (flex row: w-20 marker column + boxes flex-1), spine at left-10 runs down through markers; boxes sit to the right of each marker.
+
 ## Round 65 (2026-06) — VERIFIED (screenshot)
 - New standalone page /life-at-cgreen (App.js now uses BrowserRouter: "/" landing, "/life-at-cgreen"). Nav: "Our Solution" replaced with "Life at CGreen" (to:"/life-at-cgreen"); #solution section kept on landing, just unlinked. Navbar refactored with useNavigate/useLocation so hash links work cross-page (navigate "/" then scroll).
 - LifeAtCGreen.jsx: cream header (LIFE AT CGREEN / Moments from our Journey), vertical timeline with `.timeline-line` metallic-blue shimmer (keyframe timeline-flow in index.css), year nodes 2026/2025/2024/2023. 2026+2025 = 3 category glass boxes (Business Events/Cultural Event/Team Photos); 2024+2023 = single wide pooled box. Placeholder images via picsum seeds (counts vary).

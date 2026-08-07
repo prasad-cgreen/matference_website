@@ -137,26 +137,30 @@ export default function LifeAtCGreen() {
             LIFE AT CGREEN
           </h1>
           <p className="font-body font-light text-base md:text-lg text-[#142984]/70 mt-3">
-            Moments from our Journey
+            <span className="inline-block text-center px-5 py-2.5 rounded-full text-sm font-body font-bold leading-snug glass glass-yellow text-[#142984]" data-testid="life-subheading-pill">
+              Moments from our Journey
+            </span>
           </p>
         </div>
 
         {/* Timeline */}
-        <div className="relative max-w-5xl mx-auto" data-testid="life-timeline">
-          {/* metallic-blue animated spine */}
+        <div className="relative max-w-6xl mx-auto" data-testid="life-timeline">
+          {/* metallic-blue animated spine, left side */}
           <div
-            className="absolute left-1/2 -translate-x-1/2 top-8 bottom-8 w-[3px] rounded-full timeline-line"
+            className="absolute left-10 top-8 bottom-8 w-[3px] -translate-x-1/2 rounded-full timeline-line z-0"
             aria-hidden="true"
             data-testid="timeline-line"
           />
 
-          <div className="relative z-10 flex flex-col gap-16">
+          <div className="relative z-10 flex flex-col gap-14">
             {TIMELINE.map((block) => (
-              <div key={block.year} data-testid={`year-block-${block.year}`}>
-                <YearNode year={block.year} />
-                <div className="mt-8">
+              <div key={block.year} className="flex items-start gap-6 md:gap-10" data-testid={`year-block-${block.year}`}>
+                <div className="shrink-0 w-20 flex justify-center">
+                  <YearNode year={block.year} />
+                </div>
+                <div className="flex-1 min-w-0">
                   {block.type === "cat" ? (
-                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       {block.cats.map((c) => (
                         <GalleryBox
                           key={c.key}
