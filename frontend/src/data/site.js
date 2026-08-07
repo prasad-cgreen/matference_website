@@ -111,12 +111,17 @@ export const LENDING_CARDS = [
 ];
 
 export const TEAM = [
-  { name: "Vipr Raj Bhardwaj", title: "CEO", bio: "Ex-FINO, Suryoday, ICICI. Built rural distribution networks and recovery units." },
-  { name: "Nikhar Agrawal", title: "Head, Product", bio: "Ex-Spandana, Vaya, Suryoday. Unsecured systems and design expert." },
-  { name: "Vineet Singh", title: "Head, Collections Unit", bio: "Ex-ICICI Bank, HDB, Spocto, VGM." },
+  { name: "Vipir Raj Bhardwaj", title: "MD & CEO", bio: "Ex-FINO, Suryoday, ICICI. Built rural distribution networks and recovery units." },
   { name: "Vinay Shetty", title: "Head, Tech", bio: "Ex-FINO. Core tech builder for scalable banking systems." },
-  { name: "Vikas", title: "Nominee Director", bio: "Ex-Cashfree, Fino Payments Bank, Bose." },
+  { name: "Dipanshu Rajpurohit", title: "COO", bio: "" },
+  { name: "Nikhar Agrawal", title: "Head, Product", bio: "Ex-Spandana, Vaya, Suryoday. Unsecured systems and design expert." },
   { name: "Makrand Manjrekar", title: "Head, Ops Risk & Compliance", bio: "Ex-IDBI Bank, Fino Payments Bank." },
+  { name: "Vineet Singh", title: "Head, Collections Unit", bio: "Ex-ICICI Bank, HDB, Spocto, VGM." },
+];
+
+export const NOMINEE_DIRECTORS = [
+  { name: "Vikas Guru", title: "Nominee Director", bio: "Ex-Cashfree, Fino Payments Bank, Bose." },
+  { name: "Ankit Kumar", title: "Nominee Director", bio: "Ex-Reliance, Rivigo, Currently at IndiFly." },
 ];
 
 export const PARTNERS = ["IIMA", "Pont", "DP", "Sarthy", "1to10", "STPI", "TGS", "SIES", "Wadhwani", "TiE"];

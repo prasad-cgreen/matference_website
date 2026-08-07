@@ -209,6 +209,9 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 64 (2026-06) — VERIFIED (screenshot)
+- OurTeam restructured into 3 sub-sections (same card design + shared TeamCard component, avatar = User icon placeholder). Our Team: 6 members (Vipir Raj Bhardwaj MD & CEO, Vinay Shetty, Dipanshu Rajpurohit COO [no bio], Nikhar Agrawal, Makrand Manjrekar, Vineet Singh); bio hidden when empty. Nominee Directors On Board: Vikas Guru, Ankit Kumar (NOMINEE_DIRECTORS in site.js). Advisors To The Board: visible "Coming Soon" card.
+
 ## Round 62 (2026-06) — VERIFIED (screenshot)
 - For Lenders box #B3C9F2 → #7C97D6 (darker for legible yellow heading/white body; still lightest, lighter than For Customers #5568AD).
 - Branch connector top node tucked half behind Mission card: connector div md:-mt-3 → md:-mt-[26px] + relative z-0 (Mission z-20 clips top half). Node cy=6.
