@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import Navbar from "@/components/site/Navbar";
 import Footer from "@/sections/Footer";
@@ -55,10 +55,14 @@ function GalleryBox({ label, images, wide, onOpen, testid }) {
   );
 }
 
-function YearNode({ year }) {
+function YearNode({ year, glowStyle }) {
   return (
     <div className="flex justify-center">
-      <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-[#142984] border-2 border-[#FCDD15] shadow-lg shadow-[#142984]/30">
+      <div
+        data-marker={year}
+        style={glowStyle}
+        className="relative flex items-center justify-center w-20 h-20 rounded-full bg-[#142984] border-2 border-[#FCDD15] shadow-lg shadow-[#142984]/30"
+      >
         <span className="font-head text-xl text-[#FCDD15]">{year}</span>
       </div>
     </div>
@@ -126,6 +130,35 @@ export default function LifeAtCGreen() {
   const [modal, setModal] = useState(null);
   const open = (title, images) => setModal({ title, images });
 
+  const timelineRef = useRef(null);
+  const [markerDelays, setMarkerDelays] = useState({});
+  const DURATION = 7; // seconds — pulse travels the full spine once per loop
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = timelineRef.current;
+      if (!el) return;
+      const spinePad = 32; // matches top-8 / bottom-8 on the spine
+      const total = el.offsetHeight - spinePad * 2;
+      if (total <= 0) return;
+      const nextDelays = {};
+      el.querySelectorAll("[data-marker]").forEach((m) => {
+        const centerY = m.offsetTop + m.offsetHeight / 2;
+        const frac = Math.min(1, Math.max(0, (centerY - spinePad) / total));
+        nextDelays[m.getAttribute("data-marker")] = +(frac * DURATION).toFixed(2);
+      });
+      setMarkerDelays(nextDelays);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  const glowStyleFor = (year) =>
+    markerDelays[year] != null
+      ? { animation: `tl-marker-glow ${DURATION}s linear ${markerDelays[year]}s infinite` }
+      : undefined;
+
   return (
     <div className="relative w-full min-h-screen bg-[#FFFCFA]" data-testid="life-at-cgreen-page">
       <Navbar />
@@ -144,19 +177,25 @@ export default function LifeAtCGreen() {
         </div>
 
         {/* Timeline */}
-        <div className="relative max-w-6xl mx-auto" data-testid="life-timeline">
-          {/* metallic-blue animated spine, left side */}
+        <div ref={timelineRef} className="relative max-w-6xl mx-auto" data-testid="life-timeline">
+          {/* triple metallic-blue circuit traces + travelling signal pulse (left side) */}
           <div
-            className="absolute left-10 top-8 bottom-8 w-[3px] -translate-x-1/2 rounded-full timeline-line z-0"
+            className="absolute left-10 top-8 bottom-8 -translate-x-1/2 z-0 overflow-visible"
+            style={{ width: "16px", "--tl-duration": `${DURATION}s` }}
             aria-hidden="true"
-            data-testid="timeline-line"
-          />
+            data-testid="timeline-spine"
+          >
+            <span className="tl-trace absolute top-0 bottom-0 w-[2px] rounded-full" style={{ left: "3px" }} />
+            <span className="tl-trace absolute top-0 bottom-0 w-[2px] rounded-full" style={{ left: "7px" }} />
+            <span className="tl-trace absolute top-0 bottom-0 w-[2px] rounded-full" style={{ left: "11px" }} />
+            <span className="tl-pulse absolute left-0 right-0" data-testid="timeline-pulse" />
+          </div>
 
           <div className="relative z-10 flex flex-col gap-14">
             {TIMELINE.map((block) => (
               <div key={block.year} className="flex items-start gap-6 md:gap-10" data-testid={`year-block-${block.year}`}>
                 <div className="shrink-0 w-20 flex justify-center">
-                  <YearNode year={block.year} />
+                  <YearNode year={block.year} glowStyle={glowStyleFor(block.year)} />
                 </div>
                 <div className="flex-1 min-w-0">
                   {block.type === "cat" ? (

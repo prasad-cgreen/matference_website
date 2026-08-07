@@ -209,6 +209,9 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 67 (2026-06) — VERIFIED (sequential screenshots)
+- Life at CGreen timeline: replaced single spine with 3 parallel `.tl-trace` metallic-blue lines (circuit bundle). Added `.tl-pulse` travelling signal (keyframe tl-pulse-move, golden head + fading tail, loops over --tl-duration 7s). Year markers glow on pulse arrival via `tl-marker-glow` with per-marker animation-delay computed in useLayoutEffect from measured marker offsets (fraction*DURATION), so glow syncs to pulse passing each. Respects prefers-reduced-motion.
+
 ## Round 66 (2026-06) — VERIFIED (screenshot)
 - Life at CGreen subheading "Moments from our Journey" wrapped in glass-yellow pill (same CSS as other site pills), centered under heading.
 - Timeline restructured: year markers moved to left edge (flex row: w-20 marker column + boxes flex-1), spine at left-10 runs down through markers; boxes sit to the right of each marker.

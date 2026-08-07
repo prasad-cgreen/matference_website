@@ -94,25 +94,54 @@ body {
   content: none;
 }
 
-/* Life at CGreen — metallic-blue timeline spine with a soft light travelling down */
-@keyframes timeline-flow {
-  0% { background-position: 50% -60%; }
-  100% { background-position: 50% 160%; }
-}
-.timeline-line {
-  background-image: linear-gradient(
+/* Life at CGreen — triple-line "circuit trace" timeline with a travelling signal pulse */
+.tl-trace {
+  background: linear-gradient(
     180deg,
-    rgba(58, 91, 191, 0.14) 0%,
-    rgba(58, 91, 191, 0.14) 38%,
-    rgba(170, 195, 245, 0.9) 50%,
-    rgba(58, 91, 191, 0.14) 62%,
-    rgba(58, 91, 191, 0.14) 100%
+    rgba(58, 91, 191, 0.3) 0%,
+    rgba(140, 168, 232, 0.55) 50%,
+    rgba(58, 91, 191, 0.3) 100%
   );
-  background-size: 100% 240%;
-  animation: timeline-flow 3.8s linear infinite;
+}
+@keyframes tl-pulse-move {
+  0% { top: -8%; opacity: 0; }
+  6% { opacity: 1; }
+  94% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.tl-pulse {
+  height: 70px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    180deg,
+    rgba(160, 190, 255, 0) 0%,
+    rgba(160, 190, 255, 0.55) 45%,
+    rgba(252, 221, 21, 0.95) 82%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  filter: blur(0.5px);
+  box-shadow: 0 0 18px 5px rgba(150, 180, 255, 0.75);
+  animation: tl-pulse-move var(--tl-duration, 7s) linear infinite;
+}
+@keyframes tl-marker-glow {
+  0% {
+    box-shadow: 0 0 26px 8px rgba(252, 221, 21, 0.9);
+    border-color: #FFF3A8;
+    background-color: #21409f;
+  }
+  12% {
+    box-shadow: 0 0 12px 3px rgba(252, 221, 21, 0.45);
+    border-color: #FCDD15;
+    background-color: #142984;
+  }
+  100% {
+    box-shadow: 0 8px 18px -6px rgba(20, 41, 132, 0.5);
+    border-color: #FCDD15;
+    background-color: #142984;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .timeline-line { animation: none; }
+  .tl-pulse { animation: none; opacity: 0; }
 }
 
 .glass-yellow {
