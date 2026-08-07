@@ -48,7 +48,7 @@ function LogoSolution({ isDesktop }) {
   if (!isDesktop) {
     return (
       <div className="flex flex-col items-center gap-6" data-testid="solution-logo-static">
-        <img src="/brain-logo-composite.png" alt="cGreen" className="w-72 h-auto" />
+        <img src="/brain-logo-composite-2026.png" alt="cGreen" className="w-72 h-auto" />
         <div className="flex flex-wrap justify-center gap-3 max-w-md">
           {SOLUTION_CAPTIONS.map((c) => {
             const Icon = FEATURE_ICONS[c];
@@ -111,7 +111,7 @@ function LogoSolution({ isDesktop }) {
           transition: "filter 0.9s ease",
         }}
       >
-        <img src="/brain-logo-composite.png" alt="cGreen — Customer • Collect • Credit" className="w-[600px] max-w-none h-auto select-none" draggable="false" />
+        <img src="/brain-logo-composite-2026.png" alt="cGreen — Customer • Collect • Credit" className="w-[600px] max-w-none h-auto select-none" draggable="false" />
       </div>
 
       {/* icon + label feature nodes */}

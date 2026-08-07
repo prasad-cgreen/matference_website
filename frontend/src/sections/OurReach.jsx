@@ -69,9 +69,9 @@ const STATS = [
 
 // Live-coded yellow pulsing glows over the baked-in dots — % of the cropped map image.
 const GLOWS = [
-  { name: "Maharashtra", left: "18.93%", top: "57.03%" },
-  { name: "Uttar Pradesh", left: "48.44%", top: "27.29%" },
-  { name: "Assam", left: "88.57%", top: "33.84%" },
+  { name: "Maharashtra", left: "33.6%", top: "54.9%" },
+  { name: "Uttar Pradesh", left: "45.3%", top: "36.6%" },
+  { name: "Assam", left: "81.5%", top: "38.9%" },
 ];
 
 // Fires once when `ref` first enters the viewport.
@@ -164,7 +164,7 @@ export default function OurReach() {
         <div className="flex justify-center">
           <div className="relative w-full lg:w-[645px] lg:mt-[56px]" data-testid="reach-map">
             <img
-              src="/india-reach-map-v3.png"
+              src="/india-map-2026.png"
               alt="cGreen network reach across India"
               className="w-full h-auto select-none"
               style={{ opacity: 0.9 }}

@@ -209,6 +209,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Alert cards: `.ai-alert-pulse` breathing glow (staggered delay, `--pulse-color` per alert) + `.ai-hover-card` lift/yellow-glow. Stat cards also `.ai-hover-card`.
 - Bar charts grow in with `.ai-bar-grow` (staggered). CSS keyframes in index.css; all respect `prefers-reduced-motion`.
 
+## Round 68 (2026-06) — VERIFIED (screenshot)
+- Nav: added "Be a Pragati Kendra" CTA (outlined secondary) beside "Book a Demo" (primary); scrolls to #contact; added to mobile menu.
+- Our Reach map: swapped to /india-map-2026.png; GLOWS recoordinated Maharashtra 33.6/54.9, UP 45.3/36.6, Assam 81.5/38.9.
+- Logo swaps: nav + platform hub + footer → /cgreen-logo-2026.webp (footer shows in white card since asset has white bg). Our Services hub composite → /brain-logo-composite-2026.png. Feature icons/connectors and orbit nodes unchanged.
+
 ## Round 67 (2026-06) — VERIFIED (sequential screenshots)
 - Life at CGreen timeline: replaced single spine with 3 parallel `.tl-trace` metallic-blue lines (circuit bundle). Added `.tl-pulse` travelling signal (keyframe tl-pulse-move, golden head + fading tail, loops over --tl-duration 7s). Year markers glow on pulse arrival via `tl-marker-glow` with per-marker animation-delay computed in useLayoutEffect from measured marker offsets (fraction*DURATION), so glow syncs to pulse passing each. Respects prefers-reduced-motion.
 

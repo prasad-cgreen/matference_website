@@ -186,7 +186,7 @@ export default function PlatformDiagram() {
         style={{ left: `${CX}%`, top: `${CY}%`, transform: "translate(-50%, -50%)", width: "22%" }}
         data-testid="platform-hub"
       >
-        <img src="/cgreen-logo.png" alt="cGreen" className="w-full h-auto max-w-[190px]" draggable="false" />
+        <img src="/cgreen-logo-2026.webp" alt="cGreen" className="w-full h-auto max-w-[190px]" draggable="false" />
       </div>
 
       {/* Orbit ring with 6 continuously revolving nodes */}

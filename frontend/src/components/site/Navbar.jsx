@@ -60,7 +60,7 @@ export default function Navbar() {
           className="flex items-center shrink-0 pl-1"
           data-testid="nav-logo"
         >
-          <img src="/cgreen-logo.png" alt="cGreen" className="h-10 w-auto md:h-12" />
+          <img src="/cgreen-logo-2026.webp" alt="cGreen" className="h-10 w-auto md:h-12" />
         </button>
 
         {/* Center nav (desktop) */}
@@ -112,6 +112,13 @@ export default function Navbar() {
           >
             Login
           </a>
+          <button
+            onClick={() => scrollToId("contact")}
+            data-testid="nav-be-pragati-kendra"
+            className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
+          >
+            Be a Pragati Kendra
+          </button>
           <button
             onClick={() => scrollToId("contact")}
             data-testid="nav-book-demo"
@@ -174,6 +181,13 @@ export default function Navbar() {
               Book a Demo
             </button>
           </div>
+          <button
+            onClick={() => { setMobileOpen(false); scrollToId("contact"); }}
+            className="w-full mt-2 px-4 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-medium"
+            data-testid="nav-be-pragati-kendra-mobile"
+          >
+            Be a Pragati Kendra
+          </button>
         </div>
       )}
     </div>
