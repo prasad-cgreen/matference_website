@@ -24,17 +24,21 @@ export default function Footer() {
         <div className="md:col-span-2" data-testid="footer-company">
           <h4 className="font-head text-base text-[#FCDD15] mb-4">Company</h4>
           <ul className="space-y-2.5">
-            {FOOTER.companyLinks.map((l) => (
-              <li key={l.label}>
-                <a
-                  href={l.href}
-                  data-testid={`footer-link-${l.label.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}
-                  className="font-body text-sm text-[#FFFCFA]/80 hover:text-[#FCDD15] transition-colors"
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
+            {FOOTER.companyLinks.map((l) => {
+              const external = !l.href.startsWith("#");
+              return (
+                <li key={l.label}>
+                  <a
+                    href={l.href}
+                    {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    data-testid={`footer-link-${l.label.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}
+                    className="font-body text-sm text-[#FFFCFA]/80 hover:text-[#FCDD15] transition-colors"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
 

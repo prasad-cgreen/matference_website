@@ -67,34 +67,36 @@ function LogoSolution({ isDesktop }) {
   }
 
   const SIZE = 740;
-  const C = SIZE / 2;
-  // Pill / capsule layout sized to the 740px graphic canvas: side icons sit just
-  // outside the 600px composite, vertically squashed for a landscape pill.
-  const radiusX = 295;
-  const radiusY = 190;
+  const CX = SIZE / 2 + 42; // shift the whole hub slightly to the right
+  const CY = SIZE / 2;
+  // Radii scaled down to match the smaller composite (600 -> 470).
+  const radiusX = 232;
+  const radiusY = 150;
   const total = SOLUTION_CAPTIONS.length;
 
-  // Per-icon nudges so the 3 icons nearest the wide wordmark clear it (Round 36).
+  // Per-icon nudges so the 3 icons nearest the wide wordmark clear it (scaled to the smaller graphic).
   const OFFSETS = {
-    "Financial Inclusion": { dx: 60, dy: 0 },
-    "Customer Place Verification": { dx: 75, dy: 35 },
-    "Voice Transcription": { dx: -45, dy: 0 },
+    "Financial Inclusion": { dx: 47, dy: 0 },
+    "Customer Place Verification": { dx: 59, dy: 27 },
+    "Voice Transcription": { dx: -35, dy: 0 },
   };
 
   const nodes = SOLUTION_CAPTIONS.map((c, i) => {
     const a = (Math.PI * 2 * i) / total - Math.PI / 2;
     const o = OFFSETS[c] || { dx: 0, dy: 0 };
-    return { c, a, x: C + Math.cos(a) * radiusX + o.dx, y: C + Math.sin(a) * radiusY + o.dy };
+    return { c, a, x: CX + Math.cos(a) * radiusX + o.dx, y: CY + Math.sin(a) * radiusY + o.dy };
   });
 
   return (
     <div className="relative mx-auto" style={{ width: SIZE, height: SIZE }} data-testid="solution-logo">
       {/* yellow bloom / halo behind the composite (arrival feedback) */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
+        className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none z-0"
         style={{
-          width: 500,
-          height: 500,
+          left: CX,
+          top: CY,
+          width: 400,
+          height: 400,
           background: "radial-gradient(circle, rgba(252,221,21,0.85) 0%, rgba(252,221,21,0.4) 45%, rgba(252,221,21,0) 72%)",
           filter: "blur(10px)",
           opacity: glow ? 1 : 0,
@@ -104,14 +106,16 @@ function LogoSolution({ isDesktop }) {
 
       {/* brain + cGreen logo composite — river terminates here (keeps hub testid) */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+        className="absolute -translate-x-1/2 -translate-y-1/2 z-10"
         data-testid="solution-logo-hub"
         style={{
+          left: CX,
+          top: CY,
           filter: glow ? "drop-shadow(0 0 26px rgba(252,221,21,0.95))" : "none",
           transition: "filter 0.9s ease",
         }}
       >
-        <img src="/brain-logo-composite-transparent.png" alt="cGreen — Customer • Collect • Credit" className="w-[600px] max-w-none h-auto select-none" draggable="false" />
+        <img src="/brain-logo-composite-transparent.png" alt="cGreen — Customer • Collect • Credit" className="w-[470px] max-w-none h-auto select-none" draggable="false" />
       </div>
 
       {/* icon + label feature nodes */}
@@ -161,7 +165,7 @@ export default function ScalingWithPurpose() {
       <button
         onClick={() => setTab(id)}
         data-testid={`services-tab-${id}`}
-        className={`glass rounded-full px-6 py-3 text-sm font-head font-bold whitespace-nowrap shrink-0 transition-all ${
+        className={`glass rounded-3xl px-4 py-3 text-sm font-head font-bold leading-tight flex-1 text-center transition-all ${
           active ? "glass-yellow text-[#142984]" : `glass-navy ${inactiveText}`
         }`}
       >
@@ -185,10 +189,10 @@ export default function ScalingWithPurpose() {
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[minmax(0,470px)_1fr] gap-14 items-start relative z-10 lg:-mt-16">
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[minmax(0,520px)_1fr] gap-14 items-start relative z-10 lg:-mt-16">
         {/* Left column: toggle tabs + service carousel */}
         <div className="lg:mt-[140px]">
-          <div className="flex flex-wrap lg:flex-nowrap gap-3 mb-7">
+          <div className="flex flex-wrap lg:flex-nowrap items-stretch gap-3 mb-7">
             <TabButton id="pragati" label="For Pragati Kendra Partners" inactiveText="text-[#142984]/70 hover:text-[#142984]" />
             <TabButton id="lending" label="For Lending Institutions" inactiveText="text-[#FCDD15]" />
           </div>

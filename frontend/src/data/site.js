@@ -146,7 +146,7 @@ export const FOOTER = {
     { label: "Our Teams", href: "#team" },
     { label: "Contact Us", href: "#contact" },
     { label: "Terms & Conditions", href: "#" },
-    { label: "Privacy Policy", href: "#" },
+    { label: "Privacy Policy", href: "/Cgreen_Privacy_Policy.pdf" },
   ],
   commAddressLabel: "Communication Address Office",
   commAddress:

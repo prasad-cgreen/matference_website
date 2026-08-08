@@ -44,10 +44,10 @@ export default function Navbar() {
     }
   };
 
-  const goPragatiKendra = () => {
+  const goContactWithSubject = (subject) => {
     setMobileOpen(false);
     const fire = () =>
-      window.dispatchEvent(new CustomEvent("cgreen:contact-subject", { detail: "Start a Pragati Kendra" }));
+      window.dispatchEvent(new CustomEvent("cgreen:contact-subject", { detail: subject }));
     if (location.pathname !== "/") {
       navigate("/");
       setTimeout(() => {
@@ -61,6 +61,9 @@ export default function Navbar() {
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  const goPragatiKendra = () => goContactWithSubject("Start a Pragati Kendra");
+  const goBookDemo = () => goContactWithSubject("Request Product Demo");
 
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl" data-testid="navbar">
@@ -133,12 +136,12 @@ export default function Navbar() {
           <button
             onClick={goPragatiKendra}
             data-testid="nav-be-pragati-kendra"
-            className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
+            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-body font-medium hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
           >
             Be a Pragati Kendra
           </button>
           <button
-            onClick={() => scrollToId("contact")}
+            onClick={goBookDemo}
             data-testid="nav-book-demo"
             className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
           >
@@ -193,7 +196,7 @@ export default function Navbar() {
               Login
             </a>
             <button
-              onClick={() => { setMobileOpen(false); scrollToId("contact"); }}
+              onClick={goBookDemo}
               className="flex-1 px-4 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold"
             >
               Book a Demo
@@ -201,7 +204,7 @@ export default function Navbar() {
           </div>
           <button
             onClick={goPragatiKendra}
-            className="w-full mt-2 px-4 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-medium"
+            className="w-full mt-2 px-4 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-body font-medium hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
             data-testid="nav-be-pragati-kendra-mobile"
           >
             Be a Pragati Kendra

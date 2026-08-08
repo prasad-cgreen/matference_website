@@ -174,6 +174,13 @@ export default function LifeAtCGreen() {
               Moments from our Journey
             </span>
           </p>
+          <p
+            className="mt-4 italic text-base md:text-lg text-[#142984]/80"
+            style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 300 }}
+            data-testid="life-founding-line"
+          >
+            "CGreen commenced business from 11th Feb, 2023"
+          </p>
         </div>
 
         {/* Timeline */}

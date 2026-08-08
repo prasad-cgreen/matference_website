@@ -302,5 +302,13 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 
 ## Next Tasks
 1. Collect CRM endpoint + real assets from client.
-2. Implement Terms/Privacy pages.
+2. Implement Terms & Conditions page (Privacy Policy PDF now linked; T&C footer link still `#`).
 3. Polish desktop animation timing & river continuity if requested.
+
+## Round 70 (2026-06-08) — VERIFIED (screenshots + curl)
+- **Privacy Policy PDF**: uploaded `/public/Cgreen_Privacy_Policy.pdf`; footer "Privacy Policy" now links to it, opens in a new tab (Footer.jsx adds target=_blank for non-hash links; site.js href updated). Curl → 200 application/pdf.
+- **"Be a Pragati Kendra" button**: restyled to solid navy bg / white text (matches Book a Demo default), hover → yellow bg / navy text. Desktop + mobile.
+- **"Book a Demo" → Contact auto-select**: Navbar `goBookDemo()` dispatches `cgreen:contact-subject` = "Request Product Demo" + scrolls to #contact (cross-page). Verified subject pre-selects.
+- **Life at CGreen founding line**: italic Inter-Light quote "CGreen commenced business from 11th Feb, 2023" added directly below the "Moments from our Journey" pill.
+- **Our Services hub**: composite shrunk 600→470px and shifted right (CX = SIZE/2 + 42); 9 feature-icon radii scaled (radiusX 295→232, radiusY 190→150) + per-icon OFFSETS scaled; halo 500→400. Toggle tabs widened (flex-1, wrap, items-stretch) so both fill the left column (grid left min 470→520).
+- **Our Reach map**: labels repositioned near their states (UP center-top, Maharashtra west margin, Assam NE) with cream text-shadow halo for contrast over the bright map; added 3 pulsing yellow dots (reach-glow-pulse) inside each outlined state.
