@@ -125,14 +125,16 @@ export const NOMINEE_DIRECTORS = [
 ];
 
 export const PARTNERS = [
-  { src: "/partners/tie.png", alt: "TiE Young Entrepreneurs" },
-  { src: "/partners/wadhwani.png", alt: "Wadhwani Foundation" },
-  { src: "/partners/stpi.png", alt: "STPI" },
-  { src: "/partners/sies.png", alt: "SIES" },
-  { src: "/partners/tgs100.png", alt: "TGS100" },
-  { src: "/partners/sarthy.png", alt: "Sarthy Venture Investment Partners" },
-  { src: "/partners/pontaq.png", alt: "Pontaq" },
   { src: "/partners/iima-ventures.png", alt: "IIMA Ventures" },
+  { src: "/partners/indifly.jpg", alt: "Indifly" },
+  { src: "/partners/pontaq.png", alt: "Pontaq" },
+  { src: "/partners/stpi.png", alt: "STPI" },
+  { src: "/partners/sarthy.png", alt: "Sarthy Venture Investment Partners" },
+  { src: "/partners/dpiit.png", alt: "DPIIT — Startup India" },
+  { src: "/partners/wadhwani.png", alt: "Wadhwani Foundation" },
+  { src: "/partners/sies.png", alt: "SIES" },
+  { src: "/partners/face.jpg", alt: "FACE SRO" },
+  { src: "/partners/tie-new.jpg", alt: "TiE Delhi-NCR" },
 ];
 
 export const LENDERS = [
@@ -176,7 +178,7 @@ export const FOOTER = {
   ],
   commAddressLabel: "Communication Address Office",
   commAddress:
-    "Matference Technologies India Pvt Ltd, 705, Bay B, Rupa Solitaire Building, Sector -1, Millennium Business Park, Mahape, Navi Mumbai- 400710",
+    "Matference Technologies India Pvt Ltd, Building No. 1 (61), B Wing, Sector 2, Millenium Business Park, Mahape, Navi Mumbai – 400710. Landmark: Near post office building",
   regAddressLabel: "Registered Address",
   regAddress:
     "C-602, Balaji Towers, Plot 8, Sec-22, Nerul (West), Navi Mumbai- 400706",

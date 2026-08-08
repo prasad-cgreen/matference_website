@@ -1,12 +1,10 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/site/Navbar";
 import Footer from "@/sections/Footer";
 
 // Placeholder images (swapped for real photos later). Counts vary per category.
-const imgs = (seed, n) =>
-  Array.from({ length: n }, (_, i) => `https://picsum.photos/seed/cgreen-${seed}-${i}/640/480`);
-
 const PICNIC = Array.from({ length: 11 }, (_, i) => `/life/picnic/picnic-${i + 1}.jpeg`);
 
 const TIMELINE = [
@@ -15,24 +13,25 @@ const TIMELINE = [
     type: "cat",
     cats: [
       { key: "picnic", label: "Picnic", images: PICNIC },
-      { key: "cultural", label: "Cultural Event", images: imgs("2026-cultural", 4) },
-      { key: "team", label: "Team Photos", images: imgs("2026-team", 6) },
+      { key: "cultural", label: "Cultural Event", images: [] },
+      { key: "team", label: "Team Photos", images: [] },
     ],
   },
   {
     year: "2025",
     type: "cat",
     cats: [
-      { key: "business", label: "Business Events", images: imgs("2025-business", 6) },
-      { key: "cultural", label: "Cultural Event", images: imgs("2025-cultural", 3) },
-      { key: "team", label: "Team Photos", images: imgs("2025-team", 5) },
+      { key: "business", label: "Business Events", images: [] },
+      { key: "cultural", label: "Cultural Event", images: [] },
+      { key: "team", label: "Team Photos", images: [] },
     ],
   },
-  { year: "2024", type: "pool", label: "Highlights", images: imgs("2024-pool", 8) },
-  { year: "2023", type: "pool", label: "Highlights", images: imgs("2023-pool", 5) },
+  { year: "2024", type: "pool", label: "Highlights", images: [] },
+  { year: "2023", type: "pool", label: "Highlights", images: [] },
 ];
 
 function GalleryBox({ label, images, wide, onOpen, testid }) {
+  const hasPhotos = images.length > 0;
   return (
     <button
       type="button"
@@ -41,17 +40,27 @@ function GalleryBox({ label, images, wide, onOpen, testid }) {
       className="group relative w-full overflow-hidden rounded-2xl glass glass-navy text-left transition-transform duration-300 hover:-translate-y-1"
     >
       <div className={`relative w-full overflow-hidden ${wide ? "aspect-[16/6]" : "aspect-[4/3]"}`}>
-        <img
-          src={images[0]}
-          alt={label}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
+        {hasPhotos ? (
+          <img
+            src={images[0]}
+            alt={label}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ background: "linear-gradient(135deg, rgba(20,41,132,0.16), rgba(20,41,132,0.05))" }}
+            data-testid={`${testid}-empty`}
+          >
+            <span className="font-body text-sm text-[#142984]/45">Coming soon</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a1240]/85 via-[#0a1240]/10 to-transparent" />
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
         <span className="font-head text-base lg:text-lg text-[#FFFCFA]">{label}</span>
-        <span className="text-xs font-body text-[#FCDD15]">{images.length} photos</span>
+        <span className="text-xs font-body text-[#FCDD15]">{hasPhotos ? `${images.length} photos` : "Coming soon"}</span>
       </div>
     </button>
   );
@@ -238,34 +247,56 @@ export default function LifeAtCGreen() {
 
           <div className="relative z-10 flex flex-col gap-14">
             {TIMELINE.map((block) => (
-              <div key={block.year} className="flex items-start gap-6 md:gap-10" data-testid={`year-block-${block.year}`}>
+              <motion.div
+                key={block.year}
+                className="flex items-start gap-6 md:gap-10"
+                data-testid={`year-block-${block.year}`}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
                 <div className="shrink-0 w-20 flex justify-center">
                   <YearNode year={block.year} glowStyle={glowStyleFor(block.year)} />
                 </div>
                 <div className="flex-1 min-w-0">
                   {block.type === "cat" ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {block.cats.map((c) => (
-                        <GalleryBox
+                      {block.cats.map((c, ci) => (
+                        <motion.div
                           key={c.key}
-                          label={c.label}
-                          images={c.images}
-                          onOpen={(label, images) => open(`${block.year} — ${label}`, images)}
-                          testid={`gallery-box-${block.year}-${c.key}`}
-                        />
+                          initial={{ opacity: 0, y: 24 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, amount: 0.3 }}
+                          transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 + ci * 0.12 }}
+                        >
+                          <GalleryBox
+                            label={c.label}
+                            images={c.images}
+                            onOpen={(label, images) => open(`${block.year} — ${label}`, images)}
+                            testid={`gallery-box-${block.year}-${c.key}`}
+                          />
+                        </motion.div>
                       ))}
                     </div>
                   ) : (
-                    <GalleryBox
-                      wide
-                      label={`${block.year} ${block.label}`}
-                      images={block.images}
-                      onOpen={(label, images) => open(label, images)}
-                      testid={`gallery-box-${block.year}-pooled`}
-                    />
+                    <motion.div
+                      initial={{ opacity: 0, y: 24 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
+                    >
+                      <GalleryBox
+                        wide
+                        label={`${block.year} ${block.label}`}
+                        images={block.images}
+                        onOpen={(label, images) => open(label, images)}
+                        testid={`gallery-box-${block.year}-pooled`}
+                      />
+                    </motion.div>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

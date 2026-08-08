@@ -318,7 +318,12 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 73 (2026-06-08) — VERIFIED (testing_agent iterations 12 & 13, 100%)
+## Round 74 (2026-06-08) — VERIFIED (screenshots + curl)
+- **Scroll Reveal (Life at CGreen)**: each year block (marker + boxes) fades/slides in on scroll via framer-motion whileInView (once), with staggered box delays.
+- **Gallery cleanup**: removed all dummy picsum images; every non-Picnic gallery is now empty and shows a clean "Coming soon" placeholder (no broken imgs). Picnic (11 photos) intact.
+- **Partners in Impact**: removed TGS100 and old TiE; reordered to 2 rows of 5 — R1: IIMA Ventures, Indifly, Pontaq, STPI, Sarthy; R2: DPIIT, Wadhwani, SIES, FACE SRO, TiE Delhi-NCR. New logos added (/partners/indifly.jpg, face.jpg, dpiit.png, tie-new.jpg); grid lg:grid-cols-5.
+- **Terms & Conditions**: replaced /Terms_and_Conditions.pdf with the newly uploaded file (serves 200 application/pdf).
+- **Footer communication address**: updated to "Matference Technologies India Pvt Ltd, Building No. 1 (61), B Wing, Sector 2, Millenium Business Park, Mahape, Navi Mumbai – 400710. Landmark: Near post office building" (old removed).
 - **Life at CGreen**: 2026 "Business Events" box renamed "Picnic" with 11 new photos (/life/picnic/picnic-1..11.jpeg). GalleryModal rewritten as a single-image lightbox (prev/next arrows, keyboard, counter 1/11..11/11).
 - **Team LinkedIn**: all 8 cards now have real LinkedIn anchor links (target=_blank); hrefs in site.js TEAM & NOMINEE_DIRECTORS. OurTeam TeamCard renders <a> when member.linkedin present.
 - **Footer T&C**: links to /Terms_and_Conditions.pdf (new tab), served 200 application/pdf.

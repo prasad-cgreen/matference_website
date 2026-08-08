@@ -11,7 +11,7 @@ export default function PartnersInImpact() {
           Institutions, incubators, and ecosystems backing cGreen's mission across Bharat.
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
           {PARTNERS.map((p, i) => (
             <motion.div
               key={p.alt}
