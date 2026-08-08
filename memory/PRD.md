@@ -312,3 +312,16 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - **Life at CGreen founding line**: italic Inter-Light quote "CGreen commenced business from 11th Feb, 2023" added directly below the "Moments from our Journey" pill.
 - **Our Services hub**: composite shrunk 600→470px and shifted right (CX = SIZE/2 + 42); 9 feature-icon radii scaled (radiusX 295→232, radiusY 190→150) + per-icon OFFSETS scaled; halo 500→400. Toggle tabs widened (flex-1, wrap, items-stretch) so both fill the left column (grid left min 470→520).
 - **Our Reach map**: labels repositioned near their states (UP center-top, Maharashtra west margin, Assam NE) with cream text-shadow halo for contrast over the bright map; added 3 pulsing yellow dots (reach-glow-pulse) inside each outlined state.
+
+
+## Round 71 (2026-06-08) — VERIFIED (screenshot)
+- "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
+- Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
+
+## Round 72 (2026-06-08) — VERIFIED (screenshots + testing_agent iteration_11)
+- CEO name corrected "Vipir" → "Vipr" (site.js TEAM); "Vipir" nowhere on site.
+- India map replaced with /india-map-final.png (labels + yellow outlines baked in, no coded overlays); PNG whitespace trimmed 1024x1536 → 1011x1064 to remove dead space and close the section gap.
+- All 8 team members now use real headshots (/team/*.png) via OurTeam Avatar (rounded-2xl object-cover, User-icon fallback). Dipanshu & Ankit swapped to new square-filling photos.
+- Lenders marquee: 16 real logos (/lenders/*.png) in white tiles (object-contain, aspect preserved, x2 loop).
+- Partners in Impact: 8 real logos (/partners/*.png) in white tiles (md:grid-cols-4).
+- Our Reach → Coming Soon gap reduced (OurReach pb-24→pb-8, AICommandCenter pt-10→pt-6; root cause was the portrait map's built-in whitespace, fixed via crop).

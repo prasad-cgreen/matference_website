@@ -117,7 +117,7 @@ export default function OurReach() {
   const statsRef = useRef(null);
   const started = useInViewOnce(statsRef);
   return (
-    <section id="reach" className="relative w-full pt-12 pb-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-reach">
+    <section id="reach" className="relative w-full pt-12 pb-8 bg-[#FFFCFA] scroll-mt-24" data-testid="section-reach">
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[2fr_3fr] gap-14 items-start relative z-10">
         {/* Left column: heading, subheading pill, stat boxes */}
         <div>

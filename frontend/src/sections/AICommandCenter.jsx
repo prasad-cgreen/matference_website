@@ -292,7 +292,7 @@ export default function AICommandCenter() {
   const d = DATA[active];
 
   return (
-    <section id="ai-command-center" className="relative w-full pt-10 pb-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-ai-command-center">
+    <section id="ai-command-center" className="relative w-full pt-6 pb-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-ai-command-center">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="font-head text-3xl lg:text-4xl text-[#142984] text-center mb-2" data-testid="ai-coming-soon-header">COMING SOON</h2>
         <p className="font-body text-sm text-[#142984]/70 text-center mb-10">A preview of the cGreen AI Command Center</p>
