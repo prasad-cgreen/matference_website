@@ -125,9 +125,7 @@ export default function Navbar() {
         {/* Right CTAs */}
         <div className="hidden md:flex items-center gap-2">
           <a
-            href="https://tx.cgreen.in/Login"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="https://newapp.cgreen.in/login"
             data-testid="nav-login"
             className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
           >
@@ -145,7 +143,7 @@ export default function Navbar() {
             data-testid="nav-book-demo"
             className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
           >
-            Book a Demo
+            Partner with Us
           </button>
         </div>
 
@@ -188,9 +186,7 @@ export default function Navbar() {
           ))}
           <div className="flex gap-2 mt-2 px-3">
             <a
-              href="https://tx.cgreen.in/Login"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="https://newapp.cgreen.in/login"
               className="flex-1 text-center px-4 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-medium"
             >
               Login
@@ -199,7 +195,7 @@ export default function Navbar() {
               onClick={goBookDemo}
               className="flex-1 px-4 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold"
             >
-              Book a Demo
+              Partner with Us
             </button>
           </div>
           <button

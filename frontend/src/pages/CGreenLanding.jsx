@@ -5,6 +5,7 @@ import HeroSection from "@/sections/HeroSection";
 import BharatProblem from "@/sections/BharatProblem";
 import ScalingWithPurpose from "@/sections/ScalingWithPurpose";
 import PlatformVisionMission from "@/sections/PlatformVisionMission";
+import PlatformSection from "@/sections/PlatformSection";
 import OurReach from "@/sections/OurReach";
 import AICommandCenter from "@/sections/AICommandCenter";
 import OurTeam from "@/sections/OurTeam";
@@ -66,6 +67,7 @@ export default function CGreenLanding() {
 
       <PlatformVisionMission />
       <OurReach />
+      <PlatformSection />
       <AICommandCenter />
       <OurTeam />
       <PartnersInImpact />

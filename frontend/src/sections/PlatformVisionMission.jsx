@@ -2,7 +2,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Eye, Target, Landmark, Users, Store, Network } from "lucide-react";
 import { VISION, MISSION } from "@/data/site";
-import PlatformDiagram from "@/sections/PlatformDiagram";
 
 const AUDIENCE_BOXES = [
   { id: "lenders", hex: "#7C97D6", Icon: Landmark, heading: "For Lenders", body: "Deeper district-level reach without having to create a separate physical operating infrastructure for every service." },
@@ -14,8 +13,7 @@ const AUDIENCE_BOXES = [
 export default function PlatformVisionMission() {
   return (
     <section
-      className="relative w-full pt-12 pb-8 overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #FFFDF7 0%, #FAF0CE 55%, #F4E5A2 100%)" }}
+      className="relative w-full pt-12 pb-8 overflow-hidden bg-[#FFFCFA]"
       data-testid="section-platform-vision"
     >
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -106,13 +104,6 @@ export default function PlatformVisionMission() {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Platform subsection */}
-        <div id="platform" className="mt-20 scroll-mt-28" data-testid="platform-subsection">
-          <h3 className="font-head text-2xl lg:text-3xl text-[#142984] mb-6">PLATFORM</h3>
-          {/* Interactive capability diagram: orbiting nodes + glass hub + side panels */}
-          <PlatformDiagram />
         </div>
       </div>
     </section>

@@ -141,7 +141,7 @@ function LogoSolution({ isDesktop }) {
 
 export default function ScalingWithPurpose() {
   const isDesktop = useIsDesktop();
-  const [tab, setTab] = useState("pragati");
+  const [tab, setTab] = useState("lending");
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {

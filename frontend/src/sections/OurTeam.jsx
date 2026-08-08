@@ -98,7 +98,7 @@ export default function OurTeam() {
         <h3 className={`${subHeading} mt-20`} data-testid="advisors-heading">Advisors To The Board</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className={`${cardCls} flex items-center justify-center min-h-[140px]`} data-testid="advisors-coming-soon">
-            <span className="font-head text-2xl text-[#142984]/80">Coming Soon</span>
+            <span className="font-head text-sm tracking-wider text-[#142984]/80">Coming Soon</span>
           </div>
         </div>
       </div>

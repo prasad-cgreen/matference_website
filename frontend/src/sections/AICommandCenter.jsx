@@ -319,7 +319,7 @@ export default function AICommandCenter() {
   return (
     <section id="ai-command-center" className="relative w-full pt-6 pb-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-ai-command-center">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="font-head text-3xl lg:text-4xl text-[#142984] text-center mb-2" data-testid="ai-coming-soon-header">COMING SOON</h2>
+        <h2 className="font-head text-sm lg:text-base tracking-[0.25em] text-[#142984] text-center mb-2" data-testid="ai-coming-soon-header">COMING SOON</h2>
         <p className="font-body text-sm text-[#142984]/70 text-center mb-10">A preview of the cGreen AI Command Center</p>
 
         <div className="rounded-3xl p-5 lg:p-7 border border-[#FCDD15]/40 text-white overflow-hidden"

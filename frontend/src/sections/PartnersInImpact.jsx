@@ -12,7 +12,9 @@ export default function PartnersInImpact() {
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
-          {PARTNERS.map((p, i) => (
+          {PARTNERS.map((p, i) => {
+            const big = p.alt === "Indifly" || p.alt.startsWith("TiE");
+            return (
             <motion.div
               key={p.alt}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -25,12 +27,13 @@ export default function PartnersInImpact() {
               <img
                 src={p.src}
                 alt={p.alt}
-                className="max-h-14 max-w-[160px] w-auto h-auto object-contain"
+                className={`${big ? "max-h-[72px] max-w-[190px]" : "max-h-14 max-w-[160px]"} w-auto h-auto object-contain`}
                 loading="lazy"
                 draggable="false"
               />
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

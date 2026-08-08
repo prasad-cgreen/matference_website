@@ -60,7 +60,7 @@ export const VISION =
   "To build Bharat's most trusted, AI-led customer-resolution network—combining digital scale, multilingual intelligence, responsible human engagement and dependable local presence. We envision a future where lenders do not act only on delinquency status, but on a continuously updated understanding of the customer's intent, ability, contactability and circumstances.";
 
 export const MISSION =
-  "CGreen's mission is to build a connected, technology-enabled resolution network across 200 districts in Bharat. Through one cloud platform, trained remote teams and local Pragati Kendras, we aim to deliver digital, remote and field collections, contact-point verification and actionable customer intelligence. Over time, this infrastructure will enable a broader range of lender-approved assistance, verification and documentation services closer to the customer.";
+  "CGreen's mission is to build a connected, technology-enabled resolution network across 200 districts in Bharat within 3 years. Through one cloud platform, trained remote teams and local Pragati Kendras, we aim to deliver digital, remote and field collections, contact-point verification and actionable customer intelligence. Over time, this infrastructure will enable a broader range of lender-approved assistance, verification and documentation services closer to the customer.";
 
 export const SERVICES_TAGLINE =
   "Digital when possible. Human when needed. Local when it matters.";
@@ -154,6 +154,20 @@ export const LENDERS = [
   { src: "/lenders/paytm.png", alt: "Paytm" },
   { src: "/lenders/kissht.png", alt: "Kissht" },
   { src: "/lenders/piramal.png", alt: "Piramal Capital & Housing Finance" },
+  { src: "/lenders/home-credit.png", alt: "Home Credit" },
+  { src: "/lenders/flot.png", alt: "FLot" },
+  { src: "/lenders/northern-arc.png", alt: "Northern Arc Investments" },
+  { src: "/lenders/third-unicorn.png", alt: "Third Unicorn" },
+  { src: "/lenders/tvs-credit.png", alt: "TVS Credit" },
+  { src: "/lenders/bajaj-finance.png", alt: "Bajaj Finance" },
+  { src: "/lenders/chola.png", alt: "Cholamandalam" },
+  { src: "/lenders/credgenics.png", alt: "Credgenics" },
+  { src: "/lenders/fatakpay.png", alt: "FatakPay" },
+  { src: "/lenders/fibe.png", alt: "Fibe" },
+  { src: "/lenders/aeon-credit.png", alt: "AEON Credit Service" },
+  { src: "/lenders/arth-finance.png", alt: "Arth Finance" },
+  { src: "/lenders/au-small-finance.png", alt: "AU Small Finance Bank" },
+  { src: "/lenders/axis-bank.png", alt: "Axis Bank" },
 ];
 
 export const SUBJECTS = [
