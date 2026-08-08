@@ -318,7 +318,16 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 74 (2026-06-08) — VERIFIED (screenshots + curl)
+## Round 75 (2026-06-08) — VERIFIED (testing_agent iteration_14, 100%)
+- **Section reorder**: Hero → Bharat Problem → Our Services → Vision & Mission → Our Reach → Platform → AI Command Center → Our Team → Partners → Lenders → Contact → Footer. Platform split into standalone `PlatformSection.jsx` (id=platform, cream bg) inserted after Our Reach; removed from PlatformVisionMission.
+- **Our Services default tab** → "For Lending Institutions" (useState("lending")).
+- **Mission copy** updated to add "within 3 years".
+- **Partners**: Indifly & TiE logos enlarged (max-h-[72px] max-w-[190px]).
+- **Backgrounds**: Vision & Mission and Platform sections → cream #FFFCFA (yellow removed).
+- **"Coming Soon"** reduced to label size in AI header (text-sm/base) and Advisors card (text-sm).
+- **Nav**: "Book a Demo" → "Partner with Us" (same behavior, subject Request Product Demo). Login → https://newapp.cgreen.in/login same tab (desktop + mobile).
+- **Lenders marquee**: expanded 16 → 30 logos (added Home Credit, FLot, Northern Arc, Third Unicorn, TVS Credit, Bajaj Finance, Cholamandalam, Credgenics, FatakPay, Fibe, AEON, Arth Finance, AU Small Finance Bank, Axis Bank).
+- Internal animations (Platform orbit, V&M connector, Our Reach count-up) confirmed working in new positions.
 - **Scroll Reveal (Life at CGreen)**: each year block (marker + boxes) fades/slides in on scroll via framer-motion whileInView (once), with staggered box delays.
 - **Gallery cleanup**: removed all dummy picsum images; every non-Picnic gallery is now empty and shows a clean "Coming soon" placeholder (no broken imgs). Picnic (11 photos) intact.
 - **Partners in Impact**: removed TGS100 and old TiE; reordered to 2 rows of 5 — R1: IIMA Ventures, Indifly, Pontaq, STPI, Sarthy; R2: DPIIT, Wadhwani, SIES, FACE SRO, TiE Delhi-NCR. New logos added (/partners/indifly.jpg, face.jpg, dpiit.png, tie-new.jpg); grid lg:grid-cols-5.
