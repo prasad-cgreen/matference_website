@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useIsDesktop } from "@/hooks/useResponsive";
 import {
   Building2, Users, Cog, AlertTriangle, HandCoins, MapPin, TrendingUp,
@@ -302,6 +302,20 @@ export default function AICommandCenter() {
   const isDesktop = useIsDesktop();
   const d = DATA[active];
 
+  // Mobile: lock the content pane to the tallest tab's height so switching tabs
+  // never resizes the container (desktop uses a fixed lg:h-[620px] instead).
+  const contentRef = useRef(null);
+  const [minH, setMinH] = useState(0);
+  useLayoutEffect(() => {
+    if (isDesktop) { setMinH(0); return; }
+    if (contentRef.current) setMinH((prev) => Math.max(prev, contentRef.current.scrollHeight));
+  }, [active, isDesktop]);
+  useEffect(() => {
+    const onResize = () => setMinH(0);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <section id="ai-command-center" className="relative w-full pt-6 pb-24 bg-[#FFFCFA] scroll-mt-24" data-testid="section-ai-command-center">
       <div className="max-w-7xl mx-auto px-6">
@@ -337,7 +351,12 @@ export default function AICommandCenter() {
             </div>
 
             {/* Main content — desktop: fixed height so animations never resize/push the page */}
-            <div className="flex-1 min-w-0 lg:h-[620px] lg:overflow-y-auto" data-testid={`ai-content-${active}`}>
+            <div
+              ref={contentRef}
+              className="flex-1 min-w-0 lg:h-[620px] lg:overflow-y-auto"
+              style={!isDesktop && minH ? { minHeight: minH } : undefined}
+              data-testid={`ai-content-${active}`}
+            >
               <DashboardBody key={active} d={d} animated={isDesktop} />
             </div>
           </div>
