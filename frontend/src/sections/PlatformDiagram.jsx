@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useIsDesktop } from "@/hooks/useResponsive";
 import {
   LineChart,
   Users,
@@ -118,11 +119,69 @@ function SidePanelCard({ card, onHover }) {
   );
 }
 
+function MobilePlatform() {
+  return (
+    <div className="w-full max-w-md mx-auto flex flex-col gap-6" data-testid="platform-mobile">
+      {/* Hub */}
+      <div className="flex justify-center" data-testid="platform-hub">
+        <img src="/cgreen-logo-transparent.png" alt="cGreen" className="w-40 h-auto" draggable="false" />
+      </div>
+
+      {/* 6 capabilities as a stacked list */}
+      <div className="flex flex-col gap-3" data-testid="platform-capabilities-list">
+        {NODES.map((n) => (
+          <div
+            key={n.id}
+            data-testid={`platform-node-${n.id}`}
+            className="glass glass-navy rounded-2xl flex items-start gap-3 px-4 py-3"
+            style={{ background: "rgba(20,41,132,0.08)", border: "1px solid rgba(20,41,132,0.18)" }}
+          >
+            <span className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center bg-white/70 border border-[#142984]/15">
+              <n.Icon size={22} strokeWidth={1.9} className="text-[#142984]" />
+            </span>
+            <div className="min-w-0">
+              <div className="font-head text-sm uppercase tracking-wide text-[#142984] leading-tight">{n.label}</div>
+              <div className="font-body text-xs text-[#142984]/70 leading-snug mt-0.5">{n.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Data Sources */}
+      <div
+        className="rounded-3xl glass p-4 flex flex-col"
+        style={{ background: "rgba(255,255,255,0.55)", border: "1.5px solid #FCDD15" }}
+        data-testid="platform-panel-data-sources"
+      >
+        <h4 className="font-head text-sm text-[#142984] mb-3 tracking-wide">DATA SOURCES</h4>
+        <div className="flex flex-col gap-3">
+          {LEFT_CARDS.map((c) => (<SidePanelCard key={c.id} card={c} />))}
+        </div>
+      </div>
+
+      {/* Omni-Channel Sub Channels */}
+      <div
+        className="rounded-3xl glass p-4 flex flex-col"
+        style={{ background: "rgba(255,255,255,0.55)", border: "1.5px solid #FCDD15" }}
+        data-testid="platform-panel-omni"
+      >
+        <h4 className="font-head text-sm text-[#142984] mb-3 tracking-wide leading-tight">OMNI-CHANNEL SUB CHANNELS</h4>
+        <div className="flex flex-col gap-3">
+          {RIGHT_CARDS.map((c) => (<SidePanelCard key={c.id} card={c} />))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PlatformDiagram() {
+  const isDesktop = useIsDesktop();
   const [hoverNode, setHoverNode] = useState(null);
   const [hotSource, setHotSource] = useState(null);
 
   const omniHot = hoverNode === "omni-channel-outreach";
+
+  if (!isDesktop) return <MobilePlatform />;
 
   return (
     <div

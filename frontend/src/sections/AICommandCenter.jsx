@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useIsDesktop } from "@/hooks/useResponsive";
 import {
   Building2, Users, Cog, AlertTriangle, HandCoins, MapPin, TrendingUp,
   FileText, TrendingDown, GraduationCap, UserMinus, Clock, ArrowUpRight,
@@ -122,10 +123,11 @@ function TagPill({ tag }) {
   );
 }
 
-function RiskGauge({ pct, label, color }) {
+function RiskGauge({ pct, label, color, animated = true }) {
   const r = 62, c = 2 * Math.PI * r;
-  const anim = useCountUp(pct, 1300);
-  const dash = (anim / 100) * c;
+  const animVal = useCountUp(pct, 1300);
+  const shown = animated ? animVal : pct;
+  const dash = (shown / 100) * c;
   return (
     <div className="relative flex items-center justify-center" style={{ width: 168, height: 168 }}>
       <svg width="168" height="168" viewBox="0 0 168 168" className="-rotate-90">
@@ -133,7 +135,7 @@ function RiskGauge({ pct, label, color }) {
         <circle cx="84" cy="84" r={r} fill="none" stroke="#FCDD15" strokeWidth="12" strokeLinecap="round" strokeDasharray={`${dash} ${c - dash}`} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-head text-4xl text-white leading-none">{Math.round(anim)}%</span>
+        <span className="font-head text-4xl text-white leading-none">{Math.round(shown)}%</span>
         <span className="mt-1 text-xs font-semibold" style={{ color }}>{label}</span>
       </div>
     </div>
@@ -141,14 +143,15 @@ function RiskGauge({ pct, label, color }) {
 }
 
 // Animate the numeric portion of a stat string (preserves prefix/suffix, commas, decimals).
-function AnimatedStatValue({ value }) {
+function AnimatedStatValue({ value, animated = true }) {
   const m = String(value).match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);
   const numStr = m ? m[2] : "0";
   const target = parseFloat(numStr.replace(/,/g, ""));
   const decimals = numStr.includes(".") ? numStr.split(".")[1].length : 0;
-  const anim = useCountUp(target, 1200);
+  const animVal = useCountUp(target, 1200);
+  const val = animated ? animVal : target;
   if (!m) return <>{value}</>;
-  const shown = anim.toLocaleString("en-IN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  const shown = val.toLocaleString("en-IN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   return <>{m[1]}{shown}{m[3]}</>;
 }
 
@@ -173,22 +176,23 @@ function BarChart({ chart }) {
 
 const panel = "rounded-2xl border border-white/10 bg-white/[0.04]";
 
-// Reveals rows one-by-one every `interval` ms, then loops from empty.
-function useLiveFeed(count, interval = 2000) {
-  const [visible, setVisible] = useState(1);
+// Reveals rows one-by-one every `interval` ms, then loops from empty (when animated).
+function useLiveFeed(count, interval = 2000, animated = true) {
+  const [visible, setVisible] = useState(animated ? 1 : count);
   useEffect(() => {
+    if (!animated) { setVisible(count); return undefined; }
     setVisible(1);
     const id = setInterval(() => {
       setVisible((v) => (v >= count ? 1 : v + 1));
     }, interval);
     return () => clearInterval(id);
-  }, [count, interval]);
+  }, [count, interval, animated]);
   return visible;
 }
 
 // Extracted body — remounts on tab change via `key`, restarting all animations.
-function DashboardBody({ d }) {
-  const visibleRows = useLiveFeed(d.rows.length, 2200);
+function DashboardBody({ d, animated = true }) {
+  const visibleRows = useLiveFeed(d.rows.length, 2200, animated);
 
   return (
     <div className="flex-1 min-w-0 flex flex-col gap-5" data-testid="ai-dashboard-body">
@@ -203,7 +207,7 @@ function DashboardBody({ d }) {
               <span className="w-2 h-2 rounded-full" style={{ background: "#F87171" }} />
             </span>
           </div>
-          <RiskGauge pct={d.pct} label={d.riskLabel} color={d.riskColor} />
+          <RiskGauge pct={d.pct} label={d.riskLabel} color={d.riskColor} animated={animated} />
           <div className="grid grid-cols-2 gap-2 w-full mt-4">
             {d.metrics.map((m, i) => (
               <div key={i} className="rounded-xl bg-white/[0.04] border border-white/10 px-3 py-2 text-center">
@@ -219,7 +223,7 @@ function DashboardBody({ d }) {
           <div className="flex items-center justify-between mb-4">
             <span className="font-head text-sm tracking-wider flex items-center gap-2">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#F87171" }} />
+                {animated && <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: "#F87171" }} />}
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: "#F87171" }} />
               </span>
               {d.liveTitle}
@@ -227,9 +231,15 @@ function DashboardBody({ d }) {
             <span className="text-[11px] text-white/60">{d.liveMeta}</span>
           </div>
 
+          {/* All rows always rendered (constant height); animation only toggles opacity */}
           <div className="flex flex-col gap-2.5">
-            {d.rows.slice(0, visibleRows).map((l, i) => (
-              <div key={`${visibleRows}-${i}`} className="flex items-start gap-2.5 ai-line-in" data-testid={`ai-row-${i}`}>
+            {d.rows.map((l, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-2.5 transition-opacity duration-500"
+                style={{ opacity: animated ? (i < visibleRows ? 1 : 0.12) : 1 }}
+                data-testid={`ai-row-${i}`}
+              >
                 <span className="text-[10px] text-white/40 font-mono pt-1 w-9 shrink-0">{l.t}</span>
                 <div className="flex-1 min-w-0">
                   {l.who && <span className={`text-[11px] font-semibold ${l.who.startsWith("Customer") ? "text-[#60A5FA]" : "text-[#FCDD15]"}`}>{l.who} </span>}
@@ -257,7 +267,7 @@ function DashboardBody({ d }) {
         {/* Alerts */}
         <div className="flex flex-col gap-3" data-testid="ai-alerts">
           {d.alerts.map((a, i) => (
-            <div key={i} className={`${panel} p-4 flex gap-3 ai-hover-card ai-alert-pulse`} style={{ "--pulse-color": `${a.color}80`, animationDelay: `${i * 0.7}s` }} data-testid={`ai-alert-${i}`}>
+            <div key={i} className={`${panel} p-4 flex gap-3 ${animated ? "ai-hover-card ai-alert-pulse" : ""}`} style={{ "--pulse-color": `${a.color}80`, animationDelay: `${i * 0.7}s` }} data-testid={`ai-alert-${i}`}>
               <span className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ background: `${a.color}22`, border: `1px solid ${a.color}66` }}>
                 <a.Icon size={16} style={{ color: a.color }} />
               </span>
@@ -274,9 +284,9 @@ function DashboardBody({ d }) {
       {/* Bottom stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-testid="ai-stat-cards">
         {d.stats.map((s, i) => (
-          <div key={i} className={`${panel} p-4 ai-hover-card`} data-testid={`ai-stat-${i}`}>
+          <div key={i} className={`${panel} p-4 ${animated ? "ai-hover-card" : ""}`} data-testid={`ai-stat-${i}`}>
             <div className="text-[11px] text-white/55 tracking-wide">{s.label}</div>
-            <div className="font-head text-2xl mt-1"><AnimatedStatValue value={s.value} /></div>
+            <div className="font-head text-2xl mt-1"><AnimatedStatValue value={s.value} animated={animated} /></div>
             <div className="flex items-center gap-1 mt-1 text-[11px]" style={{ color: "#34D399" }}>
               <TrendingUp size={13} /><span>{s.trend}</span>
             </div>
@@ -289,6 +299,7 @@ function DashboardBody({ d }) {
 
 export default function AICommandCenter() {
   const [active, setActive] = useState("lending-institution");
+  const isDesktop = useIsDesktop();
   const d = DATA[active];
 
   return (
@@ -309,14 +320,14 @@ export default function AICommandCenter() {
             <span data-testid="ai-coming-soon-badge" className="shrink-0 font-head text-[11px] tracking-wider px-4 py-2 rounded-full text-[#142984]" style={{ background: "#FCDD15", boxShadow: "0 0 20px rgba(252,221,21,0.4)" }}>COMING SOON</span>
           </div>
 
-          <div className="flex gap-5">
-            {/* Sidebar */}
-            <div className="w-52 shrink-0 flex flex-col gap-3" data-testid="ai-sidebar">
+          <div className="flex flex-col lg:flex-row gap-5">
+            {/* Tabs: horizontal row on mobile, sidebar on desktop */}
+            <div className="flex flex-row lg:flex-col gap-3 w-full lg:w-52 shrink-0 overflow-x-auto lg:overflow-visible" data-testid="ai-sidebar">
               {TABS.map((t) => {
                 const on = active === t.id;
                 return (
                   <button key={t.id} type="button" data-testid={`ai-tab-${t.id}`} onClick={() => setActive(t.id)} aria-pressed={on}
-                    className="flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-colors"
+                    className="flex items-center gap-2 lg:gap-3 px-4 py-3 rounded-2xl text-left transition-colors shrink-0 whitespace-nowrap lg:whitespace-normal"
                     style={on ? { background: "#FCDD15", color: "#142984", fontWeight: 700 } : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.08)" }}>
                     <t.Icon size={18} strokeWidth={2} />
                     <span className="font-body text-sm leading-tight">{t.label}</span>
@@ -325,9 +336,9 @@ export default function AICommandCenter() {
               })}
             </div>
 
-            {/* Main content — key forces full remount per tab, restarting all animations */}
-            <div className="flex-1 min-w-0" data-testid={`ai-content-${active}`}>
-              <DashboardBody key={active} d={d} />
+            {/* Main content — desktop: fixed height so animations never resize/push the page */}
+            <div className="flex-1 min-w-0 lg:h-[620px] lg:overflow-y-auto" data-testid={`ai-content-${active}`}>
+              <DashboardBody key={active} d={d} animated={isDesktop} />
             </div>
           </div>
         </div>

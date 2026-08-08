@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/site/Navbar";
 import Footer from "@/sections/Footer";
 
@@ -7,12 +7,14 @@ import Footer from "@/sections/Footer";
 const imgs = (seed, n) =>
   Array.from({ length: n }, (_, i) => `https://picsum.photos/seed/cgreen-${seed}-${i}/640/480`);
 
+const PICNIC = Array.from({ length: 11 }, (_, i) => `/life/picnic/picnic-${i + 1}.jpeg`);
+
 const TIMELINE = [
   {
     year: "2026",
     type: "cat",
     cats: [
-      { key: "business", label: "Business Events", images: imgs("2026-business", 5) },
+      { key: "picnic", label: "Picnic", images: PICNIC },
       { key: "cultural", label: "Cultural Event", images: imgs("2026-cultural", 4) },
       { key: "team", label: "Team Photos", images: imgs("2026-team", 6) },
     ],
@@ -70,31 +72,42 @@ function YearNode({ year, glowStyle }) {
 }
 
 function GalleryModal({ data, onClose }) {
+  const [idx, setIdx] = useState(0);
+  const n = data ? data.images.length : 0;
+  const prev = () => setIdx((i) => (i - 1 + n) % n);
+  const next = () => setIdx((i) => (i + 1) % n);
+
+  useEffect(() => { setIdx(0); }, [data]);
+
   useEffect(() => {
     if (!data) return undefined;
-    const onKey = (e) => e.key === "Escape" && onClose();
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") setIdx((i) => (i - 1 + n) % n);
+      if (e.key === "ArrowRight") setIdx((i) => (i + 1) % n);
+    };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [data, onClose]);
+  }, [data, onClose, n]);
 
   if (!data) return null;
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
       onClick={onClose}
       data-testid="gallery-modal"
     >
       <div
-        className="relative w-full max-w-5xl max-h-[85vh] overflow-y-auto rounded-3xl bg-[#FFFCFA] p-6 lg:p-8"
+        className="relative w-full max-w-5xl rounded-3xl bg-[#FFFCFA] p-4 lg:p-6"
         onClick={(e) => e.stopPropagation()}
         data-testid="gallery-modal-content"
       >
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="font-head text-2xl text-[#142984]" data-testid="gallery-modal-title">{data.title}</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-head text-xl lg:text-2xl text-[#142984]" data-testid="gallery-modal-title">{data.title}</h3>
           <button
             type="button"
             onClick={onClose}
@@ -105,19 +118,44 @@ function GalleryModal({ data, onClose }) {
             <X size={20} />
           </button>
         </div>
-        {data.images.length ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {data.images.map((src, i) => (
+
+        {n ? (
+          <>
+            <div className="relative w-full flex items-center justify-center">
               <img
-                key={i}
-                src={src}
-                alt={`${data.title} ${i + 1}`}
-                className="w-full aspect-[4/3] object-cover rounded-xl"
-                loading="lazy"
-                data-testid={`gallery-img-${i}`}
+                key={idx}
+                src={data.images[idx]}
+                alt={`${data.title} ${idx + 1}`}
+                className="w-full max-h-[68vh] object-contain rounded-xl bg-black/5"
+                data-testid={`gallery-img-${idx}`}
               />
-            ))}
-          </div>
+              {n > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={prev}
+                    aria-label="Previous photo"
+                    data-testid="gallery-prev"
+                    className="absolute left-2 lg:left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#142984]/90 text-[#FFFCFA] flex items-center justify-center hover:bg-[#FCDD15] hover:text-[#142984] transition-colors shadow-lg"
+                  >
+                    <ChevronLeft size={22} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={next}
+                    aria-label="Next photo"
+                    data-testid="gallery-next"
+                    className="absolute right-2 lg:right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#142984]/90 text-[#FFFCFA] flex items-center justify-center hover:bg-[#FCDD15] hover:text-[#142984] transition-colors shadow-lg"
+                  >
+                    <ChevronRight size={22} />
+                  </button>
+                </>
+              )}
+            </div>
+            <div className="mt-3 text-center font-body text-sm text-[#142984]/70" data-testid="gallery-counter">
+              {idx + 1} / {n}
+            </div>
+          </>
         ) : (
           <p className="font-body text-[#142984]/60">No photos yet — coming soon.</p>
         )}

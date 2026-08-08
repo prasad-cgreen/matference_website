@@ -43,13 +43,26 @@ function TeamCard({ member, index, testidPrefix }) {
       {member.bio ? (
         <p className="font-body text-sm text-[#142984]/80 mb-4">{member.bio}</p>
       ) : null}
-      <span
-        className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#142984]/10 text-[#142984] cursor-not-allowed"
-        title="LinkedIn (coming soon)"
-        data-testid={`${testidPrefix}-linkedin-${index}`}
-      >
-        <Linkedin size={18} />
-      </span>
+      {member.linkedin ? (
+        <a
+          href={member.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#142984] text-[#FCDD15] hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+          aria-label={`${member.name} on LinkedIn`}
+          data-testid={`${testidPrefix}-linkedin-${index}`}
+        >
+          <Linkedin size={18} />
+        </a>
+      ) : (
+        <span
+          className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-[#142984]/10 text-[#142984] cursor-not-allowed"
+          title="LinkedIn (coming soon)"
+          data-testid={`${testidPrefix}-linkedin-${index}`}
+        >
+          <Linkedin size={18} />
+        </span>
+      )}
     </motion.div>
   );
 }

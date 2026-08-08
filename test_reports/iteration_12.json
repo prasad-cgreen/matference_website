@@ -1,0 +1,26 @@
+{
+  "summary": "Frontend-only verification of 6 site changes on cGreen marketing site. Verified: Picnic lightbox (1/11..11/11, prev/next/wrap), Team+Nominee LinkedIn anchors (all 8 real <a target=_blank> with correct hrefs including vipr-raj), Footer T&C link -> /Terms_and_Conditions.pdf (200 application/pdf, target=_blank), Desktop AI container fixed height (758px, 0px diff during 4.5s animation and across all 3 tabs), Mobile Platform static list (6 nodes + data-sources + omni panels, no orbit-ring), Mobile AI (horizontal sidebar 300x44, all ai-row opacity=1 immediately, live-panel text identical after 3s => no looping animation, tab switching updates gauge/content). One issue found: mobile AI container height CHANGES between persona tabs (1686 -> 1647 -> 1496 px, ~190px delta), violating the 'no container resize on tab switch' requirement.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "AICommandCenter (mobile)", "issue": "Container [data-testid=ai-dashboard-container] height changes when switching persona tabs on mobile (390x844). Measured heights: lending-institution=1686.625, pragati-kendra=1647.625, internal-ops=1496.125 (~190px delta). Requirement was that container height must remain constant on tab switch on mobile.", "selector": "[data-testid=ai-dashboard-container]", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix mobile AI dashboard container so height stays constant when switching persona tabs. Options: (a) set a fixed min-height for the mobile inner content wrapper, or (b) apply the same lg:h-[620px] behavior using a mobile-specific min-h that accommodates the tallest tab (~1686px), or (c) equalize content heights per tab by padding shorter tabs."
+  ],
+  "critical_code_review_comments": [
+    "AICommandCenter.jsx content wrapper only fixes height at lg breakpoint (lg:h-[620px]). Mobile has no min-height guard so container jumps on tab switch.",
+    "Review request references data-testid 'ai-tab-pragati-kendra-partner' but actual code uses 'ai-tab-pragati-kendra' (TABS id='pragati-kendra'). Not a bug, just a doc/testid naming inconsistency to be aware of for future test agents."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "~95% (6/7 requirements pass; mobile container-resize-on-tab-switch fails)"},
+  "seed_data_creation": "None",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "All desktop features work as spec. Picnic modal test-ids: gallery-modal, gallery-img-0, gallery-prev, gallery-next, gallery-counter. AI tab test-ids are: ai-tab-lending-institution, ai-tab-pragati-kendra (NOT pragati-kendra-partner as review request stated), ai-tab-internal-ops. Only remaining issue: mobile AI container resizes across tabs (1686/1647/1496). After fix, re-verify mobile tab heights are equal within 2px using boundingBox at 390x844.",
+  "rca of the issue": "AICommandCenter's DashboardBody content wrapper applies fixed height only via lg:h-[620px] Tailwind class (desktop only). On viewports <1024px, the wrapper has natural (auto) height, so different tab content (which contains varied numbers of rows/alerts/chart heights) produces different container heights. Reproduction: 390x844 viewport, home page, scroll to Coming Soon AI Command Center, click each tab and measure element.boundingBox().height — differs by ~190px. Mitigation: add a min-height on mobile equal to the tallest tab (~1690px) or refactor content to a fixed-height scrollable pane on mobile too."
+}
