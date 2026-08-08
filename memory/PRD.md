@@ -318,7 +318,13 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 72 (2026-06-08) — VERIFIED (screenshots + testing_agent iteration_11)
+## Round 73 (2026-06-08) — VERIFIED (testing_agent iterations 12 & 13, 100%)
+- **Life at CGreen**: 2026 "Business Events" box renamed "Picnic" with 11 new photos (/life/picnic/picnic-1..11.jpeg). GalleryModal rewritten as a single-image lightbox (prev/next arrows, keyboard, counter 1/11..11/11).
+- **Team LinkedIn**: all 8 cards now have real LinkedIn anchor links (target=_blank); hrefs in site.js TEAM & NOMINEE_DIRECTORS. OurTeam TeamCard renders <a> when member.linkedin present.
+- **Footer T&C**: links to /Terms_and_Conditions.pdf (new tab), served 200 application/pdf.
+- **Platform mobile (<1024px)**: orbit diagram replaced by static stacked list (MobilePlatform: 6 capability rows + Data Sources + Omni-Channel panels single-column); desktop orbit unchanged (useIsDesktop).
+- **AI Command Center desktop**: container no longer resizes during animation — all transcript rows always rendered (opacity toggles), content pane fixed lg:h-[620px] overflow-y-auto. Stable at 758px across tabs + animation.
+- **AI Command Center mobile (<1024px)**: tabs are a horizontal row; all animations removed (static gauge/rows/stats, no pulse/loop); content pane min-height locked via useLayoutEffect to tallest tab so no resize on tab switch. Stable at 1687px.
 - CEO name corrected "Vipir" → "Vipr" (site.js TEAM); "Vipir" nowhere on site.
 - India map replaced with /india-map-final.png (labels + yellow outlines baked in, no coded overlays); PNG whitespace trimmed 1024x1536 → 1011x1064 to remove dead space and close the section gap.
 - All 8 team members now use real headshots (/team/*.png) via OurTeam Avatar (rounded-2xl object-cover, User-icon fallback). Dipanshu & Ankit swapped to new square-filling photos.
