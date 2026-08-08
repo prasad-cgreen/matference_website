@@ -5,7 +5,17 @@ import { TEAM, NOMINEE_DIRECTORS } from "@/data/site";
 
 const cardCls = "glass glass-yellow rounded-[24px] p-6";
 
-function Avatar() {
+function Avatar({ member }) {
+  if (member.photo) {
+    return (
+      <img
+        src={member.photo}
+        alt={member.name}
+        className="w-16 h-16 rounded-2xl object-cover object-top bg-[#142984] shrink-0"
+        loading="lazy"
+      />
+    );
+  }
   return (
     <div className="w-16 h-16 rounded-2xl bg-[#142984] text-[#FCDD15] flex items-center justify-center shrink-0">
       <User size={30} strokeWidth={1.8} />
@@ -24,7 +34,7 @@ function TeamCard({ member, index, testidPrefix }) {
       data-testid={`${testidPrefix}-card-${index}`}
     >
       <div className="flex items-center gap-4 mb-4">
-        <Avatar />
+        <Avatar member={member} />
         <div>
           <h3 className="font-head text-lg text-[#142984] leading-tight">{member.name}</h3>
           <p className="font-body text-sm text-[#142984]/70">{member.title}</p>

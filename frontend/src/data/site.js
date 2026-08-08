@@ -111,22 +111,48 @@ export const LENDING_CARDS = [
 ];
 
 export const TEAM = [
-  { name: "Vipir Raj Bhardwaj", title: "Co-Founder, MD & CEO", bio: "Financial services leader with 24 years of experience across ICICI, FINO, and Suryoday, with deep expertise in rural distribution and collections." },
-  { name: "Vinay Shetty", title: "Co-Founder & Head of Technology", bio: "Technology leader with 22 years of experience building scalable banking and financial services platforms, formerly with FINO." },
-  { name: "Nikhar Agrawal", title: "Co-Founder & Head of Finance", bio: "Finance leader with 13 years of experience across microfinance, lending, collections, BC banking, and rural financial services, formerly with Spandana, Vaya, and Suryoday." },
-  { name: "Dipanshu Rajpurohit", title: "Co-Founder & COO", bio: "Business and product leader with 18 years of experience across Lendingkart, Bajaj Finance, YES Bank, and FINO Finance." },
-  { name: "Makrand Manjrekar", title: "Head, Operations Risk & Compliance", bio: "Risk and operations leader with 20 years of experience across IDBI Bank and FINO Payments Bank, specialising in risk controls, compliance, and fraud prevention." },
-  { name: "Vineet Singh", title: "Head, Collections Unit", bio: "Collections leader with 17 years of experience across ICICI Bank, HDB, Spocto, and VGM, with deep expertise in remote collections and recovery." },
+  { name: "Vipr Raj Bhardwaj", title: "Co-Founder, MD & CEO", photo: "/team/vipr.png", bio: "Financial services leader with 24 years of experience across ICICI, FINO, and Suryoday, with deep expertise in rural distribution and collections." },
+  { name: "Vinay Shetty", title: "Co-Founder & Head of Technology", photo: "/team/vinay.png", bio: "Technology leader with 22 years of experience building scalable banking and financial services platforms, formerly with FINO." },
+  { name: "Nikhar Agrawal", title: "Co-Founder & Head of Finance", photo: "/team/nikhar.png", bio: "Finance leader with 13 years of experience across microfinance, lending, collections, BC banking, and rural financial services, formerly with Spandana, Vaya, and Suryoday." },
+  { name: "Dipanshu Rajpurohit", title: "Co-Founder & COO", photo: "/team/dipanshu.png", bio: "Business and product leader with 18 years of experience across Lendingkart, Bajaj Finance, YES Bank, and FINO Finance." },
+  { name: "Makrand Manjrekar", title: "Head, Operations Risk & Compliance", photo: "/team/mak.png", bio: "Risk and operations leader with 20 years of experience across IDBI Bank and FINO Payments Bank, specialising in risk controls, compliance, and fraud prevention." },
+  { name: "Vineet Singh", title: "Head, Collections Unit", photo: "/team/vineet.png", bio: "Collections leader with 17 years of experience across ICICI Bank, HDB, Spocto, and VGM, with deep expertise in remote collections and recovery." },
 ];
 
 export const NOMINEE_DIRECTORS = [
-  { name: "Vikas Guru", title: "Nominee Director", bio: "Ex-Cashfree, Fino Payments Bank, Bose." },
-  { name: "Ankit Kumar", title: "Nominee Director", bio: "Ex-Reliance, Rivigo, Currently at IndiFly." },
+  { name: "Vikas Guru", title: "Nominee Director", photo: "/team/vikas.png", bio: "Ex-Cashfree, Fino Payments Bank, Bose." },
+  { name: "Ankit Kumar", title: "Nominee Director", photo: "/team/ankit.png", bio: "Ex-Reliance, Rivigo, Currently at IndiFly." },
 ];
 
-export const PARTNERS = ["IIMA", "Pont", "DP", "Sarthy", "1to10", "STPI", "TGS", "SIES", "Wadhwani", "TiE"];
+export const PARTNERS = [
+  { src: "/partners/tie.png", alt: "TiE Young Entrepreneurs" },
+  { src: "/partners/wadhwani.png", alt: "Wadhwani Foundation" },
+  { src: "/partners/stpi.png", alt: "STPI" },
+  { src: "/partners/sies.png", alt: "SIES" },
+  { src: "/partners/tgs100.png", alt: "TGS100" },
+  { src: "/partners/sarthy.png", alt: "Sarthy Venture Investment Partners" },
+  { src: "/partners/pontaq.png", alt: "Pontaq" },
+  { src: "/partners/iima-ventures.png", alt: "IIMA Ventures" },
+];
 
-export const LENDERS = ["Aarti Finance", "Bharat Credit", "Sahyog NBFC", "Prayas Bank", "Uday Microfin", "Ganga Trust", "Vikas Capital", "Setu Lending"];
+export const LENDERS = [
+  { src: "/lenders/union-bank.png", alt: "Union Bank of India" },
+  { src: "/lenders/yes-bank.png", alt: "YES Bank" },
+  { src: "/lenders/bandhan-bank.png", alt: "Bandhan Bank" },
+  { src: "/lenders/kotak.png", alt: "Kotak" },
+  { src: "/lenders/suryoday.png", alt: "Suryoday Small Finance Bank" },
+  { src: "/lenders/fino.png", alt: "Fino" },
+  { src: "/lenders/tatkal-loan.png", alt: "Tatkal Loan" },
+  { src: "/lenders/happy.png", alt: "Happy" },
+  { src: "/lenders/nira.png", alt: "NIRA" },
+  { src: "/lenders/avanti-finance.png", alt: "Avanti Finance" },
+  { src: "/lenders/indusind-bank.png", alt: "IndusInd Bank" },
+  { src: "/lenders/ashirvad-microfinance.png", alt: "Ashirvad Microfinance" },
+  { src: "/lenders/smartcoin.png", alt: "SmartCoin" },
+  { src: "/lenders/paytm.png", alt: "Paytm" },
+  { src: "/lenders/kissht.png", alt: "Kissht" },
+  { src: "/lenders/piramal.png", alt: "Piramal Capital & Housing Finance" },
+];
 
 export const SUBJECTS = [
   "Partner With Us",

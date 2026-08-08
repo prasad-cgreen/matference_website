@@ -11,19 +11,24 @@ export default function PartnersInImpact() {
           Institutions, incubators, and ecosystems backing cGreen's mission across Bharat.
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
           {PARTNERS.map((p, i) => (
             <motion.div
-              key={p}
+              key={p.alt}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.4, delay: (i % 5) * 0.06 }}
-              className="glass glass-navy rounded-2xl h-24 flex items-center justify-center"
+              className="bg-white border border-[#142984]/10 rounded-2xl h-24 flex items-center justify-center px-6 shadow-sm"
               data-testid={`partner-${i}`}
             >
-              {/* logo placeholder slot */}
-              <span className="font-head text-lg text-[#142984]/80">{p}</span>
+              <img
+                src={p.src}
+                alt={p.alt}
+                className="max-h-14 max-w-[160px] w-auto h-auto object-contain"
+                loading="lazy"
+                draggable="false"
+              />
             </motion.div>
           ))}
         </div>

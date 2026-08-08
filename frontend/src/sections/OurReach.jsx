@@ -159,8 +159,8 @@ export default function OurReach() {
         <div className="flex justify-center">
           <div className="relative w-full lg:w-[645px] lg:-mt-6" data-testid="reach-map">
             <img
-              src="/india-map-outlined.png"
-              alt="cGreen network reach across India — Maharashtra, Uttar Pradesh, Assam"
+              src="/india-map-final.png"
+              alt="cGreen network reach across India, with Maharashtra, Uttar Pradesh and Assam highlighted"
               className="w-full h-auto select-none"
               draggable="false"
             />

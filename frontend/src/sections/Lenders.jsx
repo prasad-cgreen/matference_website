@@ -13,11 +13,16 @@ export default function Lenders() {
           {row.map((l, i) => (
             <div
               key={i}
-              className="glass glass-yellow rounded-2xl h-20 min-w-[220px] flex items-center justify-center px-8"
+              className="bg-white border border-[#142984]/10 rounded-2xl h-20 min-w-[220px] flex items-center justify-center px-8 shadow-sm"
               data-testid={`lender-${i}`}
             >
-              {/* lender logo placeholder */}
-              <span className="font-head text-base text-[#142984] whitespace-nowrap">{l}</span>
+              <img
+                src={l.src}
+                alt={l.alt}
+                className="max-h-12 max-w-[150px] w-auto h-auto object-contain"
+                loading="lazy"
+                draggable="false"
+              />
             </div>
           ))}
         </div>
