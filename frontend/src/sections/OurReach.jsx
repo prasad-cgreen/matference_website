@@ -67,20 +67,7 @@ const STATS = [
   { value: "957K+", label: "Villages", Icon: Houses },
 ];
 
-// Yellow-outlined states are baked into the map image; these are text labels
-// positioned next to each state, plus a pulsing dot inside each outline.
-const LABELS = [
-  { name: "Uttar Pradesh", left: "43%", top: "19%", tx: "-50%" },
-  { name: "Maharashtra", left: "1%", top: "57%", tx: "0" },
-  { name: "Assam", left: "82%", top: "16%", tx: "-50%" },
-];
-
-// Pulsing yellow dots sitting inside each outlined state.
-const DOTS = [
-  { name: "Uttar Pradesh", left: "43%", top: "37%" },
-  { name: "Maharashtra", left: "27%", top: "62%" },
-  { name: "Assam", left: "82%", top: "39%" },
-];
+// Yellow-outlined states are baked into the map image (no text labels or glow dots).
 
 // Fires once when `ref` first enters the viewport.
 function useInViewOnce(ref, threshold = 0.35) {
@@ -177,33 +164,6 @@ export default function OurReach() {
               className="w-full h-auto select-none"
               draggable="false"
             />
-            {DOTS.map((d) => (
-              <span
-                key={`dot-${d.name}`}
-                data-testid={`map-dot-${slug(d.name)}`}
-                aria-hidden="true"
-                className="absolute rounded-full pointer-events-none"
-                style={{
-                  left: d.left,
-                  top: d.top,
-                  width: 16,
-                  height: 16,
-                  background: "radial-gradient(circle, #FCDD15 0%, rgba(252,221,21,0.55) 55%, rgba(252,221,21,0) 78%)",
-                  boxShadow: "0 0 10px 3px rgba(252,221,21,0.8)",
-                  animation: "reach-glow-pulse 2.4s ease-in-out infinite",
-                }}
-              />
-            ))}
-            {LABELS.map((l) => (
-              <span
-                key={l.name}
-                data-testid={`map-label-${slug(l.name)}`}
-                className="absolute font-head text-sm lg:text-base font-bold text-[#142984] whitespace-nowrap"
-                style={{ left: l.left, top: l.top, transform: `translateX(${l.tx})`, textShadow: "0 1px 3px rgba(255,252,250,0.95), 0 0 7px rgba(255,252,250,0.9)" }}
-              >
-                {l.name}
-              </span>
-            ))}
           </div>
         </div>
       </div>

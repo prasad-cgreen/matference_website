@@ -136,7 +136,7 @@ export default function Navbar() {
           <button
             onClick={goPragatiKendra}
             data-testid="nav-be-pragati-kendra"
-            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-body font-medium hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
           >
             Be a Pragati Kendra
           </button>
@@ -204,7 +204,7 @@ export default function Navbar() {
           </div>
           <button
             onClick={goPragatiKendra}
-            className="w-full mt-2 px-4 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-body font-medium hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+            className="w-full mt-2 px-4 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
             data-testid="nav-be-pragati-kendra-mobile"
           >
             Be a Pragati Kendra
