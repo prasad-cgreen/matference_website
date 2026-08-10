@@ -6,6 +6,7 @@ import {
   RefreshCw, AudioLines, GitBranch, Brain, Workflow, Webhook, ShieldCheck,
   Smartphone, Footprints, ClipboardCheck, Network,
   ListChecks, Target, Gauge, TrendingUp, TrendingDown, Smile,
+  Cloud, Boxes, Zap, Lock, ClipboardList,
 } from "lucide-react";
 
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -66,6 +67,14 @@ const GROUPS = [
   },
 ];
 
+const STRIP = [
+  { label: "Cloud Native", Icon: Cloud },
+  { label: "Microservices", Icon: Boxes },
+  { label: "Real-Time Processing", Icon: Zap },
+  { label: "Bank-Grade Security", Icon: Lock },
+  { label: "Audit Trails", Icon: ClipboardList },
+];
+
 const YELLOW_GLASS = {
   background: "rgba(252,221,21,0.38)",
   backdropFilter: "blur(18px)",
@@ -73,6 +82,21 @@ const YELLOW_GLASS = {
   border: "1px solid rgba(252,221,21,0.65)",
   boxShadow: "inset 0 1px 1px rgba(255,255,255,0.45), 0 12px 40px rgba(20,41,132,0.10)",
 };
+
+// Static right-pointing connector arrow that lives inside a 24px grid gap.
+function Arrow({ side }) {
+  const pos = side === "right" ? { right: -24 } : { left: -24 };
+  return (
+    <span
+      aria-hidden="true"
+      data-testid={`platform-arrow-${side}`}
+      style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: 24, height: 14, display: "flex", alignItems: "center", zIndex: 5, pointerEvents: "none", ...pos }}
+    >
+      <span style={{ flex: 1, height: 2, background: "#FCDD15" }} />
+      <span style={{ width: 0, height: 0, borderTop: "7px solid transparent", borderBottom: "7px solid transparent", borderLeft: "14px solid #FCDD15" }} />
+    </span>
+  );
+}
 
 function StdCard({ item, highlighted, onEnter, onLeave, onClick }) {
   return (
@@ -86,18 +110,13 @@ function StdCard({ item, highlighted, onEnter, onLeave, onClick }) {
       style={{
         borderRadius: 14,
         padding: "16px 20px",
-        ...(highlighted
-          ? YELLOW_GLASS
-          : { background: "#FFFCFA", border: "1px solid rgba(20,41,132,0.14)" }),
+        ...(highlighted ? YELLOW_GLASS : { background: "#FFFCFA", border: "1px solid rgba(20,41,132,0.14)" }),
       }}
     >
-      <span
-        className="shrink-0 flex items-center justify-center"
-        style={{ width: 44, height: 44, borderRadius: 9999, background: "rgba(20,41,132,0.08)", border: "1px solid rgba(20,41,132,0.2)" }}
-      >
+      <span className="shrink-0 flex items-center justify-center" style={{ width: 44, height: 44, borderRadius: 9999, background: "rgba(20,41,132,0.08)", border: "1px solid rgba(20,41,132,0.2)" }}>
         <item.Icon size={22} strokeWidth={1.8} color="#142984" />
       </span>
-      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 17, color: "#142984" }}>
+      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 17, lineHeight: 1.25, color: "#142984" }}>
         {item.label}
       </span>
     </button>
@@ -118,21 +137,18 @@ function HeroCard({ item, hot }) {
         border: hot ? "1px solid rgba(252,221,21,0.7)" : "1px solid rgba(252,221,21,0.35)",
       }}
     >
-      <span
-        className="shrink-0 flex items-center justify-center"
-        style={{ width: 44, height: 44, borderRadius: 9999, background: "rgba(252,221,21,0.15)", border: "1px solid #FCDD15" }}
-      >
+      <span className="shrink-0 flex items-center justify-center" style={{ width: 44, height: 44, borderRadius: 9999, background: "rgba(252,221,21,0.15)", border: "1px solid #FCDD15" }}>
         <item.Icon size={22} strokeWidth={1.8} color="#FCDD15" />
       </span>
-      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 17, color: "#FFFCFA" }}>
+      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 17, lineHeight: 1.25, color: "#FFFCFA" }}>
         {item.label}
       </span>
     </div>
   );
 }
 
-// Standard group (Stakeholders / Inputs / Execution / Outputs) with box + section hover.
-function StdGroup({ group, isDesktop }) {
+// Standard column (Stakeholders / Inputs / Execution / Outputs). Box + section hover.
+function StdGroup({ group, isDesktop, arrows }) {
   const [hi, setHi] = useState({ kind: "none", id: null });
   const sectionOn = hi.kind === "group";
 
@@ -141,10 +157,9 @@ function StdGroup({ group, isDesktop }) {
   const cardEnter = (id) => isDesktop && setHi({ kind: "card", id });
   const cardLeave = () => isDesktop && setHi({ kind: "group" });
 
-  // Touch: tap-to-toggle
   const tapGroup = (e) => {
     if (isDesktop) return;
-    if (e.target !== e.currentTarget) return; // only bare padding/header taps
+    if (e.target !== e.currentTarget) return;
     setHi((p) => (p.kind === "group" ? { kind: "none" } : { kind: "group" }));
   };
   const tapCard = (id) => (e) => {
@@ -159,18 +174,16 @@ function StdGroup({ group, isDesktop }) {
       onMouseEnter={groupEnter}
       onMouseLeave={groupLeave}
       onClick={tapGroup}
-      className="flex-1 min-w-0 self-start transition-all duration-200"
+      className="relative flex flex-col transition-all duration-200"
       style={{
         borderRadius: 24,
         padding: 28,
         ...(sectionOn ? YELLOW_GLASS : { background: "rgba(20,41,132,0.05)", border: "1px solid rgba(20,41,132,0.18)" }),
       }}
     >
-      <h4
-        onClick={tapGroup}
-        className="text-center mb-6"
-        style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: 2, textTransform: "uppercase", color: "#142984" }}
-      >
+      {arrows?.left && isDesktop && <Arrow side="left" />}
+      {arrows?.right && isDesktop && <Arrow side="right" />}
+      <h4 onClick={tapGroup} className="text-center mb-6" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: 2, textTransform: "uppercase", color: "#142984" }}>
         {group.title}
       </h4>
       <div className="flex flex-col gap-4">
@@ -189,52 +202,65 @@ function StdGroup({ group, isDesktop }) {
   );
 }
 
-// Intelligence Layer — permanent navy hero styling; single hover zone for whole column.
-function HeroGroup({ group, hot, onEnter, onLeave, onClick, isDesktop }) {
+// Intelligence Layer — permanent navy hero. Single hover zone for the whole column.
+// NOTE: no position/transform/overflow on this container (preserves card backdrop-filter).
+function HeroGroup({ group, hot, onEnter, onLeave, onClick }) {
   return (
     <div
       data-testid={`platform-group-${group.key}`}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       onClick={onClick}
-      className="self-start transition-all duration-200"
+      className="flex flex-col transition-all duration-200"
       style={{
-        flex: isDesktop ? "1.15 1 0" : "1 1 auto",
-        minWidth: 0,
         borderRadius: 28,
         padding: 28,
-        paddingBottom: isDesktop ? 60 : 28, // 32px overhang below the other groups (desktop)
+        paddingBottom: 60, // +32px extension below the standard columns
         background: "#142984",
         border: hot ? "2px solid #FFE96B" : "2px solid #FCDD15",
       }}
     >
-      <h4
-        className="text-center mb-6"
-        style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: 2, textTransform: "uppercase", color: "#FCDD15" }}
-      >
+      <h4 className="text-center mb-6" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: 2, textTransform: "uppercase", color: "#FCDD15" }}>
         {group.title}
       </h4>
       <div className="flex flex-col gap-4">
-        {group.items.map((it) => (
-          <HeroCard key={it.label} item={it} hot={hot} />
-        ))}
+        {group.items.map((it) => (<HeroCard key={it.label} item={it} hot={hot} />))}
       </div>
     </div>
   );
 }
 
-function LoopVideo({ visible, style, testid }) {
+function LoopVideo({ visible, style }) {
   return (
     <video
-      data-testid={testid}
+      data-testid="platform-loop-video"
       src="/infinity_loop.webm"
-      autoPlay
-      muted
-      loop
-      playsInline
-      style={{ opacity: visible ? 1 : 0, transition: "opacity 150ms ease", ...style }}
+      autoPlay muted loop playsInline
       aria-hidden="true"
+      style={{ opacity: visible ? 1 : 0, transition: "opacity 150ms ease", pointerEvents: "none", ...style }}
     />
+  );
+}
+
+function BottomStrip() {
+  return (
+    <div
+      data-testid="platform-bottom-strip"
+      style={{ marginTop: 48, borderRadius: 24, border: "1px solid rgba(20,41,132,0.18)", background: "rgba(20,41,132,0.05)", padding: 24 }}
+      className="flex flex-col sm:flex-row sm:items-stretch"
+    >
+      {STRIP.map((it, i) => (
+        <div
+          key={it.label}
+          data-testid={`platform-strip-${slug(it.label)}`}
+          className="flex-1 flex items-center justify-center gap-3 py-3 sm:py-0"
+          style={i > 0 ? { borderLeft: "1px solid rgba(20,41,132,0.15)" } : undefined}
+        >
+          <it.Icon size={26} strokeWidth={1.8} color="#142984" />
+          <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 16, color: "#142984" }}>{it.label}</span>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -242,52 +268,50 @@ export default function PlatformGrid() {
   const isDesktop = useIsDesktop(900);
   const [heroHot, setHeroHot] = useState(false);
 
-  const heroGroup = GROUPS.find((g) => g.hero);
-  const stdGroups = GROUPS.filter((g) => !g.hero); // stakeholders, inputs, execution, outputs
-
+  const g = Object.fromEntries(GROUPS.map((x) => [x.key, x]));
   const heroEnter = () => isDesktop && setHeroHot(true);
   const heroLeave = () => isDesktop && setHeroHot(false);
   const heroTap = () => { if (!isDesktop) setHeroHot((v) => !v); };
 
   const hero = (
-    <HeroGroup
-      group={heroGroup}
-      hot={heroHot}
-      isDesktop={isDesktop}
-      onEnter={heroEnter}
-      onLeave={heroLeave}
-      onClick={heroTap}
-    />
+    <HeroGroup group={g.intelligence} hot={heroHot} onEnter={heroEnter} onLeave={heroLeave} onClick={heroTap} />
   );
 
   if (isDesktop) {
-    // Row: G1 G2 [Intelligence] [150px gutter+loop] G4 G5
     return (
-      <div className="flex flex-row items-start gap-5" data-testid="platform-grid">
-        <StdGroup group={stdGroups[0]} isDesktop={isDesktop} />
-        <StdGroup group={stdGroups[1]} isDesktop={isDesktop} />
-        {hero}
-        {/* fixed 150px gutter, always present; loop fades in on hero hover */}
-        <div className="shrink-0 flex items-center justify-center relative" style={{ width: 150, alignSelf: "stretch" }} data-testid="platform-loop-gutter">
-          <LoopVideo visible={heroHot} testid="platform-loop-video" style={{ height: 130, width: "auto" }} />
+      <>
+        <div
+          data-testid="platform-grid"
+          style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr)", gap: 24, alignItems: "stretch" }}
+        >
+          <StdGroup group={g.stakeholders} isDesktop arrows={{ right: true }} />
+          <StdGroup group={g.inputs} isDesktop arrows={{ right: true }} />
+          {hero}
+          <StdGroup group={g.execution} isDesktop arrows={{ left: true, right: true }} />
+          <StdGroup group={g.outputs} isDesktop />
+          {/* Loop video: sibling anchored to the grid wrapper (outside the Intelligence column),
+              sitting just right of column 3, vertically near the ML Scoring row. */}
+          <LoopVideo visible={heroHot} style={{ position: "absolute", left: "60.5%", top: "50%", transform: "translateY(-50%)", width: 150, height: 130 }} />
         </div>
-        <StdGroup group={stdGroups[2]} isDesktop={isDesktop} />
-        <StdGroup group={stdGroups[3]} isDesktop={isDesktop} />
-      </div>
+        <BottomStrip />
+      </>
     );
   }
 
-  // Mobile: stack vertically, full width, 20px gap; loop gutter sits below Intelligence Layer.
+  // Mobile (<900px): single column stack, 20px gap, no arrows, loop below Intelligence column.
   return (
-    <div className="flex flex-col" style={{ gap: 20 }} data-testid="platform-grid">
-      <StdGroup group={stdGroups[0]} isDesktop={isDesktop} />
-      <StdGroup group={stdGroups[1]} isDesktop={isDesktop} />
-      {hero}
-      <div className="w-full flex items-center justify-center" data-testid="platform-loop-gutter">
-        <LoopVideo visible={heroHot} testid="platform-loop-video" style={{ height: 130, width: "auto", maxWidth: "100%" }} />
+    <>
+      <div data-testid="platform-grid" className="flex flex-col" style={{ gap: 20 }}>
+        <StdGroup group={g.stakeholders} isDesktop={false} />
+        <StdGroup group={g.inputs} isDesktop={false} />
+        {hero}
+        <div className="w-full flex items-center justify-center">
+          <LoopVideo visible={heroHot} style={{ width: "auto", height: 130, maxWidth: "100%" }} />
+        </div>
+        <StdGroup group={g.execution} isDesktop={false} />
+        <StdGroup group={g.outputs} isDesktop={false} />
       </div>
-      <StdGroup group={stdGroups[2]} isDesktop={isDesktop} />
-      <StdGroup group={stdGroups[3]} isDesktop={isDesktop} />
-    </div>
+      <BottomStrip />
+    </>
   );
 }
