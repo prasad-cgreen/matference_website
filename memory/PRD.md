@@ -318,7 +318,15 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 77 (2026-06-10) — Platform fixes (grid, arrows, bottom strip, loop) — VERIFIED (screenshots + measurements)
+## Round 78 (2026-06-10) — Platform compact / one-screen fit — VERIFIED (1440×900 measurements)
+- **Equal height reinstated** (align-items stretch); all 5 cols = 563px. Std card stacks vertically centred (flex-1 justify-center); Intelligence stays top-aligned (dominance cue).
+- **Grid** 1fr 1fr 1.4fr 1fr 1fr (hero 40% wider → 210px vs 295px). Gap 24px.
+- **Spacing shrunk**: column padding 16, card padding 10/14, card gap 8, hero overhang 16px (paddingBottom 32).
+- **Type shrunk**: headers 16px/1.5 (hero 17px), card labels 14px, strip labels 14px.
+- **Icons**: side columns standalone 20px navy (no badge); hero 32px yellow badge (bg 0.18, 2px border), icon 17px yellow.
+- **Hero contrast fix**: outer border 4px #FCDD15 + halo box-shadow 0 0 24px rgba(252,221,21,0.2); inner card bg 0.16 (hover 0.22), border 2px rgba(252,221,21,0.6) (hover 0.85). Blur preserved.
+- **Top clearance** heading→cols 24px; **cols→strip** 32px; strip padding 16, icon 24; arrows 3px line / 16px head.
+- **Fit**: heading→strip bottom = 529px (< 900). Interaction logic (hover/mutual-exclusion/loop) untouched.
 - **Columns**: rebuilt as CSS grid `minmax(0,1fr) x4 + minmax(0,1.15fr)` col3, gap 24px (only spacing), align-items stretch → cols 1/2/4/5 = 221px, col3 = 254px (exactly 15% wider), all equal height; cards stack top, leftover space at bottom; labels wrap cleanly (minmax(0,…) prevents min-content stretch).
 - **Arrows** (REVERSAL of prior "no arrows"): 4 static yellow line+triangle connectors, one per gap, vertically centred, anchored via position:relative on the std columns (col3 stays unpositioned to protect its card backdrop-filter — gap3 arrow anchored to Execution's left).
 - **Bottom capability strip** (built for first time): full-width, mt 48px, 5 items (Cloud Native / Microservices / Real-Time Processing / Bank-Grade Security / Audit Trails) with 1px vertical dividers, navy lucide icons, Inter Tight 500 16px. Static.

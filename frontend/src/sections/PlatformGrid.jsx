@@ -90,10 +90,10 @@ function Arrow({ side }) {
     <span
       aria-hidden="true"
       data-testid={`platform-arrow-${side}`}
-      style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: 24, height: 14, display: "flex", alignItems: "center", zIndex: 5, pointerEvents: "none", ...pos }}
+      style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", width: 24, height: 16, display: "flex", alignItems: "center", zIndex: 5, pointerEvents: "none", ...pos }}
     >
-      <span style={{ flex: 1, height: 2, background: "#FCDD15" }} />
-      <span style={{ width: 0, height: 0, borderTop: "7px solid transparent", borderBottom: "7px solid transparent", borderLeft: "14px solid #FCDD15" }} />
+      <span style={{ flex: 1, height: 3, background: "#FCDD15" }} />
+      <span style={{ width: 0, height: 0, borderTop: "8px solid transparent", borderBottom: "8px solid transparent", borderLeft: "16px solid #FCDD15" }} />
     </span>
   );
 }
@@ -106,17 +106,15 @@ function StdCard({ item, highlighted, onEnter, onLeave, onClick }) {
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       onClick={onClick}
-      className="w-full flex items-center gap-4 text-left transition-all duration-200"
+      className="w-full flex items-center gap-3 text-left transition-all duration-200"
       style={{
-        borderRadius: 14,
-        padding: "16px 20px",
+        borderRadius: 12,
+        padding: "10px 14px",
         ...(highlighted ? YELLOW_GLASS : { background: "#FFFCFA", border: "1px solid rgba(20,41,132,0.14)" }),
       }}
     >
-      <span className="shrink-0 flex items-center justify-center" style={{ width: 44, height: 44, borderRadius: 9999, background: "rgba(20,41,132,0.08)", border: "1px solid rgba(20,41,132,0.2)" }}>
-        <item.Icon size={22} strokeWidth={1.8} color="#142984" />
-      </span>
-      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 17, lineHeight: 1.25, color: "#142984" }}>
+      <item.Icon size={20} strokeWidth={1.8} color="#142984" className="shrink-0" />
+      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 14, lineHeight: 1.25, color: "#142984" }}>
         {item.label}
       </span>
     </button>
@@ -127,20 +125,20 @@ function HeroCard({ item, hot }) {
   return (
     <div
       data-testid={`platform-item-${slug(item.label)}`}
-      className="w-full flex items-center gap-4 transition-all duration-200"
+      className="w-full flex items-center gap-3 transition-all duration-200"
       style={{
-        borderRadius: 14,
-        padding: "16px 20px",
-        background: hot ? "rgba(255,252,250,0.14)" : "rgba(255,252,250,0.08)",
+        borderRadius: 12,
+        padding: "10px 14px",
+        background: hot ? "rgba(255,252,250,0.22)" : "rgba(255,252,250,0.16)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
-        border: hot ? "1px solid rgba(252,221,21,0.7)" : "1px solid rgba(252,221,21,0.35)",
+        border: hot ? "2px solid rgba(252,221,21,0.85)" : "2px solid rgba(252,221,21,0.6)",
       }}
     >
-      <span className="shrink-0 flex items-center justify-center" style={{ width: 44, height: 44, borderRadius: 9999, background: "rgba(252,221,21,0.15)", border: "1px solid #FCDD15" }}>
-        <item.Icon size={22} strokeWidth={1.8} color="#FCDD15" />
+      <span className="shrink-0 flex items-center justify-center" style={{ width: 32, height: 32, borderRadius: 9999, background: "rgba(252,221,21,0.18)", border: "2px solid #FCDD15" }}>
+        <item.Icon size={17} strokeWidth={1.8} color="#FCDD15" />
       </span>
-      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 17, lineHeight: 1.25, color: "#FFFCFA" }}>
+      <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 14, lineHeight: 1.25, color: "#FFFCFA" }}>
         {item.label}
       </span>
     </div>
@@ -177,16 +175,16 @@ function StdGroup({ group, isDesktop, arrows }) {
       className="relative flex flex-col transition-all duration-200"
       style={{
         borderRadius: 24,
-        padding: 28,
+        padding: 16,
         ...(sectionOn ? YELLOW_GLASS : { background: "rgba(20,41,132,0.05)", border: "1px solid rgba(20,41,132,0.18)" }),
       }}
     >
       {arrows?.left && isDesktop && <Arrow side="left" />}
       {arrows?.right && isDesktop && <Arrow side="right" />}
-      <h4 onClick={tapGroup} className="text-center mb-6" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: 2, textTransform: "uppercase", color: "#142984" }}>
+      <h4 onClick={tapGroup} className="text-center mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, letterSpacing: 1.5, textTransform: "uppercase", color: "#142984" }}>
         {group.title}
       </h4>
-      <div className="flex flex-col gap-4">
+      <div className="flex-1 flex flex-col justify-center" style={{ gap: 8 }}>
         {group.items.map((it) => (
           <StdCard
             key={it.label}
@@ -214,16 +212,17 @@ function HeroGroup({ group, hot, onEnter, onLeave, onClick }) {
       className="flex flex-col transition-all duration-200"
       style={{
         borderRadius: 28,
-        padding: 28,
-        paddingBottom: 60, // +32px extension below the standard columns
+        padding: 16,
+        paddingBottom: 32, // 16px base + 16px overhang below the standard columns
         background: "#142984",
-        border: hot ? "2px solid #FFE96B" : "2px solid #FCDD15",
+        border: hot ? "4px solid #FFE96B" : "4px solid #FCDD15",
+        boxShadow: "0 0 24px rgba(252,221,21,0.2)",
       }}
     >
-      <h4 className="text-center mb-6" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: 2, textTransform: "uppercase", color: "#FCDD15" }}>
+      <h4 className="text-center mb-4" style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 17, letterSpacing: 1.5, textTransform: "uppercase", color: "#FCDD15" }}>
         {group.title}
       </h4>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col" style={{ gap: 8 }}>
         {group.items.map((it) => (<HeroCard key={it.label} item={it} hot={hot} />))}
       </div>
     </div>
@@ -246,7 +245,7 @@ function BottomStrip() {
   return (
     <div
       data-testid="platform-bottom-strip"
-      style={{ marginTop: 48, borderRadius: 24, border: "1px solid rgba(20,41,132,0.18)", background: "rgba(20,41,132,0.05)", padding: 24 }}
+      style={{ marginTop: 32, borderRadius: 24, border: "1px solid rgba(20,41,132,0.18)", background: "rgba(20,41,132,0.05)", padding: 16 }}
       className="flex flex-col sm:flex-row sm:items-stretch"
     >
       {STRIP.map((it, i) => (
@@ -256,8 +255,8 @@ function BottomStrip() {
           className="flex-1 flex items-center justify-center gap-3 py-3 sm:py-0"
           style={i > 0 ? { borderLeft: "1px solid rgba(20,41,132,0.15)" } : undefined}
         >
-          <it.Icon size={26} strokeWidth={1.8} color="#142984" />
-          <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 16, color: "#142984" }}>{it.label}</span>
+          <it.Icon size={24} strokeWidth={1.8} color="#142984" />
+          <span style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, fontSize: 14, color: "#142984" }}>{it.label}</span>
         </div>
       ))}
     </div>
@@ -282,7 +281,7 @@ export default function PlatformGrid() {
       <>
         <div
           data-testid="platform-grid"
-          style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr) minmax(0,1fr)", gap: 24, alignItems: "stretch" }}
+          style={{ position: "relative", display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr)", gap: 24, alignItems: "stretch" }}
         >
           <StdGroup group={g.stakeholders} isDesktop arrows={{ right: true }} />
           <StdGroup group={g.inputs} isDesktop arrows={{ right: true }} />
