@@ -1,7 +1,7 @@
 import React from "react";
 
 // Gold line-art feature icons for the cGreen logo circuit diagram.
-const GOLD = "#D4A017";
+const GOLD = "#FCDD15";
 
 const p = (s) => ({
   width: s,

@@ -318,7 +318,12 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 75 (2026-06-08) — VERIFIED (testing_agent iteration_14, 100%)
+## Round 76 (2026-06-10) — Platform rebuild + font swap + AICC heading removal
+- **Platform rebuilt**: deleted old orbit diagram (PlatformDiagram.jsx removed) + all `.plat-*` CSS/keyframes (orbit spin, ambient glow, panel pulse). New `PlatformGrid.jsx`: 5 groups (Stakeholders/Inputs/Intelligence/Execution/Outputs), 28 item cards, Intelligence Layer = permanent navy hero (yellow border/header, blur cards, yellow icons, 32px overhang, 15% wider). Box-level vs section-level yellow-glass hover with mutual exclusion (glass glass-yellow recipe); Intelligence hover lightens cards + fades in 150px infinity-loop gutter video. Mobile (<900px) stacks vertically, loop gutter below Intelligence, tap-to-toggle. Existing PLATFORM h3 heading untouched. Icons = lucide (matches OrbitRings style); reused RefreshCw/AudioLines for Customer 360 / Voice AI.
+- **Font swap**: Inter Tight Light (300) → Medium (500) sitewide (body + .font-body; font-light→font-medium in ScalingWithPurpose & LifeAtCGreen; Life founding line inline 300→500). font-head (Montserrat) and the 9 feature labels (600) untouched.
+- **AICC heading removed**: deleted "COMING SOON" h2 + "A preview…" subline; set 120px gap (Platform pb-8 32px + AICC pt-[88px]).
+- **Our Services icons**: FEATURE_ICONS GOLD #D4A017 → #FCDD15 (colour only).
+- **FLAG**: `infinity_loop.webm` NOT yet uploaded — video wired to /infinity_loop.webm (hidden opacity:0 until hover); upload to /app/frontend/public/ and verify VP8-alpha transparency in live Chrome.
 - **Section reorder**: Hero → Bharat Problem → Our Services → Vision & Mission → Our Reach → Platform → AI Command Center → Our Team → Partners → Lenders → Contact → Footer. Platform split into standalone `PlatformSection.jsx` (id=platform, cream bg) inserted after Our Reach; removed from PlatformVisionMission.
 - **Our Services default tab** → "For Lending Institutions" (useState("lending")).
 - **Mission copy** updated to add "within 3 years".

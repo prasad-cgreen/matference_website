@@ -184,7 +184,7 @@ export default function ScalingWithPurpose() {
             {SERVICES_TAGLINE}
           </span>
         </div>
-        <p className="font-body font-light text-base md:text-lg text-[#142984]/80 mt-6 leading-relaxed">
+        <p className="font-body font-medium text-base md:text-lg text-[#142984]/80 mt-6 leading-relaxed">
           {SERVICES_BANNER}
         </p>
       </div>

@@ -22,7 +22,7 @@ html {
 body {
   margin: 0;
   font-family: 'Inter Tight', sans-serif;
-  font-weight: 300;
+  font-weight: 500;
   background: var(--cream);
   color: var(--navy);
   -webkit-font-smoothing: antialiased;
@@ -43,7 +43,7 @@ body {
 
 .font-body {
   font-family: 'Inter Tight', sans-serif;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 /* ---------- GLASS RECIPE ---------- */
@@ -318,55 +318,6 @@ body {
   }
 }
 
-
-/* ---------- PLATFORM DIAGRAM (Round 44) ---------- */
-@keyframes plat-orbit-spin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(360deg); }
-}
-@keyframes plat-orbit-counter {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(-360deg); }
-}
-@keyframes plat-orbit-icon {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.plat-ring   { animation: plat-orbit-spin 20s linear infinite; }
-.plat-upright{ animation: plat-orbit-counter 20s linear infinite; transform-origin: center; }
-.plat-icon   { animation: plat-orbit-icon 20s linear infinite; transform-origin: center; }
-
-/* Ambient yellow glow that chases around a panel's border */
-@property --plat-ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
-@keyframes plat-ambient { to { --plat-ang: 360deg; } }
-.plat-ambient { position: relative; }
-.plat-ambient::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 2px;
-  background: conic-gradient(from var(--plat-ang),
-    rgba(252,221,21,0) 0deg,
-    rgba(252,221,21,0) 285deg,
-    rgba(252,221,21,0.95) 330deg,
-    rgba(252,221,21,0) 360deg);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask-composite: exclude;
-  animation: plat-ambient 4.5s linear infinite;
-  pointer-events: none;
-  z-index: 2;
-}
-@keyframes plat-panel-pulse {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(252,221,21,0.9), 0 0 18px rgba(252,221,21,0.5); }
-  50%      { box-shadow: 0 0 0 2px rgba(252,221,21,1),  0 0 34px rgba(252,221,21,0.8); }
-}
-.plat-panel-hot { animation: plat-panel-pulse 1.4s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .plat-ring, .plat-upright, .plat-icon, .plat-ambient::before, .plat-panel-hot { animation: none; }
-}
 
 /* ---------- AI COMMAND CENTER (Round 50) ---------- */
 @keyframes ai-line-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }

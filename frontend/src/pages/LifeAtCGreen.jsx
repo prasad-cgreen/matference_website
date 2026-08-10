@@ -216,14 +216,14 @@ export default function LifeAtCGreen() {
           <h1 className="font-head text-4xl sm:text-5xl lg:text-6xl text-[#142984]" data-testid="life-heading">
             LIFE AT CGREEN
           </h1>
-          <p className="font-body font-light text-base md:text-lg text-[#142984]/70 mt-3">
+          <p className="font-body font-medium text-base md:text-lg text-[#142984]/70 mt-3">
             <span className="inline-block text-center px-5 py-2.5 rounded-full text-sm font-body font-bold leading-snug glass glass-yellow text-[#142984]" data-testid="life-subheading-pill">
               Moments from our Journey
             </span>
           </p>
           <p
             className="mt-4 italic text-base md:text-lg text-[#142984]/80"
-            style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 300 }}
+            style={{ fontFamily: "'Inter Tight', sans-serif", fontWeight: 500 }}
             data-testid="life-founding-line"
           >
             "CGreen commenced business from 11th Feb, 2023"
