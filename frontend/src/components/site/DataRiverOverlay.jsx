@@ -65,9 +65,10 @@ export default function DataRiverOverlay({
     const wrap = containerRef.current;
     if (!g || !wrap) return;
     const wr = wrap.getBoundingClientRect();
+    const Z = wrap.offsetWidth ? wr.width / wrap.offsetWidth : 1;
     const vh = window.innerHeight;
-    const top = wr.top + Math.min(g.Tu.y, g.Tr.y);
-    const bot = wr.top + Math.max(g.Tu.y, g.Tr.y);
+    const top = wr.top + Math.min(g.Tu.y, g.Tr.y) * Z;
+    const bot = wr.top + Math.max(g.Tu.y, g.Tr.y) * Z;
     const vis = bot > vh * 0.04 && top < vh * 0.96;
     if (vis !== inViewRef.current) {
       inViewRef.current = vis;
@@ -88,8 +89,12 @@ export default function DataRiverOverlay({
       const wr = wrap.getBoundingClientRect();
       const sr = s.getBoundingClientRect();
       const dr = d.getBoundingClientRect();
-      const S = { x: sr.left - wr.left + sr.width / 2, y: sr.top - wr.top + sr.height / 2, R: sr.width / 2 };
-      const D = { x: dr.left - wr.left + dr.width / 2, y: dr.top - wr.top + dr.height / 2, R: Math.min(dr.width, dr.height) / 2 };
+      // CSS `zoom` scales getBoundingClientRect() but NOT the px lengths we set
+      // on children — detect the zoom factor and divide measured deltas by it so
+      // the trail renders at the correct visual length/endpoints under zoom:0.85.
+      const Z = wrap.offsetWidth ? wr.width / wrap.offsetWidth : 1;
+      const S = { x: (sr.left - wr.left + sr.width / 2) / Z, y: (sr.top - wr.top + sr.height / 2) / Z, R: (sr.width / 2) / Z };
+      const D = { x: (dr.left - wr.left + dr.width / 2) / Z, y: (dr.top - wr.top + dr.height / 2) / Z, R: (Math.min(dr.width, dr.height) / 2) / Z };
       const Tu = srcAnchor(S); // blue end
       const Tr = dstAnchor(D); // purple end
 

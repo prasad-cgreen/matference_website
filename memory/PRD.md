@@ -318,7 +318,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 79 (2026-06-10) — Site zoom + Platform video + map swap — VERIFIED (testing_agent iteration_15, 100%)
+## Round 80 (2026-06-10) — Spacing + zoom trail misalignment — VERIFIED (screenshots)
+- **Reach→Platform gap**: root cause was the new v2 map PNG's built-in transparent bottom padding (1309px tall). Trimmed to content (924×870) → gap normalized (0px between sections, consistent with the rest of the page). No padding changes needed.
+- **River trails (zoom root cause)**: CSS `zoom:0.85` scales getBoundingClientRect but not the px lengths set on children → trails rendered at 0.85² (too short / endpoints off). Fixed in DataRiverOverlay.jsx by auto-detecting zoom `Z = wrap.offsetWidth ? wr.width/wrap.offsetWidth : 1` and dividing all wrap-relative S/D coords by Z; evalInView multiplies Tu/Tr.y by Z for correct play/pause. This single component renders all 3 trails (hero→city, bharat→rural, rural→services hub) so all fixed at once. Hero blue glow now sits behind the city circle and the services trail reaches the CGreen hub.
+- Checked other decorative elements: OrbitRings (hero/bharat) are CSS-positioned (scale with zoom naturally); no other JS-measured absolute decorations exist. No additional zoom breakage found.
 - **Site zoom**: `zoom: 0.85` on the App root (App.js) — applies for all visitors, all routes. Glass sections confirmed intact after zoom (backdrop blur still 18px; nav + panels render fine).
 - **Platform section**: DELETED the entire 5-column grid + all hover/mutual-exclusion JS + infinity-loop (no dead code). Replaced with a single full-bleed `<video src=/Video_Project_2.mp4 autoplay loop muted playsinline preload=auto>` (breaks out to viewport width via w-screen). Capability strip preserved and sits directly below the video (mt 32). PlatformGrid.jsx now only renders video + BottomStrip.
 - **Our Reach map**: swapped to new transparent PNG (india_map_transparent_v2) at same path /india-map-final.png — direct asset swap, no layout change.
