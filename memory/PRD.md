@@ -318,7 +318,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 78 (2026-06-10) — Platform compact / one-screen fit — VERIFIED (1440×900 measurements)
+## Round 79 (2026-06-10) — Site zoom + Platform video + map swap — VERIFIED (testing_agent iteration_15, 100%)
+- **Site zoom**: `zoom: 0.85` on the App root (App.js) — applies for all visitors, all routes. Glass sections confirmed intact after zoom (backdrop blur still 18px; nav + panels render fine).
+- **Platform section**: DELETED the entire 5-column grid + all hover/mutual-exclusion JS + infinity-loop (no dead code). Replaced with a single full-bleed `<video src=/Video_Project_2.mp4 autoplay loop muted playsinline preload=auto>` (breaks out to viewport width via w-screen). Capability strip preserved and sits directly below the video (mt 32). PlatformGrid.jsx now only renders video + BottomStrip.
+- **Our Reach map**: swapped to new transparent PNG (india_map_transparent_v2) at same path /india-map-final.png — direct asset swap, no layout change.
+- FLAGS: (a) Poster frame NOT generated (no ffmpeg/network in pod) — poster attribute omitted; video autoplays so minimal impact. (b) zoom is non-standard (Chrome/Safari/Edge; Firefox supports it recently) — transform:scale fallback available if needed. (c) Backdrop blur is a fixed px and does not scale with zoom (expected, looked fine).
 - **Equal height reinstated** (align-items stretch); all 5 cols = 563px. Std card stacks vertically centred (flex-1 justify-center); Intelligence stays top-aligned (dominance cue).
 - **Grid** 1fr 1fr 1.4fr 1fr 1fr (hero 40% wider → 210px vs 295px). Gap 24px.
 - **Spacing shrunk**: column padding 16, card padding 10/14, card gap 8, hero overhang 16px (paddingBottom 32).

@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ zoom: 0.85 }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<CGreenLanding />} />
