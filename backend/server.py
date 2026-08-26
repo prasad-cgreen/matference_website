@@ -3,7 +3,9 @@ from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import asyncio
 import logging
+import resend
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
@@ -27,6 +29,62 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# ---------- Email (Resend) ----------
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
+NOTIFY_EMAIL = os.environ.get('NOTIFY_EMAIL', 'info@cgreen.in')
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
+
+
+def _esc(v):
+    return (str(v).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+
+def _lead_email_html(sub):
+    rows = [
+        ("First Name", sub.first_name),
+        ("Last Name", sub.last_name),
+        ("Email", sub.email),
+        ("Subject", sub.subject),
+        ("Message", sub.message),
+        ("Accepted Terms", "Yes" if sub.accepted_terms else "No"),
+        ("Submitted At", sub.created_at),
+    ]
+    trs = "".join(
+        f'<tr><td style="padding:8px 12px;font-weight:600;color:#142984;'
+        f'border:1px solid #eee;background:#FFFCFA;white-space:nowrap;vertical-align:top">{_esc(l)}</td>'
+        f'<td style="padding:8px 12px;color:#333;border:1px solid #eee">{_esc(v)}</td></tr>'
+        for l, v in rows
+    )
+    return (
+        '<div style="font-family:Arial,sans-serif;color:#142984">'
+        '<h2 style="color:#142984;margin:0 0 12px">New Contact Form Submission — CGreen</h2>'
+        '<table style="border-collapse:collapse;width:100%;max-width:640px">'
+        f'{trs}</table>'
+        '<p style="color:#888;font-size:12px;margin-top:16px">Sent automatically from the cgreen.in contact form.</p>'
+        '</div>'
+    )
+
+
+async def _send_lead_email(sub):
+    if not RESEND_API_KEY:
+        logger.warning("RESEND_API_KEY not set — skipping lead email notification.")
+        return
+    params = {
+        "from": SENDER_EMAIL,
+        "to": [NOTIFY_EMAIL],
+        "reply_to": sub.email,
+        "subject": f"New Enquiry: {sub.subject} — {sub.first_name} {sub.last_name}",
+        "html": _lead_email_html(sub),
+    }
+    try:
+        result = await asyncio.to_thread(resend.Emails.send, params)
+        logger.info(f"Lead email sent to {NOTIFY_EMAIL} (id={result.get('id') if isinstance(result, dict) else result})")
+    except Exception as e:
+        logger.error(f"Failed to send lead email: {e}")
+
 
 
 # ---------- Models ----------
@@ -88,12 +146,12 @@ async def get_status_checks():
 
 @api_router.post("/contact", response_model=ContactSubmission)
 async def create_contact(input: ContactSubmissionCreate):
-    # FLAGGED — UNDECIDED: no CRM target specified in source material.
-    # We persist the lead to MongoDB so it can be retrieved later.
-    # TODO: wire to CRM / email endpoint once provided.
+    # Persist the lead to MongoDB (backup) and email a notification to info@cgreen.in.
+    # An email failure is logged but never blocks the user's confirmation.
     submission = ContactSubmission(**input.model_dump())
     await db.contact_submissions.insert_one(submission.model_dump())
     logger.info(f"New contact submission from {submission.email} — subject: {submission.subject}")
+    await _send_lead_email(submission)
     return submission
 
 

@@ -318,7 +318,12 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 82 (2026-06-10) — SEO metadata + PDF swap + AI label — VERIFIED (served-HTML curl checks)
+## Round 83 (2026-06-10) — Sitemap/robots + contact-form email + domain — VERIFIED (curl + live email send)
+- **robots.txt** + **sitemap.xml** added to /public (serve 200; sitemap lists / and /life-at-cgreen with cgreen.in URLs).
+- **Domain**: JSON-LD updated www.cgreen.in → https://cgreen.in throughout.
+- **Contact form email (Resend)**: POST /api/contact now saves to Mongo (backup) AND emails info@cgreen.in via Resend with a formatted table (First/Last Name, Email, Subject, Message, Accepted Terms, Submitted At) + reply-to = submitter. Email send is async and wrapped in try/except so a failure NEVER blocks the user's success response. Backend env: RESEND_API_KEY (set), SENDER_EMAIL, NOTIFY_EMAIL=info@cgreen.in. Verified: live send returned a Resend message id to info@cgreen.in.
+- resend==2.40.2 added to requirements.txt.
+- FLAG: cgreen.in domain NOT yet verified in Resend (DNS propagating) → SENDER currently onboarding@resend.dev, which delivers to info@cgreen.in because it's the Resend account owner. Once the domain verifies, change SENDER_EMAIL to no-reply@cgreen.in (enables sending to any recipient + better deliverability).
 - **Title** (public/index.html): "AI-Powered Loan Collections and Borrower Intelligence for Banks & NBFCs".
 - **Meta description**: exact 159-char SEO string.
 - **JSON-LD** (@graph in index.html <head>): Organization (CGreen / Matference, areaServed Bharat, keywords), WebSite, 3 Service entries (Services for Lending Institutions; One Resolution System = Pragati Kendra Network; AI-Powered Customer 360), SoftwareApplication (Platform Built for Lenders), 8 Person entries (TEAM+NOMINEE exact titles/bios), BreadcrumbList. NO AggregateRating/Review (per instruction). keywords on Org + Services.
