@@ -318,7 +318,10 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 83 (2026-06-10) — Sitemap/robots + contact-form email + domain — VERIFIED (curl + live email send)
+## Round 84 (2026-06-10) — Makrand title + Platform video swap
+- **Makrand Manjrekar title** (site.js): "Co-Founder & Head, Operations Risk & Compliance" → "Co-Founder & Head, Risk & Compliance" (title only).
+- **Platform video** (PlatformGrid.jsx): src /957K_1.mp4 → /957K_3.mp4; old file deleted, no dead refs (verified). Same attributes/full-bleed/strip. New mp4 serves 200 (19.4MB). Known baked-in video text errors ("Digital Connection", "Priortised Worklists") shipped as-is per instruction.
+- FLAG (repeat): poster still NOT generatable in-env (no ffmpeg/decoder; headless won't decode) — poster attribute omitted; video autoplays.
 - **robots.txt** + **sitemap.xml** added to /public (serve 200; sitemap lists / and /life-at-cgreen with cgreen.in URLs).
 - **Domain**: JSON-LD updated www.cgreen.in → https://cgreen.in throughout.
 - **Contact form email (Resend)**: POST /api/contact now saves to Mongo (backup) AND emails info@cgreen.in via Resend with a formatted table (First/Last Name, Email, Subject, Message, Accepted Terms, Submitted At) + reply-to = submitter. Email send is async and wrapped in try/except so a failure NEVER blocks the user's success response. Backend env: RESEND_API_KEY (set), SENDER_EMAIL, NOTIFY_EMAIL=info@cgreen.in. Verified: live send returned a Resend message id to info@cgreen.in.
