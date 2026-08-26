@@ -318,7 +318,13 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 81 (2026-06-10) — Ecosystem copy + hero intro color + Makrand title + video swap — VERIFIED (screenshots)
+## Round 82 (2026-06-10) — SEO metadata + PDF swap + AI label — VERIFIED (served-HTML curl checks)
+- **Title** (public/index.html): "AI-Powered Loan Collections and Borrower Intelligence for Banks & NBFCs".
+- **Meta description**: exact 159-char SEO string.
+- **JSON-LD** (@graph in index.html <head>): Organization (CGreen / Matference, areaServed Bharat, keywords), WebSite, 3 Service entries (Services for Lending Institutions; One Resolution System = Pragati Kendra Network; AI-Powered Customer 360), SoftwareApplication (Platform Built for Lenders), 8 Person entries (TEAM+NOMINEE exact titles/bios), BreadcrumbList. NO AggregateRating/Review (per instruction). keywords on Org + Services.
+- **Privacy PDF**: /Cgreen_Privacy_Policy.pdf overwritten with new upload (footer link path unchanged) — serves 200 application/pdf.
+- **AI Command Center badge**: "COMING SOON" → "AI Command Center — In Development" (AICommandCenter.jsx, only that label).
+- No other visible copy/layout changed. index.html changes are static so carry into production build. Restarted frontend to pick up index.html.
 - **Ecosystem headers** (EcosystemFactors.jsx): "Ecosystem Advantages/Disadvantages" → "Urban Ecosystem Advantage" / "Rural Ecosystem Disadvantage" (singular, per instruction; CSS still uppercases). FLAG: singular confirmed with user.
 - **Hero intro paragraph** (HeroSection.jsx): text-[#142984]/75 → text-[#142984] (solid navy). "Hover a factor" subtext untouched.
 - **Makrand Manjrekar title** (site.js): → "Co-Founder & Head, Operations Risk & Compliance".

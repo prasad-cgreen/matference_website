@@ -328,7 +328,7 @@ export default function AICommandCenter() {
               <h3 className="font-head text-xl lg:text-2xl tracking-wide">AI COMMAND CENTER</h3>
               <p className="font-body text-xs lg:text-sm text-white/60 mt-1">Intelligence that senses, acts, and impacts what matters.</p>
             </div>
-            <span data-testid="ai-coming-soon-badge" className="shrink-0 font-head text-[11px] tracking-wider px-4 py-2 rounded-full text-[#142984]" style={{ background: "#FCDD15", boxShadow: "0 0 20px rgba(252,221,21,0.4)" }}>COMING SOON</span>
+            <span data-testid="ai-coming-soon-badge" className="shrink-0 font-head text-[11px] tracking-wider px-4 py-2 rounded-full text-[#142984]" style={{ background: "#FCDD15", boxShadow: "0 0 20px rgba(252,221,21,0.4)" }}>AI Command Center — In Development</span>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-5">
