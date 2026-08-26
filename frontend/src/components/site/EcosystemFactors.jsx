@@ -46,7 +46,7 @@ const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 // Chips are two-way synced with the orbit dots via activeLabel + onHover.
 export default function EcosystemFactors({ factors, theme = "navy", activeLabel = null, onHover, testid }) {
   const navy = theme === "navy";
-  const title = navy ? "Ecosystem Advantages" : "Ecosystem Disadvantages";
+  const title = navy ? "Urban Ecosystem Advantage" : "Rural Ecosystem Disadvantage";
   const placeholder = navy
     ? "Hover a factor to see why it strengthens urban lending."
     : "Hover a factor to see why it weakens rural lending.";

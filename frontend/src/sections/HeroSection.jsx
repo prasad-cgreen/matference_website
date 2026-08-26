@@ -55,7 +55,7 @@ export default function HeroSection() {
               <span className="absolute left-0 -bottom-1 h-2 w-full bg-[#FCDD15] -z-10 rounded" />
             </span>.
           </h1>
-          <p className="mt-6 max-w-md font-body text-base sm:text-lg text-[#142984]/75">
+          <p className="mt-6 max-w-md font-body text-base sm:text-lg text-[#142984]">
             CGreen brings lender data, digital signals, multilingual conversations and local
             execution together through an AI-powered Customer 360. It helps lenders identify whom
             to contact, how to engage and the right next step for responsible resolution.

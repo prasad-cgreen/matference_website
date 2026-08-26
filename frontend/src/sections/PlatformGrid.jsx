@@ -40,7 +40,7 @@ export default function PlatformGrid() {
       <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen max-w-none">
         <video
           data-testid="platform-video"
-          src="/Video_Project_2.mp4"
+          src="/957K_1.mp4"
           autoPlay
           loop
           muted
