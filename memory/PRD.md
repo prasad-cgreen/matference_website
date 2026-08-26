@@ -318,7 +318,11 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - "Be a Pragati Kendra" font → Montserrat (font-head), desktop + mobile.
 - Our Reach map: removed all coded state text labels + pulsing glow dots (kept yellow outlines in image).
 
-## Round 84 (2026-06-10) — Makrand title + Platform video swap
+## Round 85 (2026-06-10) — Life at CGreen 2026/2025 rows + picnic cover — VERIFIED (screenshots)
+- 2026 row: removed Cultural Event box; remaining Picnic + Team Photos reflow to 2 even columns (cat grid → grid-cols-1 sm:grid-cols-2).
+- 2025 row: 3 "Coming soon" boxes replaced by a single full-width pool box "2025 Highlights" matching 2024/2023 exactly.
+- Picnic cover: GalleryBox gains optional `cover` prop; picnic cover = PICNIC[1] (2nd carousel image). "11 photos" + carousel unchanged.
+- FLAG: picnic cover photo has a burned-in "01 August 2026 13:42" timestamp watermark (shipped per instruction; crop/edit needed later if undesired).
 - **Makrand Manjrekar title** (site.js): "Co-Founder & Head, Operations Risk & Compliance" → "Co-Founder & Head, Risk & Compliance" (title only).
 - **Platform video** (PlatformGrid.jsx): src /957K_1.mp4 → /957K_3.mp4; old file deleted, no dead refs (verified). Same attributes/full-bleed/strip. New mp4 serves 200 (19.4MB). Known baked-in video text errors ("Digital Connection", "Priortised Worklists") shipped as-is per instruction.
 - FLAG (repeat): poster still NOT generatable in-env (no ffmpeg/decoder; headless won't decode) — poster attribute omitted; video autoplays.

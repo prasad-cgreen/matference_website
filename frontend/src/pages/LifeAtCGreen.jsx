@@ -12,26 +12,18 @@ const TIMELINE = [
     year: "2026",
     type: "cat",
     cats: [
-      { key: "picnic", label: "Picnic", images: PICNIC },
-      { key: "cultural", label: "Cultural Event", images: [] },
+      { key: "picnic", label: "Picnic", images: PICNIC, cover: PICNIC[1] },
       { key: "team", label: "Team Photos", images: [] },
     ],
   },
-  {
-    year: "2025",
-    type: "cat",
-    cats: [
-      { key: "business", label: "Business Events", images: [] },
-      { key: "cultural", label: "Cultural Event", images: [] },
-      { key: "team", label: "Team Photos", images: [] },
-    ],
-  },
+  { year: "2025", type: "pool", label: "Highlights", images: [] },
   { year: "2024", type: "pool", label: "Highlights", images: [] },
   { year: "2023", type: "pool", label: "Highlights", images: [] },
 ];
 
-function GalleryBox({ label, images, wide, onOpen, testid }) {
+function GalleryBox({ label, images, wide, cover, onOpen, testid }) {
   const hasPhotos = images.length > 0;
+  const coverSrc = cover || images[0];
   return (
     <button
       type="button"
@@ -42,7 +34,7 @@ function GalleryBox({ label, images, wide, onOpen, testid }) {
       <div className={`relative w-full overflow-hidden ${wide ? "aspect-[16/6]" : "aspect-[4/3]"}`}>
         {hasPhotos ? (
           <img
-            src={images[0]}
+            src={coverSrc}
             alt={label}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
@@ -261,7 +253,7 @@ export default function LifeAtCGreen() {
                 </div>
                 <div className="flex-1 min-w-0">
                   {block.type === "cat" ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       {block.cats.map((c, ci) => (
                         <motion.div
                           key={c.key}
@@ -273,6 +265,7 @@ export default function LifeAtCGreen() {
                           <GalleryBox
                             label={c.label}
                             images={c.images}
+                            cover={c.cover}
                             onOpen={(label, images) => open(`${block.year} — ${label}`, images)}
                             testid={`gallery-box-${block.year}-${c.key}`}
                           />
