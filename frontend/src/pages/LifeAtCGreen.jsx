@@ -9,6 +9,9 @@ const PICNIC = Array.from({ length: 11 }, (_, i) => `/life/picnic/picnic-${i + 1
 
 const DURATION = 7; // seconds — pulse travels the full spine once per loop
 
+const YEAR_BLOCK = { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.25 }, transition: { duration: 0.6, ease: "easeOut" } };
+const BOX_REVEAL = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 } };
+
 const TIMELINE = [
   {
     year: "2026",
@@ -244,10 +247,7 @@ export default function LifeAtCGreen() {
                 key={block.year}
                 className="flex items-start gap-6 md:gap-10"
                 data-testid={`year-block-${block.year}`}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+                {...YEAR_BLOCK}
               >
                 <div className="shrink-0 w-20 flex justify-center">
                   <YearNode year={block.year} glowStyle={glowStyleFor(block.year)} />
@@ -258,9 +258,7 @@ export default function LifeAtCGreen() {
                       {block.cats.map((c, ci) => (
                         <motion.div
                           key={c.key}
-                          initial={{ opacity: 0, y: 24 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.3 }}
+                          {...BOX_REVEAL}
                           transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 + ci * 0.12 }}
                         >
                           <GalleryBox
@@ -275,9 +273,7 @@ export default function LifeAtCGreen() {
                     </div>
                   ) : (
                     <motion.div
-                      initial={{ opacity: 0, y: 24 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.3 }}
+                      {...BOX_REVEAL}
                       transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
                     >
                       <GalleryBox

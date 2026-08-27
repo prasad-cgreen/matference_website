@@ -62,7 +62,7 @@ export default function ContactUs() {
       setForm(EMPTY);
       setTerms(false);
     } catch (err) {
-      console.error(err);
+      if (process.env.NODE_ENV === "development") console.error(err);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);

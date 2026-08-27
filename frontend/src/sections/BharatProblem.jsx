@@ -6,6 +6,8 @@ import EcosystemFactors, { RURAL_FACTORS } from "@/components/site/EcosystemFact
 import { RURAL_ORBIT, BHARAT_COPY } from "@/data/site";
 import { useIsDesktop } from "@/hooks/useResponsive";
 
+const CARD_REVEAL = { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 }, transition: { duration: 0.8 } };
+
 export default function BharatProblem() {
   const ref = useRef(null);
   const isDesktop = useIsDesktop();
@@ -46,10 +48,7 @@ export default function BharatProblem() {
 
         {/* Right: content card */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8 }}
+          {...CARD_REVEAL}
           className="glass glass-yellow rounded-[28px] p-8 lg:p-10"
           data-testid="bharat-card"
         >

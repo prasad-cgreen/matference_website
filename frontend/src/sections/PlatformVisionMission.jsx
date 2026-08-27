@@ -10,6 +10,10 @@ const AUDIENCE_BOXES = [
   { id: "cgreen", hex: "#142984", Icon: Network, heading: "For CGreen", body: "A collections-first operating network that can support a wider range of lender and customer services over time." },
 ];
 
+const FADE_UP = { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 } };
+const VISION_T = { duration: 0.7 };
+const MISSION_T = { duration: 0.7, delay: 0.15 };
+
 export default function PlatformVisionMission() {
   return (
     <section
@@ -31,10 +35,8 @@ export default function PlatformVisionMission() {
         <div className="relative max-w-6xl mx-auto">
           {/* VISION — solid navy */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7 }}
+            {...FADE_UP}
+            transition={VISION_T}
             className="relative z-10 md:w-[58%] rounded-[28px] p-8 lg:p-10"
             style={{ background: "#142984", boxShadow: "0 22px 45px -20px rgba(20,41,132,0.45)" }}
             data-testid="card-vision"
@@ -59,10 +61,8 @@ export default function PlatformVisionMission() {
 
           {/* MISSION — solid yellow, offset down-right, overlapping */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7, delay: 0.15 }}
+            {...FADE_UP}
+            transition={MISSION_T}
             className="relative z-20 md:w-[52%] md:ml-auto mt-8 md:-mt-10 rounded-[28px] p-8 lg:p-10"
             style={{ background: "#FCDD15", boxShadow: "0 22px 45px -20px rgba(20,41,132,0.35)" }}
             data-testid="card-mission"

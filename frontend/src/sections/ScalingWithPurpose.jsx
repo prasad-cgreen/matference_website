@@ -8,6 +8,8 @@ import { FEATURE_ICONS } from "@/components/site/LogoFeatureIcons";
 const ICONS = { Store, Coins, Cpu, TrendingUp, Mic, Database };
 const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 
+const CARD_SWAP = { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -16 }, transition: { duration: 0.25 } };
+
 function ServiceCard({ card }) {
   const Icon = ICONS[card.icon];
   return (
@@ -198,13 +200,7 @@ export default function ScalingWithPurpose() {
           </div>
 
           <AnimatePresence mode="wait">
-            <motion.div
-              key={`${tab}-${idx}`}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.25 }}
-            >
+            <motion.div key={`${tab}-${idx}`} {...CARD_SWAP}>
               <ServiceCard card={card} />
             </motion.div>
           </AnimatePresence>

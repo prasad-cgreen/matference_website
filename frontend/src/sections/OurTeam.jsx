@@ -4,6 +4,7 @@ import { Linkedin, User } from "lucide-react";
 import { TEAM, NOMINEE_DIRECTORS } from "@/data/site";
 
 const cardCls = "glass glass-yellow rounded-[24px] p-6";
+const CARD_REVEAL = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.2 } };
 
 function Avatar({ member }) {
   if (member.photo) {
@@ -26,9 +27,7 @@ function Avatar({ member }) {
 function TeamCard({ member, index, testidPrefix }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      {...CARD_REVEAL}
       transition={{ duration: 0.5, delay: (index % 3) * 0.08 }}
       className={cardCls}
       data-testid={`${testidPrefix}-card-${index}`}

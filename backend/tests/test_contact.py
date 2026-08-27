@@ -33,7 +33,7 @@ def test_contact_post_valid(client):
     data = r.json()
     assert data["email"] == payload["email"]
     assert data["first_name"] == payload["first_name"]
-    assert data["accepted_terms"] == True
+    assert data["accepted_terms"]
     assert "id" in data and isinstance(data["id"], str)
     assert "created_at" in data
     # Verify persisted via GET

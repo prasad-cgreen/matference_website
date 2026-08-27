@@ -404,3 +404,16 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
   - `AICommandCenter.jsx` (7): metrics `key={m.l}`, rows `key={l.text}`, alerts `key={a.title}`, stats `key={s.label}`, bar bars `key={chart.labels[i]}`, bar labels `key={l}`, waveform `key={`wave-${i}`}`.
 - **P2 cleanup (safe only)**: `ContactUs.jsx` removed debug `console.log` + outdated CRM-stub TODO comment (backend now emails via Resend). `DataRiverOverlay.jsx` flattened nested ternary `pCount = mobile ? 5 : tablet ? 9 : 15` → if/else.
 - **P2 deep refactor (DELIBERATELY MINIMAL)**: per "safe extractions only / no behavior change" + pixel-perfect constraint, large animation files (DataRiverOverlay/OrbitRings/Navbar) were NOT structurally split — extraction there risks the zoom math and continuous animations. Flagged as intentional scope decision.
+
+## Round 87 (2026-06) — Code Quality Report (2nd pass) — VERIFIED (backend pytest 10/10, frontend compiles + smoke)
+- **Python boolean (report reversed prior guidance)**: `assert data["accepted_terms"] == True` → `assert data["accepted_terms"]` (direct truthiness) in both test files. 10/10 pass.
+- **Console statements**: `ContactUs.jsx` remaining `console.error(err)` now guarded by `if (process.env.NODE_ENV === "development")`.
+- **Inline animation objects (56)**: hoisted static framer-motion prop objects to module-level constants (spread via `{...VARIANT}`, behavior-identical — no re-render/visual change):
+  - `PlatformVisionMission.jsx`: `FADE_UP` + `VISION_T`/`MISSION_T`.
+  - `BharatProblem.jsx`: `CARD_REVEAL` (incl. transition).
+  - `PartnersInImpact.jsx`: `POP_IN` (dynamic per-item delay left inline).
+  - `OurTeam.jsx`: `CARD_REVEAL` (dynamic delay inline).
+  - `ScalingWithPurpose.jsx`: `CARD_SWAP` (AnimatePresence enter/exit).
+  - `LifeAtCGreen.jsx`: `YEAR_BLOCK` + `BOX_REVEAL` (dynamic delays inline).
+- **Hook deps re-review**: `ContactUs.jsx` `onSubject` is defined INSIDE its effect (correct, no missing dep — report false positive). `use-toast.js` is shadcn boilerplate (left as-is). All other flagged effects remain correct ref/complete-dep patterns.
+- **Complexity / long-function splits (DataRiverOverlay 225L, Navbar 207L, OrbitRings Constellation, GalleryModal, DashboardBody) STILL DEFERRED**: structural extraction of the animation-engine files is held back to protect the zoom math + pixel-perfect behavior (standing "no behavior change" guardrail). Available on explicit request.

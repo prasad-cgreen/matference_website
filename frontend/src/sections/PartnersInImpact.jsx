@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PARTNERS } from "@/data/site";
 
+const POP_IN = { initial: { opacity: 0, scale: 0.9 }, whileInView: { opacity: 1, scale: 1 }, viewport: { once: true, amount: 0.2 } };
+
 export default function PartnersInImpact() {
   return (
     <section id="partners" className="relative w-full py-24 scroll-mt-24" data-testid="section-partners">
@@ -17,9 +19,7 @@ export default function PartnersInImpact() {
             return (
             <motion.div
               key={p.alt}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              {...POP_IN}
               transition={{ duration: 0.4, delay: (i % 5) * 0.06 }}
               className="bg-white border border-[#142984]/10 rounded-2xl h-24 flex items-center justify-center px-6 shadow-sm"
               data-testid={`partner-${i}`}
