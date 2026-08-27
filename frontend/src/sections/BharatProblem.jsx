@@ -57,7 +57,7 @@ export default function BharatProblem() {
             THE BHARAT PROBLEM
           </h2>
           {BHARAT_COPY.map((para, i) => (
-            <p key={i} className={`font-body text-base lg:text-lg leading-relaxed text-[#142984]/90${i > 0 ? " mt-4" : ""}`}>
+            <p key={para} className={`font-body text-base lg:text-lg leading-relaxed text-[#142984]/90${i > 0 ? " mt-4" : ""}`}>
               {para}
             </p>
           ))}

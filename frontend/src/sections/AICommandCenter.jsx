@@ -161,13 +161,13 @@ function BarChart({ chart }) {
     <div className="mt-3" data-testid="ai-infographic">
       <div className="flex items-end justify-between gap-2" style={{ height: 96 }}>
         {chart.data.map((v, i) => (
-          <div key={i} className="flex-1 flex items-end justify-center h-full">
+          <div key={chart.labels[i]} className="flex-1 flex items-end justify-center h-full">
             <div className="w-full max-w-[26px] rounded-t-md ai-bar-grow" style={{ height: `${18 + (v / max) * 78}%`, background: "linear-gradient(180deg,#FCDD15,#e9c400)", animationDelay: `${i * 90}ms` }} />
           </div>
         ))}
       </div>
       <div className="flex justify-between gap-2 mt-1.5">
-        {chart.labels.map((l, i) => (<span key={i} className="flex-1 text-center text-[9px] text-white/50">{l}</span>))}
+        {chart.labels.map((l, i) => (<span key={l} className="flex-1 text-center text-[9px] text-white/50">{l}</span>))}
       </div>
       <div className="text-[10px] text-white/40 text-center mt-1">{chart.caption}</div>
     </div>
@@ -210,7 +210,7 @@ function DashboardBody({ d, animated = true }) {
           <RiskGauge pct={d.pct} label={d.riskLabel} color={d.riskColor} animated={animated} />
           <div className="grid grid-cols-2 gap-2 w-full mt-4">
             {d.metrics.map((m, i) => (
-              <div key={i} className="rounded-xl bg-white/[0.04] border border-white/10 px-3 py-2 text-center">
+              <div key={m.l} className="rounded-xl bg-white/[0.04] border border-white/10 px-3 py-2 text-center">
                 <div className="text-[15px] font-head" style={{ color: m.c }}>{m.v}</div>
                 <div className="text-[10px] text-white/50">{m.l}</div>
               </div>
@@ -235,7 +235,7 @@ function DashboardBody({ d, animated = true }) {
           <div className="flex flex-col gap-2.5">
             {d.rows.map((l, i) => (
               <div
-                key={i}
+                key={l.text}
                 className="flex items-start gap-2.5 transition-opacity duration-500"
                 style={{ opacity: animated ? (i < visibleRows ? 1 : 0.12) : 1 }}
                 data-testid={`ai-row-${i}`}
@@ -253,7 +253,7 @@ function DashboardBody({ d, animated = true }) {
           {d.bottom === "waveform" ? (
             <>
               <div className="flex items-center justify-center gap-[3px] h-12 mt-4" data-testid="ai-waveform">
-                {WAVE.map((h, i) => (<span key={i} className="w-[3px] rounded-full" style={{ height: h, background: "rgba(252,221,21,0.7)" }} />))}
+                {WAVE.map((h, i) => (<span key={`wave-${i}`} className="w-[3px] rounded-full" style={{ height: h, background: "rgba(252,221,21,0.7)" }} />))}
               </div>
               <div className="mt-3 flex justify-end">
                 <span className="text-[11px] font-semibold px-3 py-1 rounded-full" style={{ color: "#FBBF24", background: "rgba(251,191,36,0.16)", border: "1px solid rgba(251,191,36,0.45)" }}>{d.footerTag}</span>
@@ -267,7 +267,7 @@ function DashboardBody({ d, animated = true }) {
         {/* Alerts */}
         <div className="flex flex-col gap-3" data-testid="ai-alerts">
           {d.alerts.map((a, i) => (
-            <div key={i} className={`${panel} p-4 flex gap-3 ${animated ? "ai-hover-card ai-alert-pulse" : ""}`} style={{ "--pulse-color": `${a.color}80`, animationDelay: `${i * 0.7}s` }} data-testid={`ai-alert-${i}`}>
+            <div key={a.title} className={`${panel} p-4 flex gap-3 ${animated ? "ai-hover-card ai-alert-pulse" : ""}`} style={{ "--pulse-color": `${a.color}80`, animationDelay: `${i * 0.7}s` }} data-testid={`ai-alert-${i}`}>
               <span className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ background: `${a.color}22`, border: `1px solid ${a.color}66` }}>
                 <a.Icon size={16} style={{ color: a.color }} />
               </span>
@@ -284,7 +284,7 @@ function DashboardBody({ d, animated = true }) {
       {/* Bottom stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" data-testid="ai-stat-cards">
         {d.stats.map((s, i) => (
-          <div key={i} className={`${panel} p-4 ${animated ? "ai-hover-card" : ""}`} data-testid={`ai-stat-${i}`}>
+          <div key={s.label} className={`${panel} p-4 ${animated ? "ai-hover-card" : ""}`} data-testid={`ai-stat-${i}`}>
             <div className="text-[11px] text-white/55 tracking-wide">{s.label}</div>
             <div className="font-head text-2xl mt-1"><AnimatedStatValue value={s.value} animated={animated} /></div>
             <div className="flex items-center gap-1 mt-1 text-[11px]" style={{ color: "#34D399" }}>

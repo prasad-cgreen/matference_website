@@ -38,7 +38,7 @@ class TestContact:
         data = r.json()
         assert data["email"] == payload["email"]
         assert data["first_name"] == payload["first_name"]
-        assert data["accepted_terms"] is True
+        assert data["accepted_terms"] == True
         assert "id" in data and isinstance(data["id"], str)
         assert "created_at" in data
 

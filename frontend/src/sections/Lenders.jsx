@@ -12,7 +12,7 @@ export default function Lenders() {
         <div className="marquee-track gap-5">
           {row.map((l, i) => (
             <div
-              key={i}
+              key={`${l.alt}-${i}`}
               className="bg-white border border-[#142984]/10 rounded-2xl h-20 min-w-[220px] flex items-center justify-center px-8 shadow-sm"
               data-testid={`lender-${i}`}
             >

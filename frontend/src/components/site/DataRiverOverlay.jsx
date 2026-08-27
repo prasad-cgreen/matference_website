@@ -156,7 +156,9 @@ export default function DataRiverOverlay({
 
   if (!geo) return <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }} data-testid={testid} />;
 
-  const pCount = mobile ? 5 : tablet ? 9 : 15;
+  let pCount = 15;
+  if (mobile) pCount = 5;
+  else if (tablet) pCount = 9;
   const colors = ["#CFE4FF", "#9CC2FF", "#E7DEFF", "#C9B9F5", "#DCEBFF"];
   const play = inView ? "running" : "paused";
 
@@ -207,7 +209,7 @@ export default function DataRiverOverlay({
             const col = colors[i % colors.length];
             return (
               <div
-                key={i}
+                key={`river-particle-${i}`}
                 className="absolute top-0 left-0 rounded-full"
                 style={{
                   width: `${size}px`,

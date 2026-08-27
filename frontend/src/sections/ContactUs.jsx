@@ -56,11 +56,7 @@ export default function ContactUs() {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      // FLAGGED — UNDECIDED: no CRM target provided in source material.
-      // For now we persist the lead to the backend (MongoDB) as a stub.
-      // TODO: wire submit action to the real CRM/endpoint once provided.
       const payload = { ...form, accepted_terms: terms };
-      console.log("[cGreen] contact submission (stub → backend):", payload);
       await axios.post(`${API}/contact`, payload);
       toast.success("Thanks! Your message has been received. Our team will reach out shortly.");
       setForm(EMPTY);

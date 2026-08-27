@@ -394,3 +394,13 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - Lenders marquee: 16 real logos (/lenders/*.png) in white tiles (object-contain, aspect preserved, x2 loop).
 - Partners in Impact: 8 real logos (/partners/*.png) in white tiles (md:grid-cols-4).
 - Our Reach → Coming Soon gap reduced (OurReach pb-24→pb-8, AICommandCenter pt-10→pt-6; root cause was the portrait map's built-in whitespace, fixed via crop).
+
+## Round 86 (2026-06) — Code Quality Report fixes — VERIFIED (backend pytest 10/10, frontend compiles + smoke screenshot)
+- **P0 Python is/==**: `tests/test_contact.py` + `tests/backend_test.py` — `assert data["accepted_terms"] is True` → `== True` (value equality). 10/10 tests pass.
+- **P0 React hook dep**: `LifeAtCGreen.jsx` — hoisted `const DURATION = 7` from component scope to module scope, resolving the `useLayoutEffect([])` missing-dependency warning (also used by `glowStyleFor`). No behavior change.
+  - NOTE: the other flagged hook effects (`OrbitRings` RAF loop, `useCountUp` x2, `ScalingWithPurpose` arrive-listener, `useLiveFeed`) were reviewed and are CORRECT ref-based / complete-dep patterns; the report's "missing 31+ deps" counts stable refs which must NOT be added (would restart RAF loops). Left intentionally unchanged to preserve animation behavior.
+- **P1 array-index keys** replaced with stable keys:
+  - `BharatProblem.jsx` → `key={para}`; `Lenders.jsx` → `key={`${l.alt}-${i}`}` (marquee duplicates need index disambiguation); `DataRiverOverlay.jsx` particles → `key={`river-particle-${i}`}`.
+  - `AICommandCenter.jsx` (7): metrics `key={m.l}`, rows `key={l.text}`, alerts `key={a.title}`, stats `key={s.label}`, bar bars `key={chart.labels[i]}`, bar labels `key={l}`, waveform `key={`wave-${i}`}`.
+- **P2 cleanup (safe only)**: `ContactUs.jsx` removed debug `console.log` + outdated CRM-stub TODO comment (backend now emails via Resend). `DataRiverOverlay.jsx` flattened nested ternary `pCount = mobile ? 5 : tablet ? 9 : 15` → if/else.
+- **P2 deep refactor (DELIBERATELY MINIMAL)**: per "safe extractions only / no behavior change" + pixel-perfect constraint, large animation files (DataRiverOverlay/OrbitRings/Navbar) were NOT structurally split — extraction there risks the zoom math and continuous animations. Flagged as intentional scope decision.

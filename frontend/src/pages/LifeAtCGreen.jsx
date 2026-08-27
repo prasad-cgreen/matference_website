@@ -7,6 +7,8 @@ import Footer from "@/sections/Footer";
 // Placeholder images (swapped for real photos later). Counts vary per category.
 const PICNIC = Array.from({ length: 11 }, (_, i) => `/life/picnic/picnic-${i + 1}.jpeg`);
 
+const DURATION = 7; // seconds — pulse travels the full spine once per loop
+
 const TIMELINE = [
   {
     year: "2026",
@@ -171,7 +173,6 @@ export default function LifeAtCGreen() {
 
   const timelineRef = useRef(null);
   const [markerDelays, setMarkerDelays] = useState({});
-  const DURATION = 7; // seconds — pulse travels the full spine once per loop
 
   useLayoutEffect(() => {
     const measure = () => {
