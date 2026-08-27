@@ -42,15 +42,10 @@ class TestContact:
         assert "id" in data and isinstance(data["id"], str)
         assert "created_at" in data
 
-        created_id = data["id"]
-
-        # GET list
-        r2 = api.get(f"{BASE_URL}/api/contact")
-        assert r2.status_code == 200
-        listing = r2.json()
-        assert isinstance(listing, list)
-        ids = [item["id"] for item in listing]
-        assert created_id in ids
+    def test_list_endpoint_removed(self, api):
+        # GET /api/contact was removed to avoid unauthenticated PII exposure.
+        r = api.get(f"{BASE_URL}/api/contact")
+        assert r.status_code in (404, 405)
 
     def test_invalid_email(self, api):
         payload = {

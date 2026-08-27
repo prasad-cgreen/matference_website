@@ -100,11 +100,11 @@ class StatusCheckCreate(BaseModel):
 
 
 class ContactSubmissionCreate(BaseModel):
-    first_name: str
-    last_name: str
-    email: EmailStr
-    subject: str
-    message: str
+    first_name: str = Field(..., min_length=1, max_length=100)
+    last_name: str = Field(..., min_length=1, max_length=100)
+    email: EmailStr = Field(..., max_length=254)
+    subject: str = Field(..., min_length=1, max_length=200)
+    message: str = Field(..., min_length=1, max_length=5000)
     accepted_terms: bool
 
 
@@ -155,18 +155,12 @@ async def create_contact(input: ContactSubmissionCreate):
     return submission
 
 
-@api_router.get("/contact", response_model=List[ContactSubmission])
-async def list_contacts():
-    subs = await db.contact_submissions.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
-    return subs
-
-
 app.include_router(api_router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_credentials=False,
+    allow_origins=[o.strip() for o in os.environ['CORS_ORIGINS'].split(',') if o.strip()],
     allow_methods=["*"],
     allow_headers=["*"],
 )

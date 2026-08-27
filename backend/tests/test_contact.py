@@ -36,11 +36,12 @@ def test_contact_post_valid(client):
     assert data["accepted_terms"]
     assert "id" in data and isinstance(data["id"], str)
     assert "created_at" in data
-    # Verify persisted via GET
-    listing = client.get(f"{API}/contact")
-    assert listing.status_code == 200
-    ids = [d["id"] for d in listing.json()]
-    assert data["id"] in ids
+
+
+def test_contact_list_endpoint_removed(client):
+    # GET /api/contact was removed to avoid unauthenticated PII exposure.
+    r = client.get(f"{API}/contact")
+    assert r.status_code in (404, 405)
 
 
 def test_contact_post_missing_terms(client):
@@ -79,10 +80,3 @@ def test_contact_post_invalid_email(client):
     }
     r = client.post(f"{API}/contact", json=payload)
     assert r.status_code == 422
-
-
-def test_contact_get_no_mongo_id(client):
-    r = client.get(f"{API}/contact")
-    assert r.status_code == 200
-    for d in r.json():
-        assert "_id" not in d
