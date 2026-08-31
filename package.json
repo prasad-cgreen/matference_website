@@ -1,0 +1,12 @@
+{
+  "name": "cgreen-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "node scripts/setup-local.mjs",
+    "dev": "node scripts/dev-local.mjs"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
+}

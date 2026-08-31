@@ -1,4 +1,6 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -16,10 +18,18 @@ from datetime import datetime, timezone
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+
+def required_env(name: str) -> str:
+    """Return a required setting or fail with an actionable startup error."""
+    value = os.environ.get(name, '').strip()
+    if not value:
+        raise RuntimeError(f"Required environment variable {name} is not set")
+    return value
+
 # MongoDB connection
-mongo_url = os.environ['MONGO_URL']
+mongo_url = required_env('MONGO_URL')
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[required_env('DB_NAME')]
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -160,12 +170,49 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=False,
-    allow_origins=[o.strip() for o in os.environ['CORS_ORIGINS'].split(',') if o.strip()],
+    allow_origins=[o.strip() for o in required_env('CORS_ORIGINS').split(',') if o.strip()],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
+@app.middleware("http")
+async def production_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    if request.url.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    return response
+
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+
+# The Docker image copies the compiled React application here. Keeping this
+# conditional preserves backend-only development and test workflows.
+STATIC_DIR = Path(os.environ.get('STATIC_DIR', ROOT_DIR / 'static')).resolve()
+if STATIC_DIR.is_dir():
+    static_assets = STATIC_DIR / 'static'
+    if static_assets.is_dir():
+        app.mount('/static', StaticFiles(directory=static_assets), name='static')
+
+    @app.get('/{requested_path:path}', include_in_schema=False)
+    async def serve_spa(requested_path: str):
+        candidate = (STATIC_DIR / requested_path).resolve()
+        try:
+            candidate.relative_to(STATIC_DIR)
+        except ValueError as exc:
+            raise HTTPException(status_code=404) from exc
+
+        if requested_path and candidate.is_file():
+            return FileResponse(candidate)
+
+        index_file = STATIC_DIR / 'index.html'
+        if index_file.is_file():
+            return FileResponse(index_file, headers={"Cache-Control": "no-cache"})
+        raise HTTPException(status_code=404)

@@ -15,7 +15,9 @@ import {
 } from "@/components/ui/select";
 import { SUBJECTS } from "@/data/site";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+// Production serves the frontend and API from one origin. A build-time URL is
+// still supported for deployments that host the API separately.
+const API = `${process.env.REACT_APP_BACKEND_URL || ""}/api`;
 
 const EMPTY = { first_name: "", last_name: "", email: "", subject: "", message: "" };
 
