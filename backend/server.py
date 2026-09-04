@@ -7,7 +7,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import asyncio
 import logging
+import smtplib
+import ssl
 import resend
+from email.message import EmailMessage
+from email.utils import formataddr, formatdate, make_msgid
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
@@ -28,7 +32,9 @@ def required_env(name: str) -> str:
 
 # MongoDB connection
 mongo_url = required_env('MONGO_URL')
-client = AsyncIOMotorClient(mongo_url)
+# Fail fast: the contact form must not block on an unreachable database, so the
+# driver gives up in seconds rather than sitting through its 30s default.
+client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=5000)
 db = client[required_env('DB_NAME')]
 
 app = FastAPI()
@@ -40,10 +46,28 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ---------- Email (Resend) ----------
+# ---------- Email ----------
+# Two transports are supported. SMTP (Zoho) is preferred when configured: the
+# mailbox that receives the leads is also the mailbox that sends them, so there
+# is no third-party sending domain to verify. Resend stays available as an
+# alternative for deployments that already use it.
+SMTP_HOST = os.environ.get('SMTP_HOST', '').strip()
+SMTP_PORT = int(os.environ.get('SMTP_PORT', '465'))
+SMTP_USER = os.environ.get('SMTP_USER', '').strip()
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
+# Port 465 is implicit TLS; 587 upgrades a plain connection with STARTTLS.
+SMTP_USE_SSL = os.environ.get('SMTP_USE_SSL', '').strip().lower() in ('1', 'true', 'yes') or SMTP_PORT == 465
+
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
-SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
-NOTIFY_EMAIL = os.environ.get('NOTIFY_EMAIL', 'info@cgreen.in')
+# Comma-separated, so a lead can reach more than one inbox.
+NOTIFY_EMAILS = [e.strip() for e in os.environ.get('NOTIFY_EMAIL', 'info@cgreen.in').split(',') if e.strip()]
+NOTIFY_TO = ', '.join(NOTIFY_EMAILS)
+# Zoho only accepts a From address the authenticated user owns, so the SMTP user
+# is the correct default rather than the Resend sandbox sender.
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', '').strip() or SMTP_USER or 'onboarding@resend.dev'
+SENDER_NAME = os.environ.get('SENDER_NAME', 'CGreen Website')
+
+SMTP_CONFIGURED = bool(SMTP_HOST and SMTP_USER and SMTP_PASSWORD)
 if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
 
@@ -70,7 +94,7 @@ def _lead_email_html(sub):
     )
     return (
         '<div style="font-family:Arial,sans-serif;color:#142984">'
-        '<h2 style="color:#142984;margin:0 0 12px">New Contact Form Submission — CGreen</h2>'
+        '<h2 style="color:#142984;margin:0 0 12px">New Contact Form Submission &mdash; CGreen</h2>'
         '<table style="border-collapse:collapse;width:100%;max-width:640px">'
         f'{trs}</table>'
         '<p style="color:#888;font-size:12px;margin-top:16px">Sent automatically from the cgreen.in contact form.</p>'
@@ -78,23 +102,84 @@ def _lead_email_html(sub):
     )
 
 
-async def _send_lead_email(sub):
-    if not RESEND_API_KEY:
-        logger.warning("RESEND_API_KEY not set — skipping lead email notification.")
-        return
-    params = {
-        "from": SENDER_EMAIL,
-        "to": [NOTIFY_EMAIL],
-        "reply_to": sub.email,
-        "subject": f"New Enquiry: {sub.subject} — {sub.first_name} {sub.last_name}",
-        "html": _lead_email_html(sub),
-    }
-    try:
-        result = await asyncio.to_thread(resend.Emails.send, params)
-        logger.info(f"Lead email sent to {NOTIFY_EMAIL} (id={result.get('id') if isinstance(result, dict) else result})")
-    except Exception as e:
-        logger.error(f"Failed to send lead email: {e}")
+def _lead_email_text(sub):
+    """Plain-text alternative. Mail that offers only HTML scores worse on spam filters."""
+    return (
+        "New Contact Form Submission - CGreen\n\n"
+        f"First Name: {sub.first_name}\n"
+        f"Last Name: {sub.last_name}\n"
+        f"Email: {sub.email}\n"
+        f"Subject: {sub.subject}\n"
+        f"Accepted Terms: {'Yes' if sub.accepted_terms else 'No'}\n"
+        f"Submitted At: {sub.created_at}\n\n"
+        "Message:\n"
+        f"{sub.message}\n\n"
+        "--\nSent automatically from the cgreen.in contact form.\n"
+    )
 
+
+def _lead_subject(sub):
+    return f"New Enquiry: {sub.subject} - {sub.first_name} {sub.last_name}"
+
+
+def _send_via_smtp_blocking(sub):
+    """Deliver one lead through SMTP. Runs in a worker thread; smtplib is blocking."""
+    msg = EmailMessage()
+    msg["Subject"] = _lead_subject(sub)
+    msg["From"] = formataddr((SENDER_NAME, SENDER_EMAIL))
+    msg["To"] = NOTIFY_TO
+    # Replying to the notification answers the visitor directly.
+    msg["Reply-To"] = formataddr((f"{sub.first_name} {sub.last_name}".strip(), sub.email))
+    msg["Date"] = formatdate(localtime=True)
+    msg["Message-ID"] = make_msgid(domain=SENDER_EMAIL.split("@")[-1] or None)
+    msg.set_content(_lead_email_text(sub))
+    msg.add_alternative(_lead_email_html(sub), subtype="html")
+
+    context = ssl.create_default_context()
+    if SMTP_USE_SSL:
+        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, context=context, timeout=20) as smtp:
+            smtp.login(SMTP_USER, SMTP_PASSWORD)
+            smtp.send_message(msg)
+    else:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=20) as smtp:
+            smtp.ehlo()
+            smtp.starttls(context=context)
+            smtp.ehlo()
+            smtp.login(SMTP_USER, SMTP_PASSWORD)
+            smtp.send_message(msg)
+    return msg["Message-ID"]
+
+
+async def _send_lead_email(sub) -> bool:
+    """Email one lead to NOTIFY_EMAILS. Returns whether a transport accepted it."""
+    if SMTP_CONFIGURED:
+        try:
+            message_id = await asyncio.to_thread(_send_via_smtp_blocking, sub)
+            logger.info(f"Lead email sent via SMTP to {NOTIFY_TO} (message_id={message_id})")
+            return True
+        except Exception as e:
+            logger.error(f"SMTP lead email failed: {e.__class__.__name__}: {e}")
+
+    if RESEND_API_KEY:
+        params = {
+            "from": SENDER_EMAIL,
+            "to": NOTIFY_EMAILS,
+            "reply_to": sub.email,
+            "subject": _lead_subject(sub),
+            "html": _lead_email_html(sub),
+            "text": _lead_email_text(sub),
+        }
+        try:
+            result = await asyncio.to_thread(resend.Emails.send, params)
+            logger.info(f"Lead email sent via Resend to {NOTIFY_TO} (id={result.get('id') if isinstance(result, dict) else result})")
+            return True
+        except Exception as e:
+            logger.error(f"Resend lead email failed: {e.__class__.__name__}: {e}")
+            return False
+
+    if not SMTP_CONFIGURED:
+        logger.warning("No email transport configured (set SMTP_HOST/SMTP_USER/SMTP_PASSWORD) - lead not emailed.")
+    return False
 
 
 # ---------- Models ----------
@@ -154,14 +239,30 @@ async def get_status_checks():
     return status_checks
 
 
+async def _store_submission(submission) -> bool:
+    """Best-effort MongoDB backup. A database outage must not lose a lead."""
+    try:
+        await db.contact_submissions.insert_one(submission.model_dump())
+        return True
+    except Exception as e:
+        logger.error(f"Failed to persist contact submission: {e.__class__.__name__}: {e}")
+        return False
+
+
 @api_router.post("/contact", response_model=ContactSubmission)
 async def create_contact(input: ContactSubmissionCreate):
-    # Persist the lead to MongoDB (backup) and email a notification to info@cgreen.in.
-    # An email failure is logged but never blocks the user's confirmation.
+    # The email to NOTIFY_EMAILS is what the business acts on; MongoDB is only a
+    # backup copy. Either one succeeding means the lead is not lost, so the
+    # visitor sees an error only when both fail.
     submission = ContactSubmission(**input.model_dump())
-    await db.contact_submissions.insert_one(submission.model_dump())
-    logger.info(f"New contact submission from {submission.email} — subject: {submission.subject}")
-    await _send_lead_email(submission)
+    logger.info(f"New contact submission from {submission.email} - subject: {submission.subject}")
+    emailed = await _send_lead_email(submission)
+    stored = await _store_submission(submission)
+    if not emailed and not stored:
+        raise HTTPException(
+            status_code=502,
+            detail="Unable to deliver your message right now. Please email info@cgreen.in directly.",
+        )
     return submission
 
 
