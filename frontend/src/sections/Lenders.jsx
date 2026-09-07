@@ -1,8 +1,11 @@
 import React from "react";
 import { LENDERS } from "@/data/site";
+import { useLogos } from "@/hooks/useSiteContent";
 
 export default function Lenders() {
-  const row = [...LENDERS, ...LENDERS];
+  const lenders = useLogos("lenders", LENDERS);
+  // Doubled so the marquee can loop without a visible seam.
+  const row = [...lenders, ...lenders];
   return (
     <section className="relative w-full py-16 overflow-hidden" data-testid="section-lenders">
       <div className="max-w-7xl mx-auto px-6 mb-8">

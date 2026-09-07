@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Linkedin, User } from "lucide-react";
 import { TEAM, NOMINEE_DIRECTORS } from "@/data/site";
+import { usePeople } from "@/hooks/useSiteContent";
 
 const cardCls = "glass glass-yellow rounded-[24px] p-6";
 const CARD_REVEAL = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.2 } };
@@ -69,6 +70,12 @@ function TeamCard({ member, index, testidPrefix }) {
 const subHeading = "font-head text-lg lg:text-xl tracking-[0.18em] uppercase text-[#142984] mb-6";
 
 export default function OurTeam() {
+  const team = usePeople("team", TEAM);
+  const nominees = usePeople("nominee_directors", NOMINEE_DIRECTORS);
+  // No fallback: the site has never listed advisors, and an empty list is what
+  // keeps the "Coming Soon" card below on screen.
+  const advisors = usePeople("advisors", []);
+
   return (
     <section id="team" className="relative w-full py-24 scroll-mt-24" data-testid="section-team">
       <div className="max-w-7xl mx-auto px-6">
@@ -80,25 +87,31 @@ export default function OurTeam() {
 
         <h3 className={subHeading} data-testid="managing-team-heading">Managing Team</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TEAM.map((m, i) => (
-            <TeamCard key={m.name} member={m} index={i} testidPrefix="team" />
+          {team.map((m, i) => (
+            <TeamCard key={`${m.name}-${i}`} member={m} index={i} testidPrefix="team" />
           ))}
         </div>
 
         {/* Nominee Directors On Board */}
         <h3 className={`${subHeading} mt-20`} data-testid="nominee-heading">Nominee Directors On Board</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {NOMINEE_DIRECTORS.map((m, i) => (
-            <TeamCard key={m.name} member={m} index={i} testidPrefix="nominee" />
+          {nominees.map((m, i) => (
+            <TeamCard key={`${m.name}-${i}`} member={m} index={i} testidPrefix="nominee" />
           ))}
         </div>
 
         {/* Advisors To The Board */}
         <h3 className={`${subHeading} mt-20`} data-testid="advisors-heading">Advisors To The Board</h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className={`${cardCls} flex items-center justify-center min-h-[140px]`} data-testid="advisors-coming-soon">
-            <span className="font-head text-sm tracking-wider text-[#142984]/80">Coming Soon</span>
-          </div>
+          {advisors.length === 0 ? (
+            <div className={`${cardCls} flex items-center justify-center min-h-[140px]`} data-testid="advisors-coming-soon">
+              <span className="font-head text-sm tracking-wider text-[#142984]/80">Coming Soon</span>
+            </div>
+          ) : (
+            advisors.map((m, i) => (
+              <TeamCard key={`${m.name}-${i}`} member={m} index={i} testidPrefix="advisor" />
+            ))
+          )}
         </div>
       </div>
     </section>

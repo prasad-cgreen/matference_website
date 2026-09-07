@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "@/components/site/Navbar";
@@ -12,7 +13,9 @@ const DURATION = 7; // seconds — pulse travels the full spine once per loop
 const YEAR_BLOCK = { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.25 }, transition: { duration: 0.6, ease: "easeOut" } };
 const BOX_REVEAL = { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 } };
 
-const TIMELINE = [
+// Shown until an administrator publishes albums through the admin panel. Keeping
+// it means the page never renders empty, and survives the API being unreachable.
+const FALLBACK_TIMELINE = [
   {
     year: "2026",
     type: "cat",
@@ -25,6 +28,66 @@ const TIMELINE = [
   { year: "2024", type: "pool", label: "Highlights", images: [] },
   { year: "2023", type: "pool", label: "Highlights", images: [] },
 ];
+
+const GALLERY_API = `${process.env.REACT_APP_BACKEND_URL || ""}/api/gallery`;
+
+/** Reshape admin-managed albums into the timeline this page already renders. */
+function toTimeline(albums) {
+  const byYear = new Map();
+  albums.forEach((album) => {
+    if (!album.photos || album.photos.length === 0) return;
+    if (!byYear.has(album.year)) byYear.set(album.year, []);
+    byYear.get(album.year).push(album);
+  });
+
+  return Array.from(byYear.entries())
+    .sort((a, b) => b[0].localeCompare(a[0]))
+    .map(([year, yearAlbums]) => {
+      const asCategory = (album) => ({
+        key: album.id,
+        label: album.label,
+        images: album.photos.map((photo) => photo.url),
+        cover: (album.photos.find((photo) => photo.is_cover) || album.photos[0]).url,
+      });
+      // A single album for a year reads better across the full width, which is
+      // exactly what the existing "pool" layout does.
+      if (yearAlbums.length === 1) {
+        const [only] = yearAlbums;
+        return {
+          year,
+          type: "pool",
+          label: only.label,
+          images: only.photos.map((photo) => photo.url),
+        };
+      }
+      return { year, type: "cat", cats: yearAlbums.map(asCategory) };
+    });
+}
+
+/** Published albums when there are any, otherwise the built-in photos. */
+function useTimeline() {
+  const [timeline, setTimeline] = useState(FALLBACK_TIMELINE);
+
+  useEffect(() => {
+    let cancelled = false;
+    axios
+      .get(GALLERY_API)
+      .then((response) => {
+        if (cancelled) return;
+        const built = toTimeline(response.data || []);
+        // An empty response is not a reason to blank the page.
+        if (built.length > 0) setTimeline(built);
+      })
+      .catch(() => {
+        // Offline, or the API is down: the fallback is already on screen.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return timeline;
+}
 
 function GalleryBox({ label, images, wide, cover, onOpen, testid }) {
   const hasPhotos = images.length > 0;
@@ -171,6 +234,7 @@ function GalleryModal({ data, onClose }) {
 }
 
 export default function LifeAtCGreen() {
+  const TIMELINE = useTimeline();
   const [modal, setModal] = useState(null);
   const open = (title, images) => setModal({ title, images });
 

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import Depends, FastAPI, APIRouter, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
@@ -18,9 +18,17 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 
-
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Imported only after the environment is loaded: these modules read their
+# settings at import time, so importing them any earlier would silently leave
+# the admin panel unconfigured and photo uploads pointing at the wrong path.
+import enquiries  # noqa: E402
+import gallery  # noqa: E402
+import site_content  # noqa: E402
+import security  # noqa: E402
+import storage as storage_module  # noqa: E402
 
 
 def required_env(name: str) -> str:
@@ -59,6 +67,13 @@ SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
 SMTP_USE_SSL = os.environ.get('SMTP_USE_SSL', '').strip().lower() in ('1', 'true', 'yes') or SMTP_PORT == 465
 
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
+
+# Contact-form leads are worked from the admin panel's Inbox, so the website
+# does not email them out. The transports below are left fully intact and can
+# be switched back on with CONTACT_EMAIL_ENABLED=true, but the default is off.
+CONTACT_EMAIL_ENABLED = os.environ.get(
+    'CONTACT_EMAIL_ENABLED', ''
+).strip().lower() in ('1', 'true', 'yes')
 # Comma-separated, so a lead can reach more than one inbox.
 NOTIFY_EMAILS = [e.strip() for e in os.environ.get('NOTIFY_EMAIL', 'info@cgreen.in').split(',') if e.strip()]
 NOTIFY_TO = ', '.join(NOTIFY_EMAILS)
@@ -251,12 +266,12 @@ async def _store_submission(submission) -> bool:
 
 @api_router.post("/contact", response_model=ContactSubmission)
 async def create_contact(input: ContactSubmissionCreate):
-    # The email to NOTIFY_EMAILS is what the business acts on; MongoDB is only a
-    # backup copy. Either one succeeding means the lead is not lost, so the
-    # visitor sees an error only when both fail.
+    # The stored row is what the business acts on: it is what the admin panel's
+    # Inbox reads. Email is off by default (CONTACT_EMAIL_ENABLED), so in the
+    # normal configuration a lead is kept only when the database accepts it.
     submission = ContactSubmission(**input.model_dump())
     logger.info(f"New contact submission from {submission.email} - subject: {submission.subject}")
-    emailed = await _send_lead_email(submission)
+    emailed = await _send_lead_email(submission) if CONTACT_EMAIL_ENABLED else False
     stored = await _store_submission(submission)
     if not emailed and not stored:
         raise HTTPException(
@@ -266,7 +281,146 @@ async def create_contact(input: ContactSubmissionCreate):
     return submission
 
 
+# ---------- Admin authentication ----------
+admin_router = APIRouter(prefix="/api/admin", tags=["admin"])
+
+
+class AdminLogin(BaseModel):
+    email: EmailStr = Field(..., max_length=254)
+    password: str = Field(..., min_length=1, max_length=72)
+
+
+class AdminSession(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+    email: str
+
+
+@admin_router.post("/login", response_model=AdminSession)
+async def admin_login(payload: AdminLogin, request: Request):
+    if not security.ADMIN_CONFIGURED:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="The admin panel is not configured on this server.",
+        )
+
+    key = security.client_key(request)
+    locked_for = security.throttle_check(key)
+    if locked_for:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Too many failed attempts. Try again in {locked_for} seconds.",
+        )
+
+    if not security.authenticate(payload.email, payload.password):
+        security.record_failure(key)
+        logger.warning("Failed admin login for %s from %s", payload.email, key)
+        # One message for both wrong email and wrong password: saying which was
+        # wrong would confirm whether an address is the admin account.
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password.",
+        )
+
+    security.clear_failures(key)
+    token, expires_in = security.create_access_token(security.ADMIN_EMAIL)
+    logger.info("Admin signed in: %s", security.ADMIN_EMAIL)
+    return AdminSession(access_token=token, expires_in=expires_in, email=security.ADMIN_EMAIL)
+
+
+@admin_router.get("/me")
+async def admin_me(email: str = Depends(security.require_admin)):
+    """Used by the frontend to confirm a stored token is still valid."""
+    return {"email": email}
+
+
+@admin_router.get("/system")
+async def admin_system(email: str = Depends(security.require_admin)):
+    """What the panel needs to explain itself when something is not working.
+
+    Every value here is a status, a name or a limit - never a credential - so
+    the whole response is safe to render in the browser.
+    """
+    database_error = ""
+    try:
+        # ping is the cheapest round trip that proves the driver can actually
+        # reach the server, rather than only that a client object exists.
+        await client.admin.command("ping")
+        database_ok = True
+    except Exception as exc:
+        database_ok = False
+        database_error = f"{exc.__class__.__name__}: {exc}"
+
+    if SMTP_CONFIGURED:
+        transport = "smtp"
+    elif RESEND_API_KEY:
+        transport = "resend"
+    else:
+        transport = "none"
+
+    return {
+        "database": {
+            "connected": database_ok,
+            "name": os.environ.get("DB_NAME", ""),
+            "error": database_error,
+        },
+        "email": {
+            "transport": transport,
+            "configured": transport != "none",
+            "notifications_enabled": CONTACT_EMAIL_ENABLED,
+            "sender": SENDER_EMAIL,
+            "notify": NOTIFY_EMAILS,
+        },
+        "storage": {
+            "backend": storage_module.get_storage().__class__.__name__,
+            "upload_dir": str(storage_module.UPLOAD_DIR),
+            "max_upload_mb": round(storage_module.MAX_UPLOAD_BYTES / (1024 * 1024), 1),
+        },
+        "session": {
+            "admin_email": email,
+            "token_ttl_hours": security.TOKEN_TTL_HOURS,
+            "jwt_secret_set": bool(os.environ.get("ADMIN_JWT_SECRET", "").strip()),
+        },
+    }
+
+
 app.include_router(api_router)
+app.include_router(admin_router)
+
+# Gallery routes are built against the live database handle.
+gallery_public, gallery_admin = gallery.build_routes(db)
+app.include_router(gallery_public)
+app.include_router(gallery_admin)
+app.include_router(enquiries.build_routes(db))
+
+# Editable website sections: one public read route, the rest admin-only.
+content_public, content_admin = site_content.build_routes(db)
+app.include_router(content_public)
+app.include_router(content_admin)
+
+
+@app.on_event("startup")
+async def seed_site_content():
+    """Fill empty content collections with what the website already shows.
+
+    Wrapped: a database that is not up yet must not stop the app from serving
+    the pages it can serve without one.
+    """
+    try:
+        await site_content.ensure_seeded(db)
+    except Exception as e:
+        logger.warning("Could not seed website content: %s: %s", e.__class__.__name__, e)
+
+# Uploaded photos are served from disk. This must be mounted before the SPA
+# catch-all below, or the catch-all would swallow the requests.
+_UPLOAD_DIR = storage_module.UPLOAD_DIR
+_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+app.mount(
+    storage_module.UPLOAD_URL_PREFIX,
+    StaticFiles(directory=_UPLOAD_DIR),
+    name="uploads",
+)
 
 app.add_middleware(
     CORSMiddleware,

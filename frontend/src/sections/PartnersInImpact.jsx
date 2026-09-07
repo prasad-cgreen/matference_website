@@ -1,10 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { PARTNERS } from "@/data/site";
+import { useLogos } from "@/hooks/useSiteContent";
 
 const POP_IN = { initial: { opacity: 0, scale: 0.9 }, whileInView: { opacity: 1, scale: 1 }, viewport: { once: true, amount: 0.2 } };
 
 export default function PartnersInImpact() {
+  const partners = useLogos("partners", PARTNERS);
+
   return (
     <section id="partners" className="relative w-full py-24 scroll-mt-24" data-testid="section-partners">
       <div className="max-w-7xl mx-auto px-6">
@@ -14,11 +17,11 @@ export default function PartnersInImpact() {
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
-          {PARTNERS.map((p, i) => {
+          {partners.map((p, i) => {
             const big = p.alt === "Indifly" || p.alt.startsWith("TiE");
             return (
             <motion.div
-              key={p.alt}
+              key={`${p.alt}-${i}`}
               {...POP_IN}
               transition={{ duration: 0.4, delay: (i % 5) * 0.06 }}
               className="bg-white border border-[#142984]/10 rounded-2xl h-24 flex items-center justify-center px-6 shadow-sm"

@@ -34,7 +34,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PORT=8080 \
     WEB_CONCURRENCY=1 \
-    STATIC_DIR=/app/static
+    STATIC_DIR=/app/static \
+    UPLOAD_DIR=/app/uploads
 
 WORKDIR /app
 
@@ -45,8 +46,14 @@ COPY backend/requirements.prod.txt ./requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --requirement requirements.txt
 
-COPY --chown=cgreen:cgreen backend/server.py ./server.py
+COPY --chown=cgreen:cgreen backend/server.py backend/security.py \
+     backend/storage.py backend/gallery.py ./
 COPY --from=frontend-build --chown=cgreen:cgreen /build/frontend/build ./static
+
+# Uploaded photos must live on a mounted volume: anything written inside the
+# container's own filesystem is lost on the next deploy.
+RUN mkdir -p /app/uploads && chown cgreen:cgreen /app/uploads
+VOLUME ["/app/uploads"]
 
 USER cgreen
 

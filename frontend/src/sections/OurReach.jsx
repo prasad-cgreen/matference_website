@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSection } from "@/hooks/useSiteContent";
 
 const slug = (s) => s.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
 
@@ -67,6 +68,18 @@ const STATS = [
   { value: "957K+", label: "Villages", Icon: Houses },
 ];
 
+const REACH_FALLBACK = {
+  heading: "OUR REACH",
+  subheading: "OUR FOOTPRINT IN ACTION",
+  map_image: "/india-map-final.png",
+  stats: STATS.map(({ value, label }) => ({ value, label })),
+};
+
+// The icons stay in the code: they are artwork, not content. A counter added in
+// the admin panel is matched to one by its label, and falls back to the first.
+const ICON_BY_LABEL = Object.fromEntries(STATS.map((s) => [s.label.toLowerCase(), s.Icon]));
+const iconFor = (label) => ICON_BY_LABEL[String(label).toLowerCase()] || PeopleGroup;
+
 // Yellow-outlined states are baked into the map image (no text labels or glow dots).
 
 // Fires once when `ref` first enters the viewport.
@@ -116,13 +129,14 @@ function CountUpStat({ value, start, duration = 1800 }) {
 export default function OurReach() {
   const statsRef = useRef(null);
   const started = useInViewOnce(statsRef);
+  const copy = useSection("our_reach", REACH_FALLBACK);
   return (
     <section id="reach" className="relative w-full pt-12 pb-8 bg-[#FFFCFA] scroll-mt-24" data-testid="section-reach">
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-[2fr_3fr] gap-14 items-start relative z-10">
         {/* Left column: heading, subheading pill, stat boxes */}
         <div>
           <h2 className="font-head text-3xl lg:text-4xl text-[#142984]" data-testid="reach-heading">
-            OUR REACH
+            {copy.heading}
           </h2>
 
           <div className="mt-4">
@@ -130,19 +144,19 @@ export default function OurReach() {
               data-testid="reach-subheading"
               className="inline-block text-center px-5 py-2.5 rounded-full text-sm font-body font-bold leading-snug glass glass-yellow text-[#142984]"
             >
-              OUR FOOTPRINT IN ACTION
+              {copy.subheading}
             </span>
           </div>
 
           <div className="mt-8 flex flex-col gap-4" data-testid="reach-stats" ref={statsRef}>
-            {STATS.map((s) => (
+            {copy.stats.map((s, i) => (
               <div
-                key={s.label}
+                key={`${s.label}-${i}`}
                 data-testid={`reach-stat-${slug(s.label)}`}
                 className="w-full flex items-center justify-center gap-5 px-7 py-4 rounded-[28px] glass glass-navy text-white"
               >
                 <span className="shrink-0" data-testid={`reach-stat-icon-${slug(s.label)}`}>
-                  {s.Icon && s.Icon(42)}
+                  {iconFor(s.label)(42)}
                 </span>
                 <div className="flex flex-col items-center justify-center text-center font-head leading-none">
                   <span className="text-3xl lg:text-4xl text-white tabular-nums">
@@ -159,7 +173,7 @@ export default function OurReach() {
         <div className="flex justify-center">
           <div className="relative w-full lg:w-[645px] lg:-mt-6" data-testid="reach-map">
             <img
-              src="/india-map-final.png"
+              src={copy.map_image}
               alt="cGreen network reach across India, with Maharashtra, Uttar Pradesh and Assam highlighted"
               className="w-full h-auto select-none"
               draggable="false"

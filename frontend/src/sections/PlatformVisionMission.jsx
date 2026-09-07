@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Eye, Target, Landmark, Users, Store, Network } from "lucide-react";
 import { VISION, MISSION } from "@/data/site";
+import { useSection } from "@/hooks/useSiteContent";
 
 const AUDIENCE_BOXES = [
   { id: "lenders", hex: "#7C97D6", Icon: Landmark, heading: "For Lenders", body: "Deeper district-level reach without having to create a separate physical operating infrastructure for every service." },
@@ -14,7 +15,16 @@ const FADE_UP = { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 
 const VISION_T = { duration: 0.7 };
 const MISSION_T = { duration: 0.7, delay: 0.15 };
 
+const VM_FALLBACK = {
+  heading: "VISION AND MISSION",
+  vision_title: "VISION",
+  vision_body: VISION,
+  mission_title: "MISSION",
+  mission_body: MISSION,
+};
+
 export default function PlatformVisionMission() {
+  const copy = useSection("vision_mission", VM_FALLBACK);
   return (
     <section
       className="relative w-full pt-12 pb-8 overflow-hidden bg-[#FFFCFA]"
@@ -23,7 +33,7 @@ export default function PlatformVisionMission() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header + minimal line–dot–line divider */}
         <div className="text-center mb-14">
-          <h2 className="font-head text-4xl lg:text-5xl text-[#142984]">VISION AND MISSION</h2>
+          <h2 className="font-head text-4xl lg:text-5xl text-[#142984]">{copy.heading}</h2>
           <div className="flex items-center justify-center gap-3 mt-5">
             <span className="h-px w-40 bg-[#142984]/40" />
             <span className="w-2.5 h-2.5 rounded-full bg-[#FCDD15]" />
@@ -45,9 +55,9 @@ export default function PlatformVisionMission() {
               <span className="shrink-0 w-14 h-14 rounded-full border-2 border-[#FCDD15] flex items-center justify-center">
                 <Eye size={26} strokeWidth={2} className="text-[#FCDD15]" />
               </span>
-              <h3 className="font-head text-2xl lg:text-3xl text-[#FCDD15]">VISION</h3>
+              <h3 className="font-head text-2xl lg:text-3xl text-[#FCDD15]">{copy.vision_title}</h3>
             </div>
-            <p className="font-body text-base lg:text-lg leading-relaxed text-white">{VISION}</p>
+            <p className="font-body text-base lg:text-lg leading-relaxed text-white">{copy.vision_body}</p>
 
             {/* Elbow connector to Mission (desktop only) */}
             <div className="hidden md:block absolute z-30" style={{ left: "52%", top: "100%" }}>
@@ -71,9 +81,9 @@ export default function PlatformVisionMission() {
               <span className="shrink-0 w-14 h-14 rounded-full border-2 border-[#142984] flex items-center justify-center">
                 <Target size={26} strokeWidth={2} className="text-[#142984]" />
               </span>
-              <h3 className="font-head text-2xl lg:text-3xl text-[#142984]">MISSION</h3>
+              <h3 className="font-head text-2xl lg:text-3xl text-[#142984]">{copy.mission_title}</h3>
             </div>
-            <p className="font-body text-base lg:text-lg leading-relaxed text-[#142984]">{MISSION}</p>
+            <p className="font-body text-base lg:text-lg leading-relaxed text-[#142984]">{copy.mission_body}</p>
           </motion.div>
         </div>
 
