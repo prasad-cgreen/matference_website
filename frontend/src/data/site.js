@@ -116,7 +116,7 @@ export const TEAM = [
   { name: "Nikhar Agrawal", title: "Co-Founder & Head of Finance", photo: "/team/nikhar.png", linkedin: "https://www.linkedin.com/in/nikhar-agrawal-5631b716/", bio: "Finance leader with 13 years of experience across microfinance, lending, collections, BC banking, and rural financial services, formerly with Spandana, Vaya, and Suryoday." },
   { name: "Dipanshu Rajpurohit", title: "Co-Founder & COO", photo: "/team/dipanshu.png", linkedin: "https://www.linkedin.com/in/dipanshurajpurohit/", bio: "Business and product leader with 18 years of experience across Lendingkart, Bajaj Finance, YES Bank, and FINO Finance." },
   { name: "Makrand Manjrekar", title: "Co-Founder & Head, Risk & Compliance", photo: "/team/mak.png", linkedin: "https://www.linkedin.com/in/makrand-manjrekar/", bio: "Risk and operations leader with 20 years of experience across IDBI Bank and FINO Payments Bank, specialising in risk controls, compliance, and fraud prevention." },
-  { name: "Vineet Singh", title: "Head, Collections Unit", photo: "/team/vineet.png", linkedin: "https://www.linkedin.com/in/vineet-kumar-singh-303022a7/", bio: "Collections leader with 17 years of experience across ICICI Bank, HDB, Spocto, and VGM, with deep expertise in remote collections and recovery." },
+//  { name: "Vineet Singh", title: "Head, Collections Unit", photo: "/team/vineet.png", linkedin: "https://www.linkedin.com/in/vineet-kumar-singh-303022a7/", bio: "Collections leader with 17 years of experience across ICICI Bank, HDB, Spocto, and VGM, with deep expertise in remote collections and recovery." },
 ];
 
 export const NOMINEE_DIRECTORS = [

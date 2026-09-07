@@ -75,86 +75,88 @@ export default function Navbar() {
           style={{ position: "absolute", zIndex: 0 }}
         />
         <div className="relative z-10 flex items-center justify-between">
-        {/* Logo */}
-        <button
-          onClick={() => scrollToId("hero")}
-          className="flex items-center shrink-0 pl-1"
-          data-testid="nav-logo"
-        >
-          <img src="/cgreen-logo-transparent.png" alt="cGreen" className="h-10 w-auto md:h-12" />
-        </button>
+          {/* Logo */}
+          <button
+            onClick={() => scrollToId("hero")}
+            className="flex items-center shrink-0 pl-1"
+            data-testid="nav-logo"
+          >
+            <img src="/cgreen-logo-transparent.png" alt="cGreen" className="h-10 w-auto md:h-12" />
+          </button>
 
-        {/* Center nav (desktop) */}
-        <div className="hidden lg:flex items-center gap-1">
-          {NAV.map((item) => (
-            <div
-              key={item.label}
-              className="relative"
-              onMouseEnter={() => item.dropdown && setOpenMenu(item.label)}
-              onMouseLeave={() => setOpenMenu(null)}
-            >
-              <button
-                onClick={() => !item.dropdown && handleNav(item)}
-                data-testid={`nav-${item.label.replace(/\s+/g, "-").toLowerCase()}`}
-                className="flex items-center gap-1 px-3 py-2 rounded-full text-[15px] font-body font-medium text-[#142984] hover:text-[#0d1b5c] hover:bg-white/25 transition-colors"
+          {/* Center nav (desktop) */}
+          <div className="hidden lg:flex items-center gap-1">
+            {NAV.map((item) => (
+              <div
+                key={item.label}
+                className="relative"
+                onMouseEnter={() => item.dropdown && setOpenMenu(item.label)}
+                onMouseLeave={() => setOpenMenu(null)}
               >
-                {item.label}
-                {item.dropdown && <ChevronDown size={14} className="text-[#142984]" />}
-              </button>
+                <button
+                  onClick={() => !item.dropdown && handleNav(item)}
+                  data-testid={`nav-${item.label.replace(/\s+/g, "-").toLowerCase()}`}
+                  className="flex items-center gap-1 px-3 py-2 rounded-full text-[15px] font-body font-medium text-[#142984] hover:text-[#0d1b5c] hover:bg-white/25 transition-colors"
+                >
+                  {item.label}
+                  {item.dropdown && <ChevronDown size={14} className="text-[#142984]" />}
+                </button>
 
-              {item.dropdown && openMenu === item.label && (
-                <div className="absolute left-0 top-full pt-2 z-[60]">
-                  <div className="glass glass-nav rounded-2xl p-2 min-w-[210px] shadow-xl">
-                    {item.dropdown.map((d) => (
-                      <button
-                        key={d.label}
-                        onClick={() => handleNav(d)}
-                        data-testid={`nav-drop-${d.label.replace(/\s+/g, "-").toLowerCase()}`}
-                        className="block w-full text-left px-3 py-2 rounded-xl text-sm font-body text-[#142984] hover:bg-[#142984]/10 transition-colors"
-                      >
-                        {d.label}
-                      </button>
-                    ))}
+                {item.dropdown && openMenu === item.label && (
+                  <div className="absolute left-0 top-full pt-2 z-[60]">
+                    <div className="glass glass-nav rounded-2xl p-2 min-w-[210px] shadow-xl">
+                      {item.dropdown.map((d) => (
+                        <button
+                          key={d.label}
+                          onClick={() => handleNav(d)}
+                          data-testid={`nav-drop-${d.label.replace(/\s+/g, "-").toLowerCase()}`}
+                          className="block w-full text-left px-3 py-2 rounded-xl text-sm font-body text-[#142984] hover:bg-[#142984]/10 transition-colors"
+                        >
+                          {d.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                )}
+              </div>
+            ))}
+          </div>
 
-        {/* Right CTAs */}
-        <div className="hidden md:flex items-center gap-2">
-          <a
-            href="https://newapp.cgreen.in/login"
-            data-testid="nav-login"
-            className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
-          >
-            Login
-          </a>
-          <button
-            onClick={goPragatiKendra}
-            data-testid="nav-be-pragati-kendra"
-            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
-          >
-            Be a Pragati Kendra
-          </button>
-          <button
-            onClick={goBookDemo}
-            data-testid="nav-book-demo"
-            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
-          >
-            Partner with Us
-          </button>
-        </div>
+          {/* Right CTAs */}
+          <div className="hidden md:flex items-center gap-2">
+            <a
+              href="https://newapp.cgreen.in/login"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="nav-login"
+              className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
+            >
+              Login
+            </a>
+            <button
+              onClick={goPragatiKendra}
+              data-testid="nav-be-pragati-kendra"
+              className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+            >
+              Be a Pragati Kendra
+            </button>
+            <button
+              onClick={goBookDemo}
+              data-testid="nav-book-demo"
+              className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+            >
+              Partner with Us
+            </button>
+          </div>
 
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden p-2 text-[#142984]"
-          onClick={() => setMobileOpen((v) => !v)}
-          data-testid="nav-mobile-toggle"
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+          {/* Mobile toggle */}
+          <button
+            className="md:hidden p-2 text-[#142984]"
+            onClick={() => setMobileOpen((v) => !v)}
+            data-testid="nav-mobile-toggle"
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
       </nav>
 

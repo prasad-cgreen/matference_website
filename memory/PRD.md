@@ -237,7 +237,7 @@ Within the merged services column (`ScalingWithPurpose.jsx`):
 - GalleryModal: dimmed backdrop, grid of category/pooled images, close button + click-outside + ESC, body scroll lock; handles any image count. Verified nav routing, timeline, category-specific + pooled modals, click-outside close.
 
 ## Round 64 (2026-06) — VERIFIED (screenshot)
-- OurTeam restructured into 3 sub-sections (same card design + shared TeamCard component, avatar = User icon placeholder). Our Team: 6 members (Vipir Raj Bhardwaj MD & CEO, Vinay Shetty, Dipanshu Rajpurohit COO [no bio], Nikhar Agrawal, Makrand Manjrekar, Vineet Singh); bio hidden when empty. Nominee Directors On Board: Vikas Guru, Ankit Kumar (NOMINEE_DIRECTORS in site.js). Advisors To The Board: visible "Coming Soon" card.
+- OurTeam restructured into 3 sub-sections (same card design + shared TeamCard component, avatar = User icon placeholder). Our Team: 6 members (Vipir Raj Bhardwaj MD & CEO, Vinay Shetty, Dipanshu Rajpurohit COO [no bio], Nikhar Agrawal, Makrand Manjrekar, ); bio hidden when empty. Nominee Directors On Board: Vikas Guru, Ankit Kumar (NOMINEE_DIRECTORS in site.js). Advisors To The Board: visible "Coming Soon" card.
 
 ## Round 62 (2026-06) — VERIFIED (screenshot)
 - For Lenders box #B3C9F2 → #7C97D6 (darker for legible yellow heading/white body; still lightest, lighter than For Customers #5568AD).
