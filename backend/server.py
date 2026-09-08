@@ -1,12 +1,15 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import json
 import asyncio
 import logging
+import urllib.parse
+import urllib.request
 import smtplib
 import ssl
 import resend
@@ -182,6 +185,40 @@ async def _send_lead_email(sub) -> bool:
     return False
 
 
+# ---------- CAPTCHA (Cloudflare Turnstile) ----------
+# Server-side verification of the Turnstile token. When the secret is unset the
+# check is skipped (local dev / CI without CAPTCHA configured); set it in
+# production to enforce it. The site key lives in the frontend build only.
+TURNSTILE_SECRET_KEY = os.environ.get('TURNSTILE_SECRET_KEY', '').strip()
+TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
+
+
+def _verify_turnstile_blocking(token: str, remote_ip: Optional[str] = None) -> bool:
+    """Call Cloudflare's siteverify endpoint. Runs in a worker thread (urllib is blocking)."""
+    data = {'secret': TURNSTILE_SECRET_KEY, 'response': token}
+    if remote_ip:
+        data['remoteip'] = remote_ip
+    body = urllib.parse.urlencode(data).encode()
+    try:
+        with urllib.request.urlopen(TURNSTILE_VERIFY_URL, data=body, timeout=10) as resp:
+            result = json.loads(resp.read().decode())
+    except Exception as e:
+        logger.error(f"Turnstile verification request failed: {e.__class__.__name__}: {e}")
+        return False
+    if not result.get('success'):
+        logger.warning(f"Turnstile rejected a submission: {result.get('error-codes')}")
+    return bool(result.get('success'))
+
+
+async def verify_captcha(token: str, remote_ip: Optional[str] = None) -> bool:
+    if not TURNSTILE_SECRET_KEY:
+        logger.warning("TURNSTILE_SECRET_KEY not set - skipping CAPTCHA verification.")
+        return True
+    if not token:
+        return False
+    return await asyncio.to_thread(_verify_turnstile_blocking, token, remote_ip)
+
+
 # ---------- Models ----------
 class StatusCheck(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -201,6 +238,7 @@ class ContactSubmissionCreate(BaseModel):
     subject: str = Field(..., min_length=1, max_length=200)
     message: str = Field(..., min_length=1, max_length=5000)
     accepted_terms: bool
+    captcha_token: Optional[str] = Field(default=None, max_length=4000)
 
 
 class ContactSubmission(BaseModel):
@@ -250,7 +288,13 @@ async def _store_submission(submission) -> bool:
 
 
 @api_router.post("/contact", response_model=ContactSubmission)
-async def create_contact(input: ContactSubmissionCreate):
+async def create_contact(input: ContactSubmissionCreate, request: Request):
+    client_ip = request.client.host if request.client else None
+    if not await verify_captcha(input.captcha_token or "", client_ip):
+        raise HTTPException(
+            status_code=400,
+            detail="CAPTCHA verification failed. Please complete the challenge and try again.",
+        )
     # The email to NOTIFY_EMAILS is what the business acts on; MongoDB is only a
     # backup copy. Either one succeeding means the lead is not lost, so the
     # visitor sees an error only when both fail.

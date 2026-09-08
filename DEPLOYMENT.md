@@ -49,6 +49,25 @@ but no notification is sent:
 - `NOTIFY_EMAIL`: notification recipient; defaults to `info@cgreen.in`.
   Accepts a comma-separated list to notify several inboxes.
 
+Contact-form spam protection (Cloudflare Turnstile CAPTCHA). Without these the
+form still works and the widget is hidden:
+
+- `TURNSTILE_SECRET_KEY` (runtime, backend): server-side verification secret.
+  Treat it as a secret. When set, submissions without a valid CAPTCHA token are
+  rejected with HTTP 400.
+- `REACT_APP_TURNSTILE_SITE_KEY` (build arg): the matching public site key,
+  compiled into the browser bundle:
+
+  ```sh
+  docker build \
+    --build-arg REACT_APP_TURNSTILE_SITE_KEY=your-site-key \
+    --tag cgreen-web:latest .
+  ```
+
+  Create a widget at https://dash.cloudflare.com/?to=/:account/turnstile and add
+  your production hostnames (e.g. `cgreen.in`, `www.cgreen.in`) to it. The domain
+  does not need to use Cloudflare DNS.
+
 Other optional variables:
 
 - `RESEND_API_KEY`: alternative email transport, tried only when SMTP is

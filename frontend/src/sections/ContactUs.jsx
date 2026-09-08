@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,11 @@ import { SUBJECTS } from "@/data/site";
 // still supported for deployments that host the API separately.
 const API = `${process.env.REACT_APP_BACKEND_URL || ""}/api`;
 
+// Cloudflare Turnstile ("verify you are human"). When the site key is unset
+// (e.g. a local dev environment without CAPTCHA configured) the widget is skipped
+// and submission is not blocked; the backend applies the matching rule for its secret.
+const TURNSTILE_SITE_KEY = process.env.REACT_APP_TURNSTILE_SITE_KEY || "";
+
 const EMPTY = { first_name: "", last_name: "", email: "", subject: "", message: "" };
 
 export default function ContactUs() {
@@ -26,11 +31,55 @@ export default function ContactUs() {
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const captchaRef = useRef(null);
+  const captchaWidgetId = useRef(null);
 
   const set = (k, v) => {
     setForm((f) => ({ ...f, [k]: v }));
     setErrors((e) => ({ ...e, [k]: undefined }));
   };
+
+  const resetCaptcha = () => {
+    setCaptchaToken("");
+    if (window.turnstile && captchaWidgetId.current !== null) {
+      try { window.turnstile.reset(captchaWidgetId.current); } catch { /* widget gone */ }
+    }
+  };
+
+  // Load and render the Turnstile widget once, only when a site key is configured.
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    const SCRIPT_ID = "cf-turnstile-api";
+    const renderWidget = () => {
+      if (captchaWidgetId.current !== null) return;
+      if (!window.turnstile || !window.turnstile.render || !captchaRef.current) return;
+      captchaWidgetId.current = window.turnstile.render(captchaRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: (token) => {
+          setCaptchaToken(token);
+          setErrors((e) => ({ ...e, captcha: undefined }));
+        },
+        "expired-callback": () => setCaptchaToken(""),
+        "error-callback": () => setCaptchaToken(""),
+      });
+    };
+    if (!document.getElementById(SCRIPT_ID)) {
+      const s = document.createElement("script");
+      s.id = SCRIPT_ID;
+      s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+    const poll = setInterval(() => {
+      if (window.turnstile && window.turnstile.render) {
+        clearInterval(poll);
+        renderWidget();
+      }
+    }, 200);
+    return () => clearInterval(poll);
+  }, []);
 
   // Pre-select subject when arriving via a specific CTA (e.g. "Be a Pragati Kendra").
   useEffect(() => {
@@ -49,6 +98,7 @@ export default function ContactUs() {
     if (!form.subject) e.subject = "Please select a subject";
     if (!form.message.trim()) e.message = "Required";
     if (!terms) e.terms = "You must accept the Terms & Privacy Policy";
+    if (TURNSTILE_SITE_KEY && !captchaToken) e.captcha = "Please complete the human verification";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -58,14 +108,16 @@ export default function ContactUs() {
     if (!validate()) return;
     setSubmitting(true);
     try {
-      const payload = { ...form, accepted_terms: terms };
+      const payload = { ...form, accepted_terms: terms, captcha_token: captchaToken };
       await axios.post(`${API}/contact`, payload);
       toast.success("Thanks! Your message has been received. Our team will reach out shortly.");
       setForm(EMPTY);
       setTerms(false);
+      resetCaptcha();
     } catch (err) {
       if (process.env.NODE_ENV === "development") console.error(err);
       toast.error("Something went wrong. Please try again.");
+      resetCaptcha();
     } finally {
       setSubmitting(false);
     }
@@ -161,6 +213,13 @@ export default function ContactUs() {
               {errors.terms && <p className={errCls}>{errors.terms}</p>}
             </div>
           </div>
+
+          {TURNSTILE_SITE_KEY && (
+            <div>
+              <div ref={captchaRef} data-testid="contact-captcha" />
+              {errors.captcha && <p className={errCls}>{errors.captcha}</p>}
+            </div>
+          )}
 
           <Button
             type="submit"

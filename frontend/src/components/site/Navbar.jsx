@@ -31,6 +31,10 @@ export default function Navbar() {
 
   const handleNav = (item) => {
     setMobileOpen(false);
+    if (item.newTab && (item.to || item.href)) {
+      window.open(item.to || item.href, "_blank", "noopener");
+      return;
+    }
     if (item.to) {
       navigate(item.to);
       window.scrollTo({ top: 0 });
@@ -125,7 +129,9 @@ export default function Navbar() {
         {/* Right CTAs */}
         <div className="hidden md:flex items-center gap-2">
           <a
-            href="https://newapp.cgreen.in/login"
+          target="_blank"
+            // href="https://newapp.cgreen.in/login"
+            href="https://customer360.cgreen.in/login"
             data-testid="nav-login"
             className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
           >
