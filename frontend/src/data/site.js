@@ -8,6 +8,7 @@ export const NAV = [
       { label: "About cGreen", href: "#about" },
       { label: "Our Teams", href: "#team" },
       { label: "Partners in Impact", href: "#partners" },
+      { label: "Insight", to: "/insight", newTab: true },
     ],
   },
   {
@@ -20,6 +21,53 @@ export const NAV = [
   },
   { label: "Life at CGreen", to: "/life-at-cgreen" },
   { label: "Contact Us", href: "#contact" },
+];
+
+// Insight / blog posts. Each `body` entry is one paragraph; a string that also
+// appears in `headings` is rendered as a sub-heading, and one wrapped in the
+// `quote` marker is rendered as a pull-quote.
+export const BLOG_POSTS = [
+  {
+    slug: "indifly-backs-cgreen",
+    image: "/blog/cgreen.png",
+    imageAlt:
+      "Indifly and CGreen leadership at the strategic investment signing",
+    headline:
+      "Indifly backs CGreen to build the loan resolution infrastructure Bharat's lenders don't have",
+    date: "5 September 2025",
+    dateISO: "2025-09-05",
+    author: "CGreen",
+    body: [
+      "Collections is the backbone of lending. It is also the least rebuilt part of it, still running on manual trackers, telecalling scripts and reporting systems that tell a lender an account has gone bad without ever explaining why.",
+      "With a vision to build the resolution layer Bharat's credit economy actually runs on, CGreen has raised a strategic investment from Indifly Ventures, the venture builder shaping Bharat's digital economy across financial services, commerce and digital access.",
+      "The capital will strengthen CGreen's AI and borrower intelligence platform, expand its Pragati Kendra field network into new districts, and deepen its work with banks, NBFCs, MFIs and fintech lenders operating in Tier 3 and below markets.",
+      { type: "heading", text: "The question nobody can answer" },
+      "Two borrowers miss the same EMI. One has had a bad season and genuinely cannot pay. The other can and has chosen not to. Every collections system in India today treats them identically — same bucket, same queue, same escalation — because none of them can tell the difference.",
+      "That is the whole problem. Intent and ability are two different failures requiring two different resolutions, and the industry has been guessing between them for a decade.",
+      "Digital channels don't close the gap. SMS, WhatsApp, email and IVR are excellent at establishing contact and useless the moment a borrower stops responding. Where lending is growing fastest — deep into Bharat — remote channels reach fewest and dependable ground capability is scarcest.",
+      { type: "heading", text: "What CGreen built instead" },
+      "CGreen combines AI-led case prioritisation, Voice AI, recorded borrower interactions and structured resolution workflows with something no software-only competitor has: trained local teams across 35 districts in Uttar Pradesh, Maharashtra and Assam.",
+      "When a remote channel returns nothing, someone makes contact in person, in the borrower's language — and that conversation enters the same structured record as every digital touchpoint. The lender gets an auditable trail, a reason behind every resolution decision, and the ability to restructure where restructuring works and escalate where it doesn't.",
+      "Platforms without people can't reach the borrowers who matter. People without a platform produce anecdotes instead of intelligence. CGreen is built to be both.",
+      {
+        type: "quote",
+        text: "Recovery should begin with understanding the borrower, not just the default. Give a lender the reason behind a missed payment and they get the decision right the first time instead of the fourth. That is the entire business.",
+        cite: "Vipr Raj Bhardwaj, CEO, CGreen",
+      },
+      { type: "heading", text: "Already at scale" },
+      "CGreen is empaneled with 29+ lending institutions — among them Kotak Mahindra Bank, Axis Bank, Yes Bank, Bandhan Bank, AU Small Finance Bank, Suryoday Small Finance Bank and Home Credit. Together they represent over 3 lakh borrowers and more than ₹1,350 crore in AUM under resolution, supported by a pan-India remote network alongside our on-ground presence across 35 districts.",
+      "That mix matters. Large private banks, small finance banks and consumer lenders have very different books, very different borrower profiles and very different compliance requirements. Building for all of them at once is what forced the platform to be genuinely configurable rather than one recovery playbook applied everywhere.",
+      {
+        type: "quote",
+        text: "CGreen is solving the part of the lending stack that receives the least investment and carries some of the highest cost. Combining borrower intelligence with real on-ground execution is hard to build and harder to copy — and it is the infrastructure Bharat's credit economy will depend on.",
+        cite: "Abhinath Shinde, Co-founder & Director, Indifly",
+      },
+      "Indifly works through its inCORE operating ecosystem rather than as a passive investor, bringing operational and functional support alongside capital — which, for a business that runs on the ground as much as in software, is the part that compounds.",
+      { type: "heading", text: "Building for Bharat" },
+      "India is heading toward a credit economy of enormous scale, but the ability to lend has always been capped by the ability to collect. As lenders push deeper into underserved markets, the binding constraint stops being underwriting and becomes resolution.",
+      "Collections is not a back-office function. It is where a lender's economics are decided and where a borrower's experience of the financial system is formed. CGreen is building that layer properly, and building it for Bharat rather than adapting it to Bharat.",
+    ],
+  },
 ];
 
 export const HERO_ORBIT = {
@@ -116,7 +164,11 @@ export const TEAM = [
   { name: "Nikhar Agrawal", title: "Co-Founder & Head of Finance", photo: "/team/nikhar.png", linkedin: "https://www.linkedin.com/in/nikhar-agrawal-5631b716/", bio: "Finance leader with 13 years of experience across microfinance, lending, collections, BC banking, and rural financial services, formerly with Spandana, Vaya, and Suryoday." },
   { name: "Dipanshu Rajpurohit", title: "Co-Founder & COO", photo: "/team/dipanshu.png", linkedin: "https://www.linkedin.com/in/dipanshurajpurohit/", bio: "Business and product leader with 18 years of experience across Lendingkart, Bajaj Finance, YES Bank, and FINO Finance." },
   { name: "Makrand Manjrekar", title: "Co-Founder & Head, Risk & Compliance", photo: "/team/mak.png", linkedin: "https://www.linkedin.com/in/makrand-manjrekar/", bio: "Risk and operations leader with 20 years of experience across IDBI Bank and FINO Payments Bank, specialising in risk controls, compliance, and fraud prevention." },
+<<<<<<< HEAD
 //  { name: "Vineet Singh", title: "Head, Collections Unit", photo: "/team/vineet.png", linkedin: "https://www.linkedin.com/in/vineet-kumar-singh-303022a7/", bio: "Collections leader with 17 years of experience across ICICI Bank, HDB, Spocto, and VGM, with deep expertise in remote collections and recovery." },
+=======
+  // { name: "Vineet Singh", title: "Head, Collections Unit", photo: "/team/vineet.png", linkedin: "https://www.linkedin.com/in/vineet-kumar-singh-303022a7/", bio: "Collections leader with 17 years of experience across ICICI Bank, HDB, Spocto, and VGM, with deep expertise in remote collections and recovery." },
+>>>>>>> 01ce10733f10226ea9f73dbdb7cf7fb2a886fa64
 ];
 
 export const NOMINEE_DIRECTORS = [

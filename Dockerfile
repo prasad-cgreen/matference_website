@@ -20,7 +20,11 @@ COPY frontend/src ./src
 # CRA variables are compiled into the browser bundle and are never secrets.
 # Empty means that the browser calls the API on the same origin as the website.
 ARG REACT_APP_BACKEND_URL=""
+# Cloudflare Turnstile site key. Public (baked into the browser bundle); the
+# matching secret is provided to the backend at runtime as TURNSTILE_SECRET_KEY.
+ARG REACT_APP_TURNSTILE_SITE_KEY=""
 ENV REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL} \
+    REACT_APP_TURNSTILE_SITE_KEY=${REACT_APP_TURNSTILE_SITE_KEY} \
     CI=true \
     GENERATE_SOURCEMAP=false
 

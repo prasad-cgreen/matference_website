@@ -31,6 +31,10 @@ export default function Navbar() {
 
   const handleNav = (item) => {
     setMobileOpen(false);
+    if (item.newTab && (item.to || item.href)) {
+      window.open(item.to || item.href, "_blank", "noopener");
+      return;
+    }
     if (item.to) {
       navigate(item.to);
       window.scrollTo({ top: 0 });
@@ -122,6 +126,7 @@ export default function Navbar() {
             ))}
           </div>
 
+<<<<<<< HEAD
           {/* Right CTAs */}
           <div className="hidden md:flex items-center gap-2">
             <a
@@ -148,6 +153,34 @@ export default function Navbar() {
               Partner with Us
             </button>
           </div>
+=======
+        {/* Right CTAs */}
+        <div className="hidden md:flex items-center gap-2">
+          <a
+          target="_blank"
+            // href="https://newapp.cgreen.in/login"
+            href="https://customer360.cgreen.in/login"
+            data-testid="nav-login"
+            className="px-5 py-2 rounded-full border border-[#142984] text-[#142984] text-sm font-body font-medium hover:bg-[#142984] hover:text-[#FFFCFA] transition-colors"
+          >
+            Login
+          </a>
+          <button
+            onClick={goPragatiKendra}
+            data-testid="nav-be-pragati-kendra"
+            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+          >
+            Be a Pragati Kendra
+          </button>
+          <button
+            onClick={goBookDemo}
+            data-testid="nav-book-demo"
+            className="px-5 py-2 rounded-full bg-[#142984] text-[#FFFCFA] text-sm font-head font-bold hover:bg-[#FCDD15] hover:text-[#142984] transition-colors"
+          >
+            Partner with Us
+          </button>
+        </div>
+>>>>>>> 01ce10733f10226ea9f73dbdb7cf7fb2a886fa64
 
           {/* Mobile toggle */}
           <button
